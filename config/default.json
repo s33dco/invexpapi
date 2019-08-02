@@ -1,0 +1,7 @@
+{
+	"mongodbURI": "mongodb://localhost:27017/invexpapidev",
+	"backend_port": 5000,
+	"frontend_port": 3000,
+	"sendgrid_password": "apassword",
+	"jwt_secret": "secret"
+}

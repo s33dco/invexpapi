@@ -1,0 +1,26 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	background: #fcfcfc;
+	color: #191d32;
+	font-family: 'Ubuntu', sans-serif;
+	line-height: 1.5;
+	@media (min-width: $desktop-breakpoint) {
+		margin: 0 $l-size;
+	}
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	margin: 0 5vw;
+	@media (min-width: $desktop-breakpoint) {
+		margin: 0 $xl-size;
+	}
+}
