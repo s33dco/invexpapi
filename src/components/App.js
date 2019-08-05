@@ -2,14 +2,14 @@ import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
-import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Loading from './layout/Loading';
 import 'normalize.css/normalize.css';
 import '../styles/styles.scss';
 
-const AsyncOtherPage = importedComponent(
+const AsyncContact = importedComponent(
 	() => import(/* webpackChunkName:'Contact' */ './pages/Contact'),
 	{
 		LoadingComponent: Loading

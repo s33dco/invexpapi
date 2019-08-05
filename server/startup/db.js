@@ -30,4 +30,18 @@ const connectDB = async () => {
 	}
 };
 
-module.exports = connectDB;
+const disconnectDB = async () => {
+	try {
+		await mongoose.disconnect();
+		logger.info(`**${config.util.getEnv('NODE_ENV')} db disconnected\n`);
+	} catch (e) {
+		logger.error(
+			`** Could not disconnect to ${config.util.getEnv(
+				'NODE_ENV'
+			)} db :-( **\n ${e.message} `
+		);
+		process.exit(1);
+	}
+};
+
+module.exports = { connectDB, disconnectDB };

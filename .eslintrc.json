@@ -44,6 +44,7 @@
 				"optionalDependencies": true,
 				"peerDependencies": true
 			}
-		]
+		],
+		"no-underscore-dangle": "off"
 	}
 }
