@@ -1,7 +1,7 @@
 const faker = require('faker/locale/en');
 const { User } = require('../../models/user');
 
-const saveUser = () => {
+const savedUser = () => {
 	return new User({
 		email: faker.internet.email(),
 		password: 'passwordpassword'
@@ -15,4 +15,4 @@ const unsavedUser = () => {
 	});
 };
 
-module.exports = { saveUser, unsavedUser };
+module.exports = { savedUser, unsavedUser };

@@ -3,9 +3,17 @@ const mongoose = require('mongoose');
 const businessSchema = new mongoose.Schema({
 	userId: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'users'
+		ref: 'users',
+		required: true
 	},
 	bName: {
+		type: String,
+		required: true,
+		minlength: 1,
+		lowercase: true,
+		trim: true
+	},
+	bContact: {
 		type: String,
 		required: true,
 		minlength: 1,
@@ -52,7 +60,7 @@ const businessSchema = new mongoose.Schema({
 		required: true,
 		trim: true
 	},
-	sortcode: {
+	sortCode: {
 		type: String,
 		required: true,
 		trim: true
@@ -65,6 +73,20 @@ const businessSchema = new mongoose.Schema({
 	utr: {
 		type: String,
 		required: true,
+		trim: true
+	},
+	terms: {
+		type: String,
+		required: true,
+		minlength: 1,
+		lowercase: true,
+		trim: true
+	},
+	farewell: {
+		type: String,
+		required: true,
+		minlength: 1,
+		lowercase: true,
 		trim: true
 	}
 });

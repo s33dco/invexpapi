@@ -1,14 +1,14 @@
 /**
  * @jest-environment node
  */
-const { Business } = require('../../models/business');
-const { saveBusiness } = require('../seed/business');
-const { connectDB, disconnectDB } = require('../../startup/db');
+const { Business } = require('../../../models/business');
+const { savedBusiness } = require('../../seed/business');
+const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Business', () => {
 	beforeEach(async () => {
 		await connectDB();
-		await saveBusiness();
+		await savedBusiness();
 	});
 
 	afterEach(async () => {

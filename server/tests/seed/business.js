@@ -1,37 +1,43 @@
 const faker = require('faker/locale/en');
-const Mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const { Business } = require('../../models/business');
 
-const saveBusiness = () => {
+const savedBusiness = () => {
 	return new Business({
-		userId: Mongoose.Types.ObjectId(),
+		userId: mongoose.Types.ObjectId(),
 		bName: faker.company.companyName(),
+		bContact: faker.company.companyName(),
 		bEmail: faker.internet.email(),
 		bPhone: faker.phone.phoneNumber(),
 		bAdd1: faker.address.streetAddress(),
 		bAdd2: faker.address.county(),
 		bPcode: faker.address.zipCode(),
 		bankName: 'fake bank',
-		sortcode: '20-21-23',
+		sortCode: '20-21-23',
 		accountNo: '89786756',
-		utr: '12345678'
+		utr: '12345678',
+		terms: 'paid in full',
+		farewell: 'see you later'
 	}).save();
 };
 
 const unsavedBusiness = () => {
 	return new Business({
-		userId: Mongoose.Types.ObjectId(),
-		bName: faker.companyName(),
+		userId: mongoose.Types.ObjectId(),
+		bName: faker.company.companyName(),
+		bContact: faker.company.companyName(),
 		bEmail: faker.internet.email(),
 		bPhone: faker.phone.phoneNumber(),
 		bAdd1: faker.address.streetAddress(),
 		bAdd2: faker.address.county(),
 		bPcode: faker.address.zipCode(),
-		bankName: faker.companyName(),
-		sortcode: '20-21-23',
+		bankName: 'fake bank',
+		sortCode: '20-21-23',
 		accountNo: '89786756',
-		utr: '12345678'
+		utr: '12345678',
+		terms: 'paid in full',
+		farewell: 'see you later'
 	});
 };
 
-module.exports = { saveBusiness, unsavedBusiness };
+module.exports = { savedBusiness, unsavedBusiness };

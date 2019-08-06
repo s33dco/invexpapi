@@ -1,16 +1,16 @@
 /**
  * @jest-environment node
  */
-const { User } = require('../../models/user');
-const { saveUser, unsavedUser } = require('../seed/user');
-const { connectDB, disconnectDB } = require('../../startup/db');
+const { User } = require('../../../models/user');
+const { savedUser, unsavedUser } = require('../../seed/user');
+const { connectDB, disconnectDB } = require('../../../startup/db');
 
 let user;
 
 describe('User', () => {
 	beforeEach(async () => {
 		await connectDB();
-		user = await saveUser();
+		user = await savedUser();
 	});
 
 	afterEach(async () => {
