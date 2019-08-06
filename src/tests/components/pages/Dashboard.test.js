@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Home from '../../../components/pages/Dashboard';
+import Dashboard from '../../../components/pages/Dashboard';
 
 let wrapper;
 
 beforeEach(() => {
-	wrapper = shallow(<Home />);
+	wrapper = shallow(<Dashboard />);
 });
 
 describe('Dashboard', () => {

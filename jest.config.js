@@ -27,12 +27,14 @@ module.exports = {
 		'!**/node_modules/**',
 		'!**/config/**',
 		'!**/coverage/**',
-		'!**/server/startup/*',
+		'!**/server/startup/**',
+		'!**/server/tests/seed/**',
 		'!**/build-utils/**',
 		'!**.config.js',
 		'!**/src/index.js',
 		'!**/src/store.js',
-		'!**/server/server.js'
+		'!**/server/server.js',
+		'!**/src/tests/**'
 	],
 
 	// The directory where Jest should output its coverage files
