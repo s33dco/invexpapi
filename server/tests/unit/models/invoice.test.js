@@ -9,6 +9,10 @@ const { savedOwedInvoice } = require('../../seed/invoice');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Invoice', () => {
+	beforeAll(async () => {
+		await connectDB();
+	});
+
 	beforeEach(async () => {
 		await connectDB();
 		await savedOwedInvoice();
@@ -19,6 +23,9 @@ describe('Invoice', () => {
 		await Business.deleteMany();
 		await User.deleteMany();
 		await Client.deleteMany();
+	});
+
+	afterAll(async () => {
 		await disconnectDB();
 	});
 

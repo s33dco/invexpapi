@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 
-const Dashboard = () => {
+const Register = () => {
 	return (
 		<Fragment>
-			<p>Dashboard</p>
+			<p>Register</p>
 		</Fragment>
 	);
 };
 
-export default Dashboard;
+export default Register;

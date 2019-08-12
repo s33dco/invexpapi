@@ -15,6 +15,24 @@ const AsyncContact = importedComponent(
 		LoadingComponent: Loading
 	}
 );
+const AsyncAbout = importedComponent(
+	() => import(/* webpackChunkName:'About' */ './pages/About'),
+	{
+		LoadingComponent: Loading
+	}
+);
+const AsyncRegister = importedComponent(
+	() => import(/* webpackChunkName:'Register' */ './pages/Register'),
+	{
+		LoadingComponent: Loading
+	}
+);
+const AsyncLogin = importedComponent(
+	() => import(/* webpackChunkName:'Login' */ './pages/Login'),
+	{
+		LoadingComponent: Loading
+	}
+);
 const AsyncNoMatch = importedComponent(
 	() => import(/* webpackChunkName:'NoMatch' */ './pages/NoMatch'),
 	{
@@ -31,6 +49,9 @@ const App = () => {
 					<Switch>
 						<Route exact path="/" component={Dashboard} />
 						<Route exact path="/contact" component={AsyncContact} />
+						<Route exact path="/about" component={AsyncAbout} />
+						<Route exact path="/register" component={AsyncRegister} />
+						<Route exact path="/login" component={AsyncLogin} />
 						<Route component={AsyncNoMatch} />
 					</Switch>
 				</main>

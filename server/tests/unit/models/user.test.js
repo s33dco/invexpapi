@@ -8,6 +8,10 @@ const { connectDB, disconnectDB } = require('../../../startup/db');
 let user;
 
 describe('User', () => {
+	beforeAll(async () => {
+		await connectDB();
+	});
+
 	beforeEach(async () => {
 		await connectDB();
 		user = await savedUser();
@@ -15,6 +19,9 @@ describe('User', () => {
 
 	afterEach(async () => {
 		await User.deleteMany();
+	});
+
+	afterAll(async () => {
 		await disconnectDB();
 	});
 

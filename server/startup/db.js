@@ -32,7 +32,7 @@ const connectDB = async () => {
 
 const disconnectDB = async () => {
 	try {
-		await mongoose.disconnect();
+		await mongoose.connection.close();
 		logger.info(`**${config.util.getEnv('NODE_ENV')} db disconnected\n`);
 	} catch (e) {
 		logger.error(

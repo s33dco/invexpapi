@@ -6,6 +6,10 @@ const { savedBusiness } = require('../../seed/business');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Business', () => {
+	beforeAll(async () => {
+		await connectDB();
+	});
+
 	beforeEach(async () => {
 		await connectDB();
 		await savedBusiness();
@@ -13,6 +17,9 @@ describe('Business', () => {
 
 	afterEach(async () => {
 		await Business.deleteMany();
+	});
+
+	afterAll(async () => {
 		await disconnectDB();
 	});
 

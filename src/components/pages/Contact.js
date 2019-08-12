@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-const Home = () => {
+const Contact = () => {
 	return (
 		<Fragment>
 			<p>Contact</p>
@@ -8,4 +8,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default Contact;

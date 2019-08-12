@@ -6,13 +6,19 @@ const { savedClient } = require('../../seed/client');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Client', () => {
-	beforeEach(async () => {
+	beforeAll(async () => {
 		await connectDB();
+	});
+
+	beforeEach(async () => {
 		await savedClient();
 	});
 
 	afterEach(async () => {
 		await Client.deleteMany();
+	});
+
+	afterAll(async () => {
 		await disconnectDB();
 	});
 
