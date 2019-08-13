@@ -20,6 +20,62 @@ const Header = () => (
 			>
 				Contact
 			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/about"
+				activeClassName="is-active"
+				exact
+			>
+				About
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/register"
+				activeClassName="is-active"
+				exact
+			>
+				Register
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/login"
+				activeClassName="is-active"
+				exact
+			>
+				Login
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/invoices"
+				activeClassName="is-active"
+				exact
+			>
+				Invoices
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/clients"
+				activeClassName="is-active"
+				exact
+			>
+				Clients
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/expenses"
+				activeClassName="is-active"
+				exact
+			>
+				Expenses
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/reports"
+				activeClassName="is-active"
+				exact
+			>
+				Reports
+			</NavLink>
 		</nav>
 	</header>
 );

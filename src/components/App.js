@@ -33,6 +33,30 @@ const AsyncLogin = importedComponent(
 		LoadingComponent: Loading
 	}
 );
+const AsyncInvoices = importedComponent(
+	() => import(/* webpackChunkName:'Invoices' */ './pages/Invoices'),
+	{
+		LoadingComponent: Loading
+	}
+);
+const AsyncExpenses = importedComponent(
+	() => import(/* webpackChunkName:'Expenses' */ './pages/Expenses'),
+	{
+		LoadingComponent: Loading
+	}
+);
+const AsyncClients = importedComponent(
+	() => import(/* webpackChunkName:'Clients' */ './pages/Clients'),
+	{
+		LoadingComponent: Loading
+	}
+);
+const AsyncReports = importedComponent(
+	() => import(/* webpackChunkName:'Reports' */ './pages/Reports'),
+	{
+		LoadingComponent: Loading
+	}
+);
 const AsyncNoMatch = importedComponent(
 	() => import(/* webpackChunkName:'NoMatch' */ './pages/NoMatch'),
 	{
@@ -52,6 +76,10 @@ const App = () => {
 						<Route exact path="/about" component={AsyncAbout} />
 						<Route exact path="/register" component={AsyncRegister} />
 						<Route exact path="/login" component={AsyncLogin} />
+						<Route exact path="/invoices" component={AsyncInvoices} />
+						<Route exact path="/clients" component={AsyncClients} />
+						<Route exact path="/expenses" component={AsyncExpenses} />
+						<Route exact path="/reports" component={AsyncReports} />
 						<Route component={AsyncNoMatch} />
 					</Switch>
 				</main>
