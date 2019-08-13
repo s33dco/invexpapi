@@ -30,6 +30,7 @@ module.exports = {
 		'!**/server/startup/**',
 		'!**/server/tests/seed/**',
 		'!**/build-utils/**',
+		'!**/build/**',
 		'!**.config.js',
 		'!**/src/index.js',
 		'!**/src/store.js',
