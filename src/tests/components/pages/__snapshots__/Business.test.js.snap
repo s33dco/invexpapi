@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Business component should render Business component correctly 1`] = `ShallowWrapper {}`;

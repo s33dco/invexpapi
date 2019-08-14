@@ -33,6 +33,12 @@ const AsyncLogin = importedComponent(
 		LoadingComponent: Loading
 	}
 );
+const AsyncBusiness = importedComponent(
+	() => import(/* webpackChunkName:'Business' */ './pages/Business'),
+	{
+		LoadingComponent: Loading
+	}
+);
 const AsyncInvoices = importedComponent(
 	() => import(/* webpackChunkName:'Invoices' */ './pages/Invoices'),
 	{
@@ -72,14 +78,15 @@ const App = () => {
 				<main className="main">
 					<Switch>
 						<Route exact path="/" component={Dashboard} />
-						<Route exact path="/contact" component={AsyncContact} />
-						<Route exact path="/about" component={AsyncAbout} />
-						<Route exact path="/register" component={AsyncRegister} />
-						<Route exact path="/login" component={AsyncLogin} />
+						<Route exact path="/business" component={AsyncBusiness} />
 						<Route exact path="/invoices" component={AsyncInvoices} />
 						<Route exact path="/clients" component={AsyncClients} />
 						<Route exact path="/expenses" component={AsyncExpenses} />
 						<Route exact path="/reports" component={AsyncReports} />
+						<Route exact path="/contact" component={AsyncContact} />
+						<Route exact path="/about" component={AsyncAbout} />
+						<Route exact path="/register" component={AsyncRegister} />
+						<Route exact path="/login" component={AsyncLogin} />
 						<Route component={AsyncNoMatch} />
 					</Switch>
 				</main>

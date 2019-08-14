@@ -3,5 +3,5 @@
 	"backend_port": 5000,
 	"frontend_port": 3000,
 	"sendgrid_password": "apassword",
-	"jwt_secret": "secret"
+	"jwt_secret": "jwt_secret"
 }

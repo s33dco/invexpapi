@@ -30,18 +30,57 @@ describe('User', () => {
 		expect(users).toBe(1);
 	});
 
-	it('should save a user with valid details', async () => {
+	it('should not save a user with name > 20 characters', async () => {
 		let users = await User.find().countDocuments();
 		expect(users).toBe(1);
 		user = unsavedUser();
-		user.password = 'tooshort';
+		user.name = 'A very long name more than twenty charcters';
 		users = await User.find().countDocuments();
 		expect(users).toBe(1);
 	});
 
-	it('should reject paswords < 10', async () => {
-		const { email } = user;
-		const found = await User.findByEmail(email);
-		expect(found._id).toEqual(user._id);
+	it('should not save a user with an empty name', async () => {
+		let users = await User.find().countDocuments();
+		expect(users).toBe(1);
+		user = unsavedUser();
+		user.name = '';
+		users = await User.find().countDocuments();
+		expect(users).toBe(1);
+	});
+
+	it('should not save a user with an empty email', async () => {
+		let users = await User.find().countDocuments();
+		expect(users).toBe(1);
+		user = unsavedUser();
+		user.email = '';
+		users = await User.find().countDocuments();
+		expect(users).toBe(1);
+	});
+
+	it('should not save a user with an empty password', async () => {
+		let users = await User.find().countDocuments();
+		expect(users).toBe(1);
+		user = unsavedUser();
+		user.password = '';
+		users = await User.find().countDocuments();
+		expect(users).toBe(1);
+	});
+
+	it('should not save a user with a password < 8 characters', async () => {
+		let users = await User.find().countDocuments();
+		expect(users).toBe(1);
+		user = unsavedUser();
+		user.password = '1234567';
+		users = await User.find().countDocuments();
+		expect(users).toBe(1);
+	});
+
+	it('should not save a user with a password > 255 characters', async () => {
+		let users = await User.find().countDocuments();
+		expect(users).toBe(1);
+		user = unsavedUser();
+		user.password = new Array(258).join('a');
+		users = await User.find().countDocuments();
+		expect(users).toBe(1);
 	});
 });
