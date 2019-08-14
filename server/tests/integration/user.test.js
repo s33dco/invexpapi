@@ -28,6 +28,13 @@ describe('api/users', () => {
 			expect(res.body).toHaveProperty('token');
 		});
 
+		it('return 400 if email address already exists', async () => {
+			await registerUser();
+			const res = await registerUser();
+			expect(res.status).toBe(400);
+			expect(res.body).toHaveProperty('msg', 'User already exists');
+		});
+
 		it('should return 400 if no name sent', async () => {
 			name = '';
 			const res = await registerUser();
