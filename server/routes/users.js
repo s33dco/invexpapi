@@ -27,10 +27,9 @@ router.post('/', async (req, res) => {
 		let user = await User.findOne({ email });
 
 		if (user) {
+			logger.info('failed registration attempt - Email already used.');
 			return res.status(400).json({ msg: 'User already exists' });
 		}
-
-		logger.info('failed registration attempt.');
 
 		// create user
 
@@ -69,6 +68,13 @@ router.post('/', async (req, res) => {
 				if (err) throw err;
 
 				// send jwt
+				const fullToken = token;
+				const parts = fullToken.split('.');
+				const signature = parts[2];
+				const headPay = parts[0].concat('.', parts[1]);
+				logger.info(`token - ${fullToken}`);
+				logger.info(`header/payload - ${headPay}`);
+				logger.info(`signature -  ${signature}`);
 
 				res.json({ token });
 			}
