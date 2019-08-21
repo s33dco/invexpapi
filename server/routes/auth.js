@@ -5,6 +5,8 @@ const config = require('config');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
 const { User, validateLogin } = require('../models/user');
+const { sigOptions, payOptions } = require('../../config/cookieOptions');
+const jwtCookies = require('../utils/jwtCookies');
 
 const router = express.Router();
 
@@ -65,7 +67,11 @@ router.post('/', async (req, res) => {
 			(err, token) => {
 				if (err) throw err;
 
-				res.json({ token });
+				const { headPay, signature } = jwtCookies(token);
+
+				res.cookie('payload', headPay, payOptions);
+				res.cookie('signature', signature, sigOptions);
+				res.json({ msg: `${user.name} successfully logged in` });
 			}
 		);
 	} catch (e) {

@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const logger = require('../startup/logger');
 const { User, validate } = require('../models/user');
+const { sigOptions, payOptions } = require('../../config/cookieOptions');
+const jwtCookies = require('../utils/jwtCookies');
 
 const router = express.Router();
 
@@ -68,18 +70,13 @@ router.post('/', async (req, res) => {
 				if (err) throw err;
 
 				// send jwt
-				const fullToken = token;
-				const parts = fullToken.split('.');
-				const signature = parts[2];
-				const headPay = parts[0].concat('.', parts[1]);
-				logger.info(`token - ${fullToken}`);
-				logger.info(`header/payload - ${headPay}`);
-				logger.info(`signature -  ${signature}`);
+				const { headPay, signature } = jwtCookies(token);
 
-				res.json({ token });
+				res.cookie('payload', headPay, payOptions);
+				res.cookie('signature', signature, sigOptions);
+				res.json({ msg: `${user.name} successfully registered` });
 			}
 		);
-		logger.info(`${user.name} has logged in...`);
 	} catch (err) {
 		logger.error(err.message);
 		res.status(500).send('server error');

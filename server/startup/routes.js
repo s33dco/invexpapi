@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const config = require('config');
+const cookieParser = require('cookie-parser');
 const logger = require('./logger');
 const api = require('../routes/api');
 const users = require('../routes/users');
@@ -10,7 +11,8 @@ const auth = require('../routes/auth');
 const initialize = app => {
 	const middlewares = [
 		morgan('dev', { stream: logger.stream }),
-		express.json({ extended: false })
+		express.json({ extended: false }),
+		cookieParser()
 	];
 
 	app.use(middlewares);
@@ -26,6 +28,11 @@ const initialize = app => {
 		app.use(express.static('build'));
 		app.get('*', (req, res) => {
 			res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+		});
+	} else {
+		app.use(express.static('dev'));
+		app.get('*', (req, res) => {
+			res.sendFile(path.resolve(__dirname, 'dev', 'index.html'));
 		});
 	}
 };

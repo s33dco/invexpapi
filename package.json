@@ -18,7 +18,7 @@
 		"start": "node server/server.js",
 		"dev:start": "nodemon server/server.js",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production yarn build\" \" cross-env NODE_ENV=production yarn start\"",
-		"runindev": "concurrently \"cross-env NODE_ENV=development yarn dev:build\" \" cross-env NODE_ENV=development yarn start\"",
+		"runindev": "concurrently \"cross-env NODE_ENV=development yarn dev:build\" \" cross-env NODE_ENV=development yarn dev:start\"",
 		"test": "jest --watchAll --coverage --runInBand"
 	},
 	"browserslist": {
@@ -38,6 +38,7 @@
 		"bcryptjs": "^2.4.3",
 		"compression": "^1.7.4",
 		"config": "^3.2.2",
+		"cookie-parser": "^1.4.4",
 		"express": "^4.17.1",
 		"helmet": "^3.20.0",
 		"jsonwebtoken": "^8.5.1",
