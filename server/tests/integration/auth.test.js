@@ -6,18 +6,37 @@ const request = require('supertest');
 const app = require('../../app');
 const { User } = require('../../models/user');
 
-const name = 'True User';
-let email = 'valid@email.co.uk';
-let password = '1Aa$word';
+const wholeCookie = cookie => cookie.split(';');
+const cleanCookie = cookie =>
+	cookie
+		.split(';')
+		.shift()
+		.split('=');
+const registeredUser = {
+	name: 'True User',
+	email: 'valid@email.co.uk',
+	password: '1Aa$word'
+};
+
+let { email } = registeredUser;
+let { password } = registeredUser;
+let bothCookies;
+let payload;
+let signature;
 
 describe('api/auth', () => {
 	beforeEach(async () => {
-		const registerUser = async () => {
+		const registerUser = () => {
 			return request(app)
 				.post('/api/users')
-				.send({ name, email, password });
+				.send(registeredUser);
 		};
-		await registerUser();
+		const response = await registerUser();
+		bothCookies = response.headers['set-cookie'];
+		const wholeSignatureCookie = response.headers['set-cookie'][1];
+		[, signature] = cleanCookie(wholeSignatureCookie);
+		const wholePayloadCookie = response.headers['set-cookie'][0];
+		[, payload] = cleanCookie(wholePayloadCookie);
 	});
 
 	afterEach(async () => {
@@ -31,10 +50,51 @@ describe('api/auth', () => {
 				.send({ email: email, password: password });
 		};
 
-		it('should return 200 and token with correct user info', async () => {
+		it('should return 200 and json msg', async () => {
 			const res = await loginUser();
 			expect(res.status).toBe(200);
-			expect(res.body).toHaveProperty('token');
+			expect(res.body).toHaveProperty(
+				'msg',
+				'True User successfully logged in'
+			);
+		});
+
+		it('should set 2 cookies', async () => {
+			const res = await loginUser();
+			const setCookie = res.headers['set-cookie'];
+			expect(setCookie.length).toBe(2);
+		});
+
+		it('should set the signature cookie correctly', async () => {
+			const res = await loginUser();
+			const setCookie = res.headers['set-cookie'];
+			const sig = setCookie[1];
+			const fullSignature = wholeCookie(sig);
+			expect(fullSignature).toBeArrayOfSize(5);
+			expect(fullSignature).toIncludeAnyMembers([
+				' Path=/',
+				' HttpOnly',
+				' Secure',
+				' SameSite=Strict'
+			]);
+			expect(fullSignature).not.toIncludeAnyMembers([' Max-Age=1800']);
+			expect(cleanCookie(sig)[1]).toBe(signature);
+		});
+
+		it('should set the payload cookie correctly', async () => {
+			const res = await loginUser();
+			const setCookie = res.headers['set-cookie'];
+			const pay = setCookie[0];
+			const fullPayload = wholeCookie(pay);
+			expect(fullPayload).toBeArrayOfSize(6);
+			expect(fullPayload).toIncludeAnyMembers([
+				' Path=/',
+				' HttpOnly',
+				' Secure',
+				' SameSite=Strict',
+				' Max-Age=1800'
+			]);
+			expect(cleanCookie(pay)[1]).toEqual(payload);
 		});
 
 		it('should return 400 if password/email combination wrong', async () => {
@@ -109,54 +169,36 @@ describe('api/auth', () => {
 	});
 
 	describe('GET /', () => {
-		const registerUser = async () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'Frankie',
-					email: 'frank@frank.com',
-					password: '1Frank13$$'
-				});
-		};
-
-		const loginUser = async () => {
-			return request(app)
-				.post('/api/auth')
-				.send({ email: 'frank@frank.com', password: '1Frank13$$' });
-		};
-
-		const getUser = async token => {
+		const getUser = async cookies => {
 			return request(app)
 				.get('/api/auth')
-				.set('x-auth-token', token);
+				.set('Cookie', cookies);
 		};
 
 		it('should return 200 and user object', async () => {
-			await registerUser();
-			const response = await loginUser();
-			const { token } = response.body;
-			const res = await getUser(token);
-			expect(res.body).toContainKeys(['_id', 'name', 'email']);
-			expect(res.body).toContainValues(['frank@frank.com', 'Frankie']);
+			const res = await getUser(bothCookies);
+			expect(res.body).toHaveProperty('email', 'valid@email.co.uk');
+			expect(res.body).toHaveProperty('name', 'True User');
+			expect(res.body).toHaveProperty('_id');
 		});
 
 		it('should return 401 with wrong token', async () => {
-			await registerUser();
-			const token =
-				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWQ1MzRjZWFmZTJhMWMxOGMzN2YyMWYwIiwibmFtZSI6IlRydWUgVXNlciJ9LCJpYXQiOjE1NjU4MTQ4NTUsImV4cCI6MTU2NTgxODQ1NX0.jT6PgblMC7TtpZRIbkM2n65I5eGX2tbq63vf4M4_YUU';
-			const res = await getUser(token);
+			const fakeSignature =
+				'signature=p8TiYcfn9rDka_aFakeSignaturelWjtbFqIn3w0JeLtwc; ';
+			const wrongCookies = [`payload=${payload}`, fakeSignature];
+			const res = await getUser(wrongCookies);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'token is not valid');
 		});
 
-		it('should say no token', async () => {
-			const noTokenReq = () => {
+		it('should send Auth denied json if no jwt cookies', async () => {
+			const noTokenInReq = () => {
 				return request(app).get('/api/auth');
 			};
 
-			const res = await noTokenReq();
+			const res = await noTokenInReq();
 			expect(res.status).toBe(401);
-			expect(res.body).toHaveProperty('msg', 'No token, authorization denied');
+			expect(res.body).toHaveProperty('msg', 'Authorization denied');
 		});
 	});
 });

@@ -19,7 +19,7 @@
 		"dev:start": "nodemon server/server.js",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production yarn build\" \" cross-env NODE_ENV=production yarn start\"",
 		"runindev": "concurrently \"cross-env NODE_ENV=development yarn dev:build\" \" cross-env NODE_ENV=development yarn dev:start\"",
-		"test": "jest --watchAll --coverage --runInBand"
+		"test": "jest --watchAll --runInBand"
 	},
 	"browserslist": {
 		"production": [
