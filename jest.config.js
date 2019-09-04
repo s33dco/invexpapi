@@ -37,6 +37,8 @@ module.exports = {
 	testPathIgnorePatterns: ['\\\\node_modules\\\\'],
 	// This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
 	testURL: 'http://localhost',
+
+	transform: { '^.+\\.[t|j]sx?$': 'babel-jest' },
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
 	transformIgnorePatterns: ['<rootDir>/node_modules/'],
 	// Indicates whether each individual test should be reported during the run

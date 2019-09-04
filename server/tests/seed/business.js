@@ -5,17 +5,18 @@ const { Business } = require('../../models/business');
 const savedBusiness = () => {
 	return new Business({
 		userId: mongoose.Types.ObjectId(),
+		useMileage: true,
 		bName: faker.company.companyName(),
 		bContact: faker.company.companyName(),
 		bEmail: faker.internet.email(),
-		bPhone: faker.phone.phoneNumber(),
+		bPhone: '07968 123456',
 		bAdd1: faker.address.streetAddress(),
 		bAdd2: faker.address.county(),
-		bPcode: faker.address.zipCode(),
+		bPcode: 'TW17 8hj',
 		bankName: 'fake bank',
 		sortCode: '20-21-23',
 		accountNo: '89786756',
-		utr: '12345678',
+		utr: '12345 67890',
 		terms: 'paid in full',
 		farewell: 'see you later'
 	}).save();
@@ -24,17 +25,18 @@ const savedBusiness = () => {
 const unsavedBusiness = () => {
 	return new Business({
 		userId: mongoose.Types.ObjectId(),
+		useMileage: true,
 		bName: faker.company.companyName(),
 		bContact: faker.company.companyName(),
 		bEmail: faker.internet.email(),
-		bPhone: faker.phone.phoneNumber(),
+		bPhone: '01272 678678',
 		bAdd1: faker.address.streetAddress(),
 		bAdd2: faker.address.county(),
-		bPcode: faker.address.zipCode(),
+		bPcode: 'WC1A 1AX',
 		bankName: 'fake bank',
 		sortCode: '20-21-23',
 		accountNo: '89786756',
-		utr: '12345678',
+		utr: '1234567890',
 		terms: 'paid in full',
 		farewell: 'see you later'
 	});

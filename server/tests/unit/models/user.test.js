@@ -30,57 +30,40 @@ describe('User', () => {
 		expect(users).toBe(1);
 	});
 
-	it('should not save a user with name > 20 characters', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
+	it('throws validationError if name > 32 characters', async () => {
 		user = unsavedUser();
-		user.name = 'A very long name more than twenty charcters';
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
+		user.name =
+			'A very long name more than thirty two charcters in length.A very long name more than thirty two charcters in length';
+		await expect(user.save()).rejects.toThrow('User validation failed');
 	});
 
-	it('should not save a user with an empty name', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
+	it('throws validationError if name empty', async () => {
 		user = unsavedUser();
 		user.name = '';
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
+		await expect(user.save()).rejects.toThrow('User validation failed');
 	});
 
-	it('should not save a user with an empty email', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
+	it('throws validationError if name includes non standard characters', async () => {
+		user = unsavedUser();
+		user.name = '<>&$%^!@';
+		await expect(user.save()).rejects.toThrow('User validation failed');
+	});
+
+	it('throws validationError if email empty', async () => {
 		user = unsavedUser();
 		user.email = '';
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
+		await expect(user.save()).rejects.toThrow('User validation failed');
 	});
 
-	it('should not save a user with an empty password', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
+	it('throws validationError if invalid email', async () => {
+		user = unsavedUser();
+		user.email = 'tony@tony';
+		await expect(user.save()).rejects.toThrow('User validation failed');
+	});
+
+	it('throws validationError if password empty', async () => {
 		user = unsavedUser();
 		user.password = '';
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
-	});
-
-	it('should not save a user with a password < 8 characters', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
-		user = unsavedUser();
-		user.password = '1234567';
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
-	});
-
-	it('should not save a user with a password > 255 characters', async () => {
-		let users = await User.find().countDocuments();
-		expect(users).toBe(1);
-		user = unsavedUser();
-		user.password = new Array(258).join('a');
-		users = await User.find().countDocuments();
-		expect(users).toBe(1);
+		await expect(user.save()).rejects.toThrow('User validation failed');
 	});
 });

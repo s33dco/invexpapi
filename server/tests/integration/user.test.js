@@ -37,6 +37,13 @@ describe('api/users', () => {
 			);
 		});
 
+		it('saved password should be hashed', async () => {
+			const res = await registerUser();
+			expect(res.status).toBe(200);
+			const user = await User.findOne({ email });
+			expect(user.password).not.toEqual(password);
+		});
+
 		it('should set 2 cookies to make the jwt', async () => {
 			const res = await registerUser();
 			const setCookie = res.headers['set-cookie'];
@@ -86,21 +93,21 @@ describe('api/users', () => {
 			name = '';
 			const res = await registerUser();
 			expect(res.status).toBe(400);
-			expect(res.body).toHaveProperty('msg', 'name should be 1-20 letters');
+			expect(res.body).toHaveProperty('msg', 'name should be 1-32 letters');
 		});
 
 		it('should return 400 if  name > 20 characters', async () => {
 			name = 'A very long name more than twenty charcters';
 			const res = await registerUser();
 			expect(res.status).toBe(400);
-			expect(res.body).toHaveProperty('msg', 'name should be 1-20 letters');
+			expect(res.body).toHaveProperty('msg', 'name should be 1-32 letters');
 		});
 
 		it('should return 400 if name includes non word chareacters', async () => {
 			name = '%$^£**@(@';
 			const res = await registerUser();
 			expect(res.status).toBe(400);
-			expect(res.body).toHaveProperty('msg', 'name should be 1-20 letters');
+			expect(res.body).toHaveProperty('msg', 'name should be 1-32 letters');
 		});
 
 		it('should return 400 if no email sent', async () => {
@@ -126,7 +133,7 @@ describe('api/users', () => {
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
-				'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 255 characters long'
+				'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 50 characters long'
 			);
 		});
 
@@ -146,7 +153,7 @@ describe('api/users', () => {
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
-					'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 255 characters long'
+					'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 50 characters long'
 				);
 			});
 		});
@@ -157,7 +164,7 @@ describe('api/users', () => {
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
-				'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 255 characters long'
+				'password requires atleast one uppercase & lowercase letter, one number & one special character (@£$!%*?&), between 8 and 50 characters long'
 			);
 		});
 	});
