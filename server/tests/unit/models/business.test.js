@@ -63,259 +63,231 @@ describe('Business', () => {
 			);
 		});
 
-		it('bName to throw validationError if empty string', async () => {
+		it('name to throw validationError if empty string', async () => {
 			const business = await unsavedBusiness();
-			business.bName = '';
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.name = '';
+			await expect(business.save()).rejects.toThrow('Business Name required');
 		});
 
-		it('bName to throw validationError if > 255 characters', async () => {
+		it('name to throw validationError if > 255 characters', async () => {
 			const business = await unsavedBusiness();
 			const name = new Array(27).join('longName55');
-			business.bName = name;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.name = name;
+			await expect(business.save()).rejects.toThrow('Business Name too long');
 		});
 
-		it('bName saved as lowercase', async () => {
+		it('name saved as lowercase', async () => {
 			const business = await unsavedBusiness();
 			const name = 'LoWeRCaSE';
-			business.bName = name;
+			business.name = name;
 			await business.save();
-			expect(business.bName).toBe('lowercase');
+			expect(business.name).toBe('lowercase');
 		});
 
-		it('bName to throw validationError if includes non word characters', async () => {
+		it('name to throw validationError if includes non word characters', async () => {
 			const names = ['<>', '|{}', '$_+=', '@!@', '-->'];
 			let business;
 			names.forEach(async name => {
 				business = await unsavedBusiness();
-				business.bName = name;
+				business.name = name;
 				await expect(business.save()).rejects.toThrow(
-					'Business validation failed'
+					'contains blacklisted character'
 				);
 			});
 		});
 
-		it('bContact must be present', async () => {
+		it('contact must be present', async () => {
 			const name = '';
 			const business = await unsavedBusiness();
-			business.bContact = name;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.contact = name;
+			await expect(business.save()).rejects.toThrow('Contact Name required');
 		});
 
-		it('bContact to throw validationError if > 255 characters', async () => {
+		it('contact to throw validationError if > 255 characters', async () => {
 			const business = await unsavedBusiness();
 			const name = new Array(27).join('longName55');
-			business.bContact = name;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.contact = name;
+			await expect(business.save()).rejects.toThrow('Contact Name too long');
 		});
 
-		it('bContact is saved as lowercase', async () => {
+		it('contact is saved as lowercase', async () => {
 			const business = await unsavedBusiness();
 			const name = 'MR UPPERCASE';
-			business.bContact = name;
+			business.contact = name;
 			await business.save();
-			expect(business.bContact).toBe('mr uppercase');
+			expect(business.contact).toBe('mr uppercase');
 		});
 
-		it('bContact to throw validationError if includes non word characters', async () => {
+		it('contact to throw validationError if includes non word characters', async () => {
 			const names = ['<>', '|{}', '$_+=', '@!@', '-->', '?%^&£'];
 			let business;
 			names.forEach(async name => {
 				business = await unsavedBusiness();
-				business.bContact = name;
+				business.contact = name;
 				await expect(business.save()).rejects.toThrow(
-					'Business validation failed'
+					'contains blacklisted character'
 				);
 			});
 		});
 
-		it('bContact accepts hypenated punctuated names', async () => {
+		it('contact accepts hypenated punctuated names', async () => {
 			let businesses = await Business.find().countDocuments();
 			expect(businesses).toBe(1);
 			const name = "Mr. John O'Flaherty-Mincepie Esq. ";
 			const business = await unsavedBusiness();
-			business.bContact = name;
+			business.contact = name;
 			await business.save();
 			businesses = await Business.find().countDocuments();
 			expect(businesses).toBe(2);
 		});
 
-		it('bEmail to throw validationError if empty', async () => {
+		it('email to throw validationError if empty', async () => {
 			const email = '';
 			const business = await unsavedBusiness();
-			business.bEmail = email;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.email = email;
+			await expect(business.save()).rejects.toThrow('Email address required');
 		});
 
-		it('bEmail to throw validationError if invalid email address.', async () => {
+		it('email to throw validationError if invalid email address.', async () => {
 			const emails = ['@bmail', 'del@del', 'del[at]del[dot]com', 'del@delcom'];
 			let business;
 			emails.forEach(async email => {
 				business = await unsavedBusiness();
-				business.bEmail = email;
-				await expect(business.save()).rejects.toThrow(
-					'Business validation failed'
-				);
+				business.email = email;
+				await expect(business.save()).rejects.toThrow('Check email address');
 			});
 		});
 
-		it('bEmail to throw validationError if > 255 characters', async () => {
+		it('email to throw validationError if > 255 characters', async () => {
 			const business = await unsavedBusiness();
-			const bEmail = new Array(30).join('email@email.com');
-			business.bEmail = bEmail;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			const email = new Array(30).join('email@email.com');
+			business.email = email;
+			await expect(business.save()).rejects.toThrow('Email address too long');
 		});
 
-		it('bEmail saved as lowercase', async () => {
+		it('email saved as lowercase', async () => {
 			const business = await unsavedBusiness();
 			const email = 'MYEMAILADDRESS@EMAILPROVIDER.COM';
-			business.bEmail = email;
+			business.email = email;
 			await business.save();
-			expect(business.bEmail).toBe('myemailaddress@emailprovider.com');
+			expect(business.email).toBe('myemailaddress@emailprovider.com');
 		});
 
-		it('bPhone to throw validationError if empty', async () => {
+		it('phone to throw validationError if empty', async () => {
 			const phone = '';
 			const business = await unsavedBusiness();
-			business.bPhone = phone;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.phone = phone;
+			await expect(business.save()).rejects.toThrow('Phone number required');
 		});
 
-		it('bPhone to throw validationError if too short', async () => {
+		it('phone to throw validationError if too short', async () => {
 			const phone = '123 678';
 			const business = await unsavedBusiness();
-			business.bPhone = phone;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.phone = phone;
+			await expect(business.save()).rejects.toThrow('check phone number');
 		});
 
-		it('bPhone to throw validationError if too long', async () => {
+		it('phone to throw validationError if too long', async () => {
 			const phone = '123 678 890 898098080';
 			const business = await unsavedBusiness();
-			business.bPhone = phone;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.phone = phone;
+			await expect(business.save()).rejects.toThrow('check phone number');
 		});
 
-		it('bPhone to throw validationError if any non digits', async () => {
+		it('phone to throw validationError if any non digits', async () => {
 			const phone = '(01278) 788788';
 			const business = await unsavedBusiness();
-			business.bPhone = phone;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.phone = phone;
+			await expect(business.save()).rejects.toThrow('check phone number');
 		});
 
-		it('bAdd1 to throw validationError if empty', async () => {
+		it('add1 to throw validationError if empty', async () => {
 			const add1 = '';
 			const business = await unsavedBusiness();
-			business.bAdd1 = add1;
+			business.add1 = add1;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'First line of address required'
 			);
 		});
 
-		it('bAdd1 to save in lowercase', async () => {
+		it('add1 to save in lowercase', async () => {
 			const add1 = '13 TOP STREET';
 			const business = await unsavedBusiness();
-			business.bAdd1 = add1;
+			business.add1 = add1;
 			await business.save();
-			expect(business.bAdd1).toBe('13 top street');
+			expect(business.add1).toBe('13 top street');
 		});
 
-		it('bAdd1 to throw validationError if include non standard characters', async () => {
+		it('add1 to throw validationError if include non standard characters', async () => {
 			const add1 = '<big>!ddd****';
 			const business = await unsavedBusiness();
-			business.bAdd1 = add1;
+			business.add1 = add1;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in address'
 			);
 		});
 
-		it('bAdd2 to throw validationError if include non standard characters', async () => {
+		it('add2 to throw validationError if include non standard characters', async () => {
 			const add1 = '<big>!ddd****';
 			const business = await unsavedBusiness();
-			business.bAdd2 = add1;
+			business.add2 = add1;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in address'
 			);
 		});
 
-		it('bAdd2 to save in lowercase', async () => {
+		it('add2 to save in lowercase', async () => {
 			const add1 = '13 TOP STREET';
 			const business = await unsavedBusiness();
-			business.bAdd2 = add1;
+			business.add2 = add1;
 			await business.save();
-			expect(business.bAdd2).toBe('13 top street');
+			expect(business.add2).toBe('13 top street');
 		});
 
-		it('bAdd3 to save in lowercase', async () => {
+		it('add3 to save in lowercase', async () => {
 			const add1 = '13 TOP STREET';
 			const business = await unsavedBusiness();
-			business.bAdd3 = add1;
+			business.add3 = add1;
 			await business.save();
-			expect(business.bAdd3).toBe('13 top street');
+			expect(business.add3).toBe('13 top street');
 		});
 
-		it('bAdd3 to throw validationError if include non standard characters', async () => {
+		it('add3 to throw validationError if include non standard characters', async () => {
 			const add1 = '<big>!ddd****';
 			const business = await unsavedBusiness();
-			business.bAdd3 = add1;
+			business.add3 = add1;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in address'
 			);
 		});
 
-		it('bPcode to throw validationError if empty', async () => {
+		it('postcode to throw validationError if empty', async () => {
 			const pcode = '';
 			const business = await unsavedBusiness();
-			business.bPcode = pcode;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.postcode = pcode;
+			await expect(business.save()).rejects.toThrow('Postcode required');
 		});
 
-		it('bPcode to throw validationError if wrong format', async () => {
+		it('postcode to throw validationError if wrong format', async () => {
 			const code = 'thwe1 229292';
 			const business = await unsavedBusiness();
-			business.bPcode = code;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			business.postcode = code;
+			await expect(business.save()).rejects.toThrow('check postcode');
 		});
 
-		it('bPcode saved as uppercase', async () => {
+		it('postcode saved as uppercase', async () => {
 			const business = await unsavedBusiness();
 			const code = 'wc1a 7yu';
-			business.bPcode = code;
+			business.postcode = code;
 			await business.save();
-			expect(business.bPcode).toBe('WC1A 7YU');
+			expect(business.postcode).toBe('WC1A 7YU');
 		});
 
 		it('bankName to throw validationError if empty', async () => {
 			const add1 = '';
 			const business = await unsavedBusiness();
 			business.bankName = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('Bank name required');
 		});
 
 		it('bankName to throw validationError if non standard characters', async () => {
@@ -323,7 +295,7 @@ describe('Business', () => {
 			const business = await unsavedBusiness();
 			business.bankName = add1;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in Bank name'
 			);
 		});
 
@@ -339,63 +311,49 @@ describe('Business', () => {
 			const add1 = '';
 			const business = await unsavedBusiness();
 			business.sortCode = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('Sort code required');
 		});
 
 		it('sortCode to throw validationError if non standard characters', async () => {
 			const add1 = '23/23/23';
 			const business = await unsavedBusiness();
 			business.sortCode = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('check sort code');
 		});
 
 		it('accountNo to throw validationError if empty', async () => {
 			const add1 = '';
 			const business = await unsavedBusiness();
 			business.accountNo = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('Account number required');
 		});
 
-		it('accountNo to throw validationError if tpp many digits', async () => {
+		it('accountNo to throw validationError if too many digits', async () => {
 			const add1 = '129837192837';
 			const business = await unsavedBusiness();
 			business.accountNo = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('check account nummber');
 		});
 
 		it('utr to throw validationError if empty', async () => {
 			const add1 = '';
 			const business = await unsavedBusiness();
 			business.utr = add1;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('UTR required');
 		});
 
 		it('utr to throw validationError if too many digits', async () => {
 			const utr = '987654321987654321';
 			const business = await unsavedBusiness();
 			business.utr = utr;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('check UTR');
 		});
 
 		it('terms to throw validationError if empty', async () => {
 			const text = '';
 			const business = await unsavedBusiness();
 			business.terms = text;
-			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
-			);
+			await expect(business.save()).rejects.toThrow('payment terms required');
 		});
 
 		it('terms to throw validationError if includes balcklisted characters', async () => {
@@ -403,7 +361,7 @@ describe('Business', () => {
 			const business = await unsavedBusiness();
 			business.terms = text;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in terms'
 			);
 		});
 
@@ -417,12 +375,19 @@ describe('Business', () => {
 			);
 		});
 
+		it('farewell to throw validationError if empty', async () => {
+			const text = '';
+			const business = await unsavedBusiness();
+			business.farewell = text;
+			await expect(business.save()).rejects.toThrow('farewell required');
+		});
+
 		it('farewell to throw validationError if includes blacklisted characters', async () => {
 			const text = '<>^';
 			const business = await unsavedBusiness();
 			business.farewell = text;
 			await expect(business.save()).rejects.toThrow(
-				'Business validation failed'
+				'incorrect chatacter in farewell'
 			);
 		});
 

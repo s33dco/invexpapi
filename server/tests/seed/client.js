@@ -5,24 +5,24 @@ const { Client } = require('../../models/client');
 const savedClient = () => {
 	return new Client({
 		userId: mongoose.Types.ObjectId(),
-		cName: faker.company.companyName(),
-		cPhone: '0121 456 7894',
-		cEmail: faker.internet.email(),
-		cAdd1: faker.address.streetAddress(),
-		cAdd2: faker.address.county(),
-		cPcode: 'bn3 8gh'
+		name: faker.company.companyName(),
+		phone: '0121 456 7894',
+		email: faker.internet.email(),
+		add1: faker.address.streetAddress(),
+		add2: faker.address.county(),
+		postcode: 'bn3 8gh'
 	}).save();
 };
 
 const unsavedClient = () => {
 	return new Client({
 		userId: mongoose.Types.ObjectId(),
-		cName: faker.company.companyName(),
-		cPhone: '07777 765432',
-		cEmail: faker.internet.email(),
-		cAdd1: faker.address.streetAddress(),
-		cAdd2: faker.address.county(),
-		cPcode: 'wc1a 7hg'
+		name: faker.company.companyName(),
+		phone: '07777 765432',
+		email: faker.internet.email(),
+		add1: faker.address.streetAddress(),
+		add2: faker.address.county(),
+		postcode: 'wc1a 7hg'
 	});
 };
 

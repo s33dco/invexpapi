@@ -15,81 +15,86 @@ const clientSchema = new mongoose.Schema({
 		ref: 'users',
 		required: true
 	},
-	cName: {
+	name: {
 		type: String,
-		required: true,
+		required: [true, 'Name required'],
 		minlength: 1,
-		maxlength: 255,
+		maxlength: [255, 'Name too long'],
 		validate: {
 			validator: v => {
 				return v.match(businessName);
-			}
+			},
+			message: `Name contains invalid character`
 		},
 		lowercase: true,
 		trim: true
 	},
-	cEmail: {
+	email: {
 		type: String,
-		required: true,
+		required: [true, 'Email address required'],
 		lowercase: true,
-		minlength: 1,
-		maxlength: 255,
+		maxlength: [255, 'Email address too long'],
 		validate: {
 			validator: v => {
 				return v.match(simpleEmail);
-			}
+			},
+			message: `Check email address`
 		},
 		trim: true
 	},
-	cPhone: {
+	phone: {
 		type: String,
-		required: true,
-		minlength: 11,
+		required: [true, 'Phone number required'],
 		validate: {
 			validator: v => {
 				return v.match(phoneNumber);
-			}
+			},
+			message: `Check phone number`
 		},
 		trim: true
 	},
-	cAdd1: {
+	add1: {
 		type: String,
-		required: true,
+		required: [true, 'First line of address required'],
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: 'incorrect chatacter in address'
 		},
 		lowercase: true,
 		trim: true
 	},
-	cAdd2: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(name);
-			}
-		},
-		trim: true
-	},
-	cAdd3: {
+	add2: {
 		type: String,
 		lowercase: true,
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: 'incorrect character in address'
 		},
 		trim: true
 	},
-	cPcode: {
+	add3: {
 		type: String,
-		required: true,
+		lowercase: true,
+		validate: {
+			validator: v => {
+				return v.match(name);
+			},
+			message: 'incorrect character in address'
+		},
+		trim: true
+	},
+	postcode: {
+		type: String,
+		required: [true, 'Postcode required'],
 		validate: {
 			validator: v => {
 				return v.match(postCode);
-			}
+			},
+			message: 'Check postcode'
 		},
 		uppercase: true,
 		trim: true
@@ -102,31 +107,31 @@ const validate = client => {
 			.regex(objectId)
 			.required()
 			.error(() => 'Invalid user id'),
-		cName: Joi.string()
+		name: Joi.string()
 			.regex(businessName)
 			.min(1)
 			.max(255)
 			.required()
 			.error(() => 'Need Client name for Invoice'),
-		cEmail: Joi.string()
+		email: Joi.string()
 			.email({ minDomainSegments: 2 })
 			.required()
 			.error(() => 'email must be a valid address'),
-		cPhone: Joi.string()
+		phone: Joi.string()
 			.required()
 			.regex(phoneNumber)
 			.error(() => 'Invalid phone number - just digits'),
-		cAdd1: Joi.string()
+		add1: Joi.string()
 			.required()
 			.regex(name)
 			.error(() => 'first line of address required, just word characters.'),
-		cAdd2: Joi.string()
+		add2: Joi.string()
 			.regex(name)
 			.error(() => 'just word characters.'),
-		cAdd3: Joi.string()
+		add3: Joi.string()
 			.regex(name)
 			.error(() => 'just word characters.'),
-		cPcode: Joi.string()
+		postcode: Joi.string()
 			.required()
 			.regex(postCode)
 			.error(() => 'enter a valid postcode')

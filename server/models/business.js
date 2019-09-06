@@ -22,94 +22,98 @@ const businessSchema = new mongoose.Schema({
 		type: Boolean,
 		required: true
 	},
-	bName: {
+	name: {
 		type: String,
-		required: true,
-		minlength: 1,
-		maxlength: 255,
+		required: [true, 'Business Name required'],
+		maxlength: [255, 'Business Name too long'],
 		validate: {
 			validator: v => {
 				return v.match(businessName);
-			}
+			},
+			message: `contains blacklisted character`
 		},
 		lowercase: true,
 		trim: true
 	},
-	bContact: {
+	contact: {
 		type: String,
-		required: true,
-		minlength: 1,
-		maxlength: 255,
+		required: [true, 'Contact Name required'],
+		maxlength: [255, 'Contact Name too long'],
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: `contains blacklisted character`
 		},
 		lowercase: true,
 		trim: true
 	},
-	bEmail: {
+	email: {
 		type: String,
-		required: true,
+		required: [true, 'Email address required'],
 		lowercase: true,
-		minlength: 1,
-		maxlength: 255,
+		maxlength: [255, 'Email address too long'],
 		validate: {
 			validator: v => {
 				return v.match(simpleEmail);
-			}
+			},
+			message: `Check email address`
 		},
 		trim: true
 	},
-	bPhone: {
+	phone: {
 		type: String,
-		required: true,
-		minlength: 11,
+		required: [true, 'Phone number required'],
 		validate: {
 			validator: v => {
 				return v.match(phoneNumber);
-			}
+			},
+			message: `check phone number`
 		},
 		trim: true
 	},
-	bAdd1: {
+	add1: {
 		type: String,
-		required: true,
+		required: [true, 'First line of address required'],
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: 'incorrect chatacter in address'
 		},
 		lowercase: true,
 		trim: true
 	},
-	bAdd2: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(name);
-			}
-		},
-		trim: true
-	},
-	bAdd3: {
+	add2: {
 		type: String,
 		lowercase: true,
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: 'incorrect chatacter in address'
 		},
 		trim: true
 	},
-	bPcode: {
+	add3: {
 		type: String,
-		required: true,
+		lowercase: true,
+		validate: {
+			validator: v => {
+				return v.match(name);
+			},
+			message: 'incorrect chatacter in address'
+		},
+		trim: true
+	},
+	postcode: {
+		type: String,
+		required: [true, 'Postcode required'],
 		validate: {
 			validator: v => {
 				return v.match(postCode);
-			}
+			},
+			message: 'check postcode'
 		},
 		uppercase: true,
 		trim: true
@@ -117,63 +121,69 @@ const businessSchema = new mongoose.Schema({
 	bankName: {
 		type: String,
 		lowercase: true,
-		required: true,
+		required: [true, 'Bank name required'],
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: 'incorrect chatacter in Bank name'
 		},
 		trim: true
 	},
 	sortCode: {
 		type: String,
-		required: true,
+		required: [true, 'Sort code required'],
 		validate: {
 			validator: v => {
 				return v.match(sortCode);
-			}
+			},
+			message: 'check sort code'
 		},
 		trim: true
 	},
 	accountNo: {
 		type: String,
-		required: true,
+		required: [true, 'Account number required'],
 		validate: {
 			validator: v => {
 				return v.match(accountNo);
-			}
+			},
+			message: 'check account nummber'
 		},
 		trim: true
 	},
 	utr: {
 		type: String,
-		required: true,
+		required: [true, 'UTR required'],
 		validate: {
 			validator: v => {
 				return v.match(utr);
-			}
+			},
+			message: 'check UTR'
 		},
 		trim: true
 	},
 	terms: {
 		type: String,
-		required: true,
+		required: [true, 'payment terms required'],
 		minlength: 1,
 		lowercase: true,
 		validate: {
 			validator: v => {
 				return v.match(businessName);
-			}
+			},
+			message: 'incorrect chatacter in terms'
 		},
 		trim: true
 	},
 	farewell: {
 		type: String,
-		required: true,
+		required: [true, 'farewell required'],
 		validate: {
 			validator: v => {
 				return v.match(businessName);
-			}
+			},
+			message: 'incorrect chatacter in farewell'
 		},
 		lowercase: true,
 		trim: true
@@ -189,37 +199,37 @@ const validate = business => {
 		useMileage: Joi.boolean()
 			.required()
 			.error(() => 'Yes or no for simplified mileage'),
-		bName: Joi.string()
+		name: Joi.string()
 			.regex(businessName)
 			.min(1)
 			.max(255)
 			.required()
 			.error(() => 'Need Business name for Invoice'),
-		bContact: Joi.string()
+		contact: Joi.string()
 			.regex(name)
 			.min(1)
 			.max(255)
 			.required()
 			.error(() => 'Need a contact name for Invoice'),
-		bEmail: Joi.string()
+		email: Joi.string()
 			.email({ minDomainSegments: 2 })
 			.required()
 			.error(() => 'email must be a valid address'),
-		bPhone: Joi.string()
+		phone: Joi.string()
 			.required()
 			.regex(phoneNumber)
 			.error(() => 'Invalid phone number - just digits'),
-		bAdd1: Joi.string()
+		add1: Joi.string()
 			.required()
 			.regex(name)
 			.error(() => 'first line of address required, just word characters.'),
-		bAdd2: Joi.string()
+		add2: Joi.string()
 			.regex(name)
 			.error(() => 'just word characters.'),
-		bAdd3: Joi.string()
+		add3: Joi.string()
 			.regex(name)
 			.error(() => 'just word characters.'),
-		bPcode: Joi.string()
+		postcode: Joi.string()
 			.required()
 			.regex(postCode)
 			.error(() => 'enter a valid postcode'),

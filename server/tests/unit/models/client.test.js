@@ -39,165 +39,175 @@ describe('Client', () => {
 		await expect(client.save()).rejects.toThrow('Client validation failed');
 	});
 
-	it('cName throws validationError if null', async () => {
+	it('name throws validationError if null', async () => {
 		const client = await unsavedClient();
-		client.cName = '';
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.name = '';
+		await expect(client.save()).rejects.toThrow('Name required');
 	});
 
-	it('cName throws validationError if > 255', async () => {
+	it('name throws validationError if > 255', async () => {
 		const client = await unsavedClient();
 		const name = new Array(27).join('longName55');
-		client.cName = name;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.name = name;
+		await expect(client.save()).rejects.toThrow('Name too long');
 	});
 
-	it('cName throws validationError if includes non standard characters', async () => {
+	it('name throws validationError if includes non standard characters', async () => {
 		const client = await unsavedClient();
 		const name = '<Client>!@£$%^>';
-		client.cName = name;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.name = name;
+		await expect(client.save()).rejects.toThrow(
+			'Name contains invalid character'
+		);
 	});
 
-	it('cName saved as lowercase', async () => {
+	it('name saved as lowercase', async () => {
 		const client = await unsavedClient();
-		client.cName = 'LOWERCASE';
+		client.name = 'LOWERCASE';
 		await client.save();
-		expect(client.cName).toBe('lowercase');
+		expect(client.name).toBe('lowercase');
 	});
 
 	// cEmail
-	it('cEmail throws validationError if null', async () => {
+	it('email throws validationError if null', async () => {
 		const client = await unsavedClient();
-		client.cEmail = '';
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.email = '';
+		await expect(client.save()).rejects.toThrow('Email address required');
 	});
 
-	it('cEmail throws validationError if > 255', async () => {
+	it('email throws validationError if > 255', async () => {
 		const client = await unsavedClient();
 		const name = new Array(27).join('longName55');
-		client.cEmail = name.concat('@email.com');
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.email = name.concat('@email.com');
+		await expect(client.save()).rejects.toThrow('Email address too long');
 	});
 
-	it('cEmail throws validationError if not an valid format', async () => {
+	it('email throws validationError if not an valid format', async () => {
 		const client = await unsavedClient();
 		const name = '<Client>!@£$%^>';
-		client.cEmail = name;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.email = name;
+		await expect(client.save()).rejects.toThrow('Check email address');
 	});
 
-	it('cEmail saved as lowercase', async () => {
+	it('email saved as lowercase', async () => {
 		const client = await unsavedClient();
-		client.cEmail = 'UPPERCASE@EMAIL.COM';
+		client.email = 'UPPERCASE@EMAIL.COM';
 		await client.save();
-		expect(client.cEmail).toBe('uppercase@email.com');
+		expect(client.email).toBe('uppercase@email.com');
 	});
 
 	// cPhone
 
-	it('cPhone to throw validationError if empty', async () => {
+	it('phone to throw validationError if empty', async () => {
 		const phone = '';
 		const client = await unsavedClient();
-		client.cPhone = phone;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.phone = phone;
+		await expect(client.save()).rejects.toThrow('Phone number required');
 	});
 
-	it('cPhone to throw validationError if too short', async () => {
+	it('phone to throw validationError if too short', async () => {
 		const phone = '123 678';
 		const client = await unsavedClient();
-		client.cPhone = phone;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.phone = phone;
+		await expect(client.save()).rejects.toThrow('Check phone number');
 	});
 
-	it('cPhone to throw validationError if too long', async () => {
+	it('phone to throw validationError if too long', async () => {
 		const phone = '123 678 890 898098080';
 		const client = await unsavedClient();
-		client.cPhone = phone;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.phone = phone;
+		await expect(client.save()).rejects.toThrow('Check phone number');
 	});
 
-	it('cPhone to throw validationError if any non digits', async () => {
+	it('phone to throw validationError if any non digits', async () => {
 		const phone = '(01278) 788788';
 		const client = await unsavedClient();
-		client.cPhone = phone;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.phone = phone;
+		await expect(client.save()).rejects.toThrow('Check phone number');
 	});
 
 	// cAdd1
-	it('cAdd1 to throw validationError if empty', async () => {
+	it('add1 to throw validationError if empty', async () => {
 		const add1 = '';
 		const client = await unsavedClient();
-		client.cAdd1 = add1;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.add1 = add1;
+		await expect(client.save()).rejects.toThrow(
+			'First line of address required'
+		);
 	});
 
-	it('cAdd1 to save in lowercase', async () => {
+	it('add1 to save in lowercase', async () => {
 		const add1 = '13 TOP STREET';
 		const client = await unsavedClient();
-		client.cAdd1 = add1;
+		client.add1 = add1;
 		await client.save();
-		expect(client.cAdd1).toBe('13 top street');
+		expect(client.add1).toBe('13 top street');
 	});
 
-	it('cAdd1 to throw validationError if include non standard characters', async () => {
+	it('add1 to throw validationError if include non standard characters', async () => {
 		const add1 = '<big>!ddd****';
 		const client = await unsavedClient();
-		client.cAdd1 = add1;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.add1 = add1;
+		await expect(client.save()).rejects.toThrow(
+			'incorrect chatacter in address'
+		);
 	});
 
 	// cAdd2
-	it('cAdd2 to throw validationError if include non standard characters', async () => {
+	it('add2 to throw validationError if include non standard characters', async () => {
 		const add1 = '<big>!ddd****';
 		const client = await unsavedClient();
-		client.cAdd2 = add1;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.add2 = add1;
+		await expect(client.save()).rejects.toThrow(
+			'incorrect character in address'
+		);
 	});
 
-	it('cAdd2 to save in lowercase', async () => {
+	it('add2 to save in lowercase', async () => {
 		const add1 = '13 TOP STREET';
 		const client = await unsavedClient();
-		client.cAdd2 = add1;
+		client.add2 = add1;
 		await client.save();
-		expect(client.cAdd2).toBe('13 top street');
+		expect(client.add2).toBe('13 top street');
 	});
 
 	// cAdd3
-	it('cAdd3 to throw validationError if include non standard characters', async () => {
+	it('add3 to throw validationError if include non standard characters', async () => {
 		const add1 = '<big>!ddd****';
 		const client = await unsavedClient();
-		client.cAdd3 = add1;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.add3 = add1;
+		await expect(client.save()).rejects.toThrow(
+			'incorrect character in address'
+		);
 	});
 
-	it('cAdd3 to save in lowercase', async () => {
+	it('add3 to save in lowercase', async () => {
 		const add1 = '13 TOP STREET';
 		const client = await unsavedClient();
-		client.cAdd3 = add1;
+		client.add3 = add1;
 		await client.save();
-		expect(client.cAdd3).toBe('13 top street');
+		expect(client.add3).toBe('13 top street');
 	});
 	// cPcode
-	it('bPcode to throw validationError if empty', async () => {
+	it('postcode to throw validationError if empty', async () => {
 		const pcode = '';
 		const client = await unsavedClient();
-		client.cPcode = pcode;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.postcode = pcode;
+		await expect(client.save()).rejects.toThrow('Postcode required');
 	});
 
-	it('bPcode to throw validationError if wrong format', async () => {
+	it('postcode to throw validationError if wrong format', async () => {
 		const code = 'thwe1 229292';
 		const client = await unsavedClient();
-		client.cPcode = code;
-		await expect(client.save()).rejects.toThrow('Client validation failed');
+		client.postcode = code;
+		await expect(client.save()).rejects.toThrow('Check postcode');
 	});
 
-	it('bPcode saved as uppercase', async () => {
+	it('postcode saved as uppercase', async () => {
 		const client = await unsavedClient();
 		const code = 'wc1a 7yu';
-		client.cPcode = code;
+		client.postcode = code;
 		await client.save();
-		expect(client.cPcode).toBe('WC1A 7YU');
+		expect(client.postcode).toBe('WC1A 7YU');
 	});
 });

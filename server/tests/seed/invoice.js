@@ -12,7 +12,9 @@ const savedOwedInvoice = async () => {
 	return new Invoice({
 		userId: user._id,
 		invNo: 1,
-		invDate: moment().format(),
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
 		emailGreeting: 'Dear Frank',
 		message: 'look forward to next time',
 		paid: false,
@@ -20,31 +22,32 @@ const savedOwedInvoice = async () => {
 			{
 				date: moment()
 					.subtract(3, 'days')
-					.format(),
+					.startOf('day')
+					.toISOString(),
 				desc: 'built a shed',
 				fee: 123.45
 			}
 		],
 		client: {
 			client_id: client._id,
-			cName: client.cName,
-			cPhone: client.cPhone,
-			cEmail: client.cEmail,
-			cAdd1: client.cAdd1,
-			cAdd2: client.cAdd2,
-			cAdd3: client.cAdd3,
-			cPcode: client.cPcode
+			name: client.name,
+			phone: client.phone,
+			email: client.email,
+			add1: client.add1,
+			add2: client.add2,
+			add3: client.add3,
+			postcode: client.postcode
 		},
 		business: {
 			business_id: business._id,
-			bName: business.bName,
-			bContact: business.bContact,
-			bEmail: business.bEmail,
-			bPhone: business.bPhone,
-			bAdd1: business.bAdd1,
-			bAdd2: business.bAdd2,
-			bAdd3: business.bAdd3,
-			bPcode: business.bPcode,
+			name: business.name,
+			contact: business.contact,
+			email: business.email,
+			phone: business.phone,
+			add1: business.add1,
+			add2: business.add2,
+			add3: business.add3,
+			postcode: business.postcode,
 			bankName: business.bankName,
 			sortCode: business.sortCode,
 			accountNo: business.accountNo,
@@ -55,4 +58,115 @@ const savedOwedInvoice = async () => {
 	}).save();
 };
 
-module.exports = { savedOwedInvoice };
+const unsavedOwedInvoice = async () => {
+	const user = await savedUser();
+	const business = await savedBusiness();
+	const client = await savedClient();
+
+	return new Invoice({
+		userId: user._id,
+		invNo: 2,
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
+		emailGreeting: 'Dear Frank',
+		message: 'look forward to next time',
+		paid: false,
+		items: [
+			{
+				date: moment()
+					.subtract(3, 'days')
+					.startOf('day')
+					.toISOString(),
+				desc: 'built a shed',
+				fee: 123.45
+			}
+		],
+		client: {
+			client_id: client._id,
+			name: client.name,
+			phone: client.phone,
+			email: client.email,
+			add1: client.add1,
+			add2: client.add2,
+			add3: client.add3,
+			postcode: client.postcode
+		},
+		business: {
+			business_id: business._id,
+			name: business.name,
+			contact: business.contact,
+			email: business.email,
+			phone: business.phone,
+			add1: business.add1,
+			add2: business.add2,
+			add3: business.add3,
+			postcode: business.postcode,
+			bankName: business.bankName,
+			sortCode: business.sortCode,
+			accountNo: business.accountNo,
+			utr: business.utr,
+			terms: business.terms,
+			farewell: business.farewell
+		}
+	});
+};
+
+const savedPaidInvoice = async () => {
+	const user = await savedUser();
+	const business = await savedBusiness();
+	const client = await savedClient();
+
+	return new Invoice({
+		userId: user._id,
+		invNo: 3,
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
+		emailGreeting: 'Dear Frank',
+		message: 'look forward to next time',
+		paid: true,
+		datePaid: moment()
+			.startOf('day')
+			.toISOString(),
+		items: [
+			{
+				date: moment()
+					.subtract(3, 'days')
+					.startOf('day')
+					.toISOString(),
+				desc: 'built a shed',
+				fee: 123.45
+			}
+		],
+		client: {
+			client_id: client._id,
+			name: client.name,
+			phone: client.phone,
+			email: client.email,
+			add1: client.add1,
+			add2: client.add2,
+			add3: client.add3,
+			postcode: client.postcode
+		},
+		business: {
+			business_id: business._id,
+			name: business.name,
+			contact: business.contact,
+			email: business.email,
+			phone: business.phone,
+			add1: business.add1,
+			add2: business.add2,
+			add3: business.add3,
+			postcode: business.postcode,
+			bankName: business.bankName,
+			sortCode: business.sortCode,
+			accountNo: business.accountNo,
+			utr: business.utr,
+			terms: business.terms,
+			farewell: business.farewell
+		}
+	}).save();
+};
+
+module.exports = { savedOwedInvoice, unsavedOwedInvoice, savedPaidInvoice };

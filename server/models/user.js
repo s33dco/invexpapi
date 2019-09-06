@@ -5,25 +5,27 @@ const { name, password, simpleEmail } = require('../../config/regexps');
 const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: true,
+		required: [true, 'Name required'],
 		minlength: 1,
-		maxlength: 32,
+		maxlength: [32, 'Name too long'],
 		validate: {
 			validator: v => {
 				return v.match(name);
-			}
+			},
+			message: `Name contains blacklisted character`
 		},
 		trim: true
 	},
 	email: {
 		type: String,
-		required: true,
+		required: [true, 'Email address required'],
 		minlength: 1,
-		maxlength: 255,
+		maxlength: [255, 'Email address too long'],
 		validate: {
 			validator: v => {
 				return v.match(simpleEmail);
-			}
+			},
+			message: `Check email address`
 		},
 		lowercase: true,
 		trim: true
@@ -37,7 +39,6 @@ const userSchema = new mongoose.Schema({
 const validate = user => {
 	const schema = {
 		name: Joi.string()
-			.min(1)
 			.max(32)
 			.regex(name)
 			.required()
