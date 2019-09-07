@@ -392,6 +392,24 @@ const InvoiceSchema = new mongoose.Schema({
 	}
 });
 
+InvoiceSchema.path('items').validate(v => {
+	if (v.length < 1) {
+		throw new Error('atleast one invoice item required');
+	}
+});
+
+// InvoiceSchema.path('business').validate(v => {
+// 	if (Object.keys(v).length === 0) {
+// 		throw new Error('business details required');
+// 	}
+// });
+
+// InvoiceSchema.path('client').validate(v => {
+// 	if (Object.keys(v).length === 0) {
+// 		throw new Error('business details required');
+// 	}
+// });
+
 // const validate = invoice => {
 // 	const schema = {
 

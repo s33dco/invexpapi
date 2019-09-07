@@ -112,6 +112,127 @@ const unsavedOwedInvoice = async () => {
 	});
 };
 
+const noItemInvoice = async () => {
+	const user = await savedUser();
+	const business = await savedBusiness();
+	const client = await savedClient();
+
+	return new Invoice({
+		userId: user._id,
+		invNo: 2,
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
+		emailGreeting: 'Dear Frank',
+		message: 'look forward to next time',
+		paid: false,
+		client: {
+			client_id: client._id,
+			name: client.name,
+			phone: client.phone,
+			email: client.email,
+			add1: client.add1,
+			add2: client.add2,
+			add3: client.add3,
+			postcode: client.postcode
+		},
+		business: {
+			business_id: business._id,
+			name: business.name,
+			contact: business.contact,
+			email: business.email,
+			phone: business.phone,
+			add1: business.add1,
+			add2: business.add2,
+			add3: business.add3,
+			postcode: business.postcode,
+			bankName: business.bankName,
+			sortCode: business.sortCode,
+			accountNo: business.accountNo,
+			utr: business.utr,
+			terms: business.terms,
+			farewell: business.farewell
+		}
+	});
+};
+
+const noClientInvoice = async () => {
+	const user = await savedUser();
+	const business = await savedBusiness();
+	return new Invoice({
+		userId: user._id,
+		invNo: 2,
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
+		emailGreeting: 'Dear Frank',
+		message: 'look forward to next time',
+		paid: false,
+		items: [
+			{
+				date: moment()
+					.subtract(3, 'days')
+					.startOf('day')
+					.toISOString(),
+				desc: 'built a shed',
+				fee: 123.45
+			}
+		],
+		business: {
+			business_id: business._id,
+			name: business.name,
+			contact: business.contact,
+			email: business.email,
+			phone: business.phone,
+			add1: business.add1,
+			add2: business.add2,
+			add3: business.add3,
+			postcode: business.postcode,
+			bankName: business.bankName,
+			sortCode: business.sortCode,
+			accountNo: business.accountNo,
+			utr: business.utr,
+			terms: business.terms,
+			farewell: business.farewell
+		}
+	});
+};
+
+const noBusinessInvoice = async () => {
+	const user = await savedUser();
+	const client = await savedClient();
+
+	return new Invoice({
+		userId: user._id,
+		invNo: 2,
+		invDate: moment()
+			.startOf('day')
+			.toISOString(),
+		emailGreeting: 'Dear Frank',
+		message: 'look forward to next time',
+		paid: false,
+		items: [
+			{
+				date: moment()
+					.subtract(3, 'days')
+					.startOf('day')
+					.toISOString(),
+				desc: 'built a shed',
+				fee: 123.45
+			}
+		],
+		client: {
+			client_id: client._id,
+			name: client.name,
+			phone: client.phone,
+			email: client.email,
+			add1: client.add1,
+			add2: client.add2,
+			add3: client.add3,
+			postcode: client.postcode
+		}
+	});
+};
 const savedPaidInvoice = async () => {
 	const user = await savedUser();
 	const business = await savedBusiness();
@@ -169,4 +290,11 @@ const savedPaidInvoice = async () => {
 	}).save();
 };
 
-module.exports = { savedOwedInvoice, unsavedOwedInvoice, savedPaidInvoice };
+module.exports = {
+	savedOwedInvoice,
+	unsavedOwedInvoice,
+	savedPaidInvoice,
+	noItemInvoice,
+	noBusinessInvoice,
+	noClientInvoice
+};

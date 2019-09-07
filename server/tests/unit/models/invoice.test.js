@@ -6,7 +6,13 @@ const { Invoice } = require('../../../models/invoice');
 const { Business } = require('../../../models/business');
 const { User } = require('../../../models/user');
 const { Client } = require('../../../models/client');
-const { savedOwedInvoice, unsavedOwedInvoice } = require('../../seed/invoice');
+const {
+	savedOwedInvoice,
+	unsavedOwedInvoice,
+	noItemInvoice,
+	noBusinessInvoice,
+	noClientInvoice
+} = require('../../seed/invoice');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Invoice', () => {
@@ -33,6 +39,13 @@ describe('Invoice', () => {
 		await savedOwedInvoice();
 		const invoices = await Invoice.find().countDocuments();
 		expect(invoices).toBe(1);
+	});
+
+	it('requires atleast one item to save invoice', async () => {
+		const invoice = await noItemInvoice();
+		await expect(invoice.save()).rejects.toThrow(
+			'atleast one invoice item required'
+		);
 	});
 
 	it('userId throws validationError if null', async () => {
