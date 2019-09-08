@@ -9,9 +9,7 @@ const { Client } = require('../../../models/client');
 const {
 	savedOwedInvoice,
 	unsavedOwedInvoice,
-	noItemInvoice,
-	noBusinessInvoice,
-	noClientInvoice
+	noItemInvoice
 } = require('../../seed/invoice');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
@@ -44,7 +42,7 @@ describe('Invoice', () => {
 	it('requires atleast one item to save invoice', async () => {
 		const invoice = await noItemInvoice();
 		await expect(invoice.save()).rejects.toThrow(
-			'atleast one invoice item required'
+			'Atleast one invoice item required'
 		);
 	});
 
@@ -66,19 +64,21 @@ describe('Invoice', () => {
 		await expect(invoice.save()).rejects.toThrow('Invoice number is required');
 	});
 
-	it.skip('invNo throws validationError if invNo already used', async () => {
+	it('invNo throws validationError if invNo already used', async () => {
 		const invoice = await unsavedOwedInvoice();
 		invoice.invNo = 23;
 		await invoice.save();
-		const invoices = await Invoice.find().countDocuments();
+		let invoices = await Invoice.find().countDocuments();
 		expect(invoices).toBe(1);
 		const invoice2 = await unsavedOwedInvoice();
 		invoice2.invNo = 23;
-		await invoice2.save();
 		await expect(invoice2.save()).rejects.toThrow(
-			'Invoice number already in used.'
+			'Invoice number already used'
 		);
+		invoices = await Invoice.find().countDocuments();
+		expect(invoices).toBe(1);
 	});
+
 	it('invNo accepts different invNos', async () => {
 		const invoice = await unsavedOwedInvoice();
 		invoice.invNo = 23;

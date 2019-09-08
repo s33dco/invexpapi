@@ -5,9 +5,9 @@ module.exports = token => {
 	const parts = fullToken.split('.');
 	const signature = parts[2];
 	const headPay = parts[0].concat('.', parts[1]);
-	logger.info(
-		`token generated : ${fullToken},\npayload: ${headPay},\nsignature: ${signature}`
-	);
+	// logger.info(
+	// 	`token generated : ${fullToken},\npayload: ${headPay},\nsignature: ${signature}`
+	// );
 
 	return { fullToken, signature, headPay };
 };

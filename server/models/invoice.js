@@ -18,19 +18,16 @@ const InvoiceSchema = new mongoose.Schema({
 		ref: 'users',
 		required: true
 	},
-	// cannot over duplicate invoice number
-	// async validator to query invoice numbers in db
 	invNo: {
 		type: Number,
-		required: [true, 'Invoice number is required'],
-		async: true,
-		validate: {
-			validator: async v => {
-				const dup = await Invoice.findOne({ invNo: v });
-				if (dup) return false;
-			},
-			message: 'Invoice number already in used.'
-		}
+		required: [true, 'Invoice number is required']
+		// validate: {
+		// 	validator: async v => {
+		// 		const dupe = await Invoice.findOne({ invNo: v });
+		// 		if (dupe) return false;
+		// 	},
+		// 	message: 'Invoice number already in used.'
+		// }
 	},
 	invDate: {
 		type: Date,
@@ -87,6 +84,7 @@ const InvoiceSchema = new mongoose.Schema({
 			'Date should be today or earlier'
 		]
 	},
+
 	items: [
 		{
 			date: {
@@ -126,6 +124,7 @@ const InvoiceSchema = new mongoose.Schema({
 			}
 		}
 	],
+
 	client: {
 		client_id: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -217,6 +216,7 @@ const InvoiceSchema = new mongoose.Schema({
 			trim: true
 		}
 	},
+
 	business: {
 		business_id: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -392,23 +392,20 @@ const InvoiceSchema = new mongoose.Schema({
 	}
 });
 
+// const Invoice = mongoose.model('Invoice', InvoiceSchema);
+
 InvoiceSchema.path('items').validate(v => {
 	if (v.length < 1) {
-		throw new Error('atleast one invoice item required');
+		throw new Error('Atleast one invoice item required');
 	}
 });
 
-// InvoiceSchema.path('business').validate(v => {
-// 	if (Object.keys(v).length === 0) {
-// 		throw new Error('business details required');
-// 	}
-// });
-
-// InvoiceSchema.path('client').validate(v => {
-// 	if (Object.keys(v).length === 0) {
-// 		throw new Error('business details required');
-// 	}
-// });
+InvoiceSchema.path('invNo').validate(async v => {
+	const dupe = await Invoice.findOne({ invNo: v });
+	if (dupe) {
+		throw new Error('Invoice number already used');
+	}
+});
 
 // const validate = invoice => {
 // 	const schema = {
@@ -416,14 +413,6 @@ InvoiceSchema.path('items').validate(v => {
 // 	}
 // 	return Joi.validate(business,schema);
 // }
-
-InvoiceSchema.statics.listInvoiceNumbers = async function() {
-	const result = await this.aggregate([
-		{ $project: { _id: 1, invNo: 1 } },
-		{ $sort: { invNo: 1 } }
-	]);
-	return result.map(r => r.invNo);
-};
 
 const Invoice = mongoose.model('Invoice', InvoiceSchema);
 
