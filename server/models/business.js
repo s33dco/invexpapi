@@ -190,9 +190,13 @@ const businessSchema = new mongoose.Schema({
 	}
 });
 
+businessSchema.statics.findUsersBusiness = function(userId) {
+	return this.findOne({ userId });
+};
+
 const validate = business => {
 	const schema = {
-		userID: Joi.string()
+		userId: Joi.string()
 			.regex(objectId)
 			.required()
 			.error(() => 'Invalid user id'),
@@ -204,51 +208,53 @@ const validate = business => {
 			.min(1)
 			.max(255)
 			.required()
-			.error(() => 'Need Business name for Invoice'),
+			.error(() => 'Valid Business name required'),
 		contact: Joi.string()
 			.regex(name)
 			.min(1)
 			.max(255)
 			.required()
-			.error(() => 'Need a contact name for Invoice'),
+			.error(() => 'Valid contact name required'),
 		email: Joi.string()
 			.email({ minDomainSegments: 2 })
 			.required()
-			.error(() => 'email must be a valid address'),
+			.error(() => 'Valid email address required'),
 		phone: Joi.string()
 			.required()
 			.regex(phoneNumber)
-			.error(() => 'Invalid phone number - just digits'),
+			.error(() => 'Valid phone number required - just digits'),
 		add1: Joi.string()
 			.required()
 			.regex(name)
-			.error(() => 'first line of address required, just word characters.'),
+			.error(
+				() => 'Valid first line of address required, just word characters'
+			),
 		add2: Joi.string()
 			.regex(name)
-			.error(() => 'just word characters.'),
+			.error(() => 'Check second line of address - just word characters'),
 		add3: Joi.string()
 			.regex(name)
-			.error(() => 'just word characters.'),
+			.error(() => 'Check third line of address - just word characters'),
 		postcode: Joi.string()
 			.required()
 			.regex(postCode)
-			.error(() => 'enter a valid postcode'),
+			.error(() => 'Valid postcode required'),
 		bankName: Joi.string()
 			.required()
 			.regex(name)
-			.error(() => 'Enter the name of your bank'),
+			.error(() => 'Valid bank name required'),
 		sortCode: Joi.string()
 			.required()
 			.regex(sortCode)
-			.error(() => 'sort code format XX-XX-XX only'),
+			.error(() => 'Valid sort code required (XX-XX-XX)'),
 		accountNo: Joi.string()
 			.required()
 			.regex(accountNo)
-			.error(() => 'account number 8 digits only'),
+			.error(() => 'Valid account number required - 8 digits only'),
 		utr: Joi.string()
 			.regex(utr)
 			.required()
-			.error(() => 'tax reference digits only'),
+			.error(() => 'Valid tax reference required'),
 		terms: Joi.string()
 			.required()
 			.regex(businessName)
@@ -256,7 +262,7 @@ const validate = business => {
 		farewell: Joi.string()
 			.required()
 			.regex(businessName)
-			.error(() => 'just words')
+			.error(() => 'enter your farewell - just regular characters')
 	};
 	return Joi.validate(business, schema);
 };

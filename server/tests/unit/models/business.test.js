@@ -3,6 +3,7 @@
  */
 const { Business } = require('../../../models/business');
 const { savedBusiness, unsavedBusiness } = require('../../seed/business');
+const { savedUser } = require('../../seed/user');
 const { connectDB, disconnectDB } = require('../../../startup/db');
 
 describe('Business', () => {
@@ -396,6 +397,24 @@ describe('Business', () => {
 			const business = await unsavedBusiness();
 			business.farewell = farewell;
 			expect(business.farewell).toBe('yours sincerely');
+		});
+	});
+
+	describe('Business.findUsersBusiness(id)', () => {
+		it('retrieves the correct record from db', async () => {
+			await savedBusiness();
+			const b2 = await unsavedBusiness();
+			const user = await savedUser();
+			const id = user._id;
+			b2.userId = id;
+			await b2.save();
+			const businesses = await Business.find().countDocuments();
+			expect(businesses).toBe(3);
+			const usersBusiness = await Business.findUsersBusiness(id);
+			expect(usersBusiness._id).toEqual(b2._id);
+			expect(usersBusiness.userId).toEqual(b2.userId);
+			expect(usersBusiness.email).toEqual(b2.email);
+			expect(usersBusiness.accountNo).toEqual(b2.accountNo);
 		});
 	});
 });
