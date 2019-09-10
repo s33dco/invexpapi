@@ -101,9 +101,13 @@ const clientSchema = new mongoose.Schema({
 	}
 });
 
+clientSchema.statics.findUsersClients = function(userId) {
+	return this.find({ userId });
+};
+
 const validate = client => {
 	const schema = {
-		userID: Joi.string()
+		userId: Joi.string()
 			.regex(objectId)
 			.required()
 			.error(() => 'Invalid user id'),
