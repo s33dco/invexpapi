@@ -187,8 +187,8 @@ describe('api/auth', () => {
 				'signature=p8TiYcfn9rDka_aFakeSignaturelWjtbFqIn3w0JeLtwc; ';
 			const wrongCookies = [`payload=${payload}`, fakeSignature];
 			const res = await getUser(wrongCookies);
-			expect(res.status).toBe(401);
-			expect(res.body).toHaveProperty('msg', 'token is not valid');
+			expect(res.status).toBe(403);
+			expect(res.body).toHaveProperty('msg', 'Authorisation Failed');
 		});
 
 		it('should send Auth denied json if no jwt cookies', async () => {
@@ -198,7 +198,7 @@ describe('api/auth', () => {
 
 			const res = await noTokenInReq();
 			expect(res.status).toBe(401);
-			expect(res.body).toHaveProperty('msg', 'Authorization denied');
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 	});
 });

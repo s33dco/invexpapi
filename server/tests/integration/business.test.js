@@ -2,9 +2,10 @@
  * @jest-environment node
  */
 const request = require('supertest');
+const mongoose = require('mongoose');
 const { Business } = require('../../models/business');
-const { savedUser } = require('../seed/user');
 const { User } = require('../../models/user');
+const { savedUser } = require('../seed/user');
 const app = require('../../app');
 const { connectDB, disconnectDB } = require('../../startup/db');
 
@@ -13,7 +14,6 @@ const registerUserDetails = {
 	email: 'code@s33d.co',
 	password: '1@P!a$£$word'
 };
-
 const businessDetails = {
 	useMileage: true,
 	name: 's33dco',
@@ -30,7 +30,6 @@ const businessDetails = {
 	terms: 'paid upfront',
 	farewell: 'with thanks'
 };
-
 const returnedBusinessDetails = {
 	useMileage: true,
 	name: 's33dco',
@@ -47,9 +46,41 @@ const returnedBusinessDetails = {
 	terms: 'paid upfront'.toLowerCase(),
 	farewell: 'with thanks'.toLowerCase()
 };
-
+const returnedUpdatedDetails = {
+	useMileage: true,
+	name: 's33dco',
+	contact: 'Tarquin'.toLowerCase(),
+	email: 'TARQUIN@s33d.co'.toLowerCase(),
+	phone: '07968999999',
+	add1: 's33d Square'.toLowerCase(),
+	add2: 'Brighton'.toLowerCase(),
+	postcode: 'bn1 1aa'.toUpperCase(),
+	bankName: 'Massive BANK LTD'.toLowerCase(),
+	sortCode: '23-23-23',
+	accountNo: '55555555',
+	utr: '1234567890',
+	terms: 'CASH ONLY'.toLowerCase(),
+	farewell: 'TA RA'.toLowerCase()
+};
+const updateDetails = {
+	useMileage: true,
+	name: 's33dco',
+	contact: 'Tarquin',
+	email: 'TARQUIN@s33d.co',
+	phone: '07968999999',
+	add1: 's33d Square',
+	add2: 'Brighton',
+	postcode: 'bn1 1aa',
+	bankName: 'Massive BANK LTD',
+	sortCode: '23-23-23',
+	accountNo: '55555555',
+	utr: '1234567890',
+	terms: 'cash only',
+	farewell: 'ta ra'
+};
 let cookies;
 let userId;
+let amendedDetails;
 
 describe('business endpoints', () => {
 	beforeAll(async () => {
@@ -64,6 +95,7 @@ describe('business endpoints', () => {
 		};
 		const res = await registerUser();
 		cookies = res.headers['set-cookie'];
+
 		const getUserId = () => {
 			return request(app)
 				.get('/api/auth')
@@ -82,12 +114,12 @@ describe('business endpoints', () => {
 		await disconnectDB();
 	});
 
-	describe('GET /business', () => {
+	describe('GET / business', () => {
 		const makeBusiness = () => {
 			return request(app)
 				.post('/api/business')
 				.set('Cookie', cookies)
-				.send({ userId, ...businessDetails });
+				.send(businessDetails);
 		};
 
 		it('returns the users business record', async () => {
@@ -96,7 +128,7 @@ describe('business endpoints', () => {
 				.get('/api/business')
 				.set('Cookie', cookies);
 			expect(res.status).toBe(200);
-			expect(res.body).toMatchObject({ ...returnedBusinessDetails });
+			expect(res.body).toMatchObject(returnedBusinessDetails);
 		});
 
 		it('returns error message if not auth', async () => {
@@ -106,14 +138,14 @@ describe('business endpoints', () => {
 				.get('/api/business')
 				.set('Cookie', cookies);
 			expect(res.status).toBe(401);
-			expect(res.body).toHaveProperty('msg', 'Authorization denied');
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('returns message if no business record', async () => {
 			const res = await request(app)
 				.get('/api/business')
 				.set('Cookie', cookies);
-			expect(res.status).toBe(400);
+			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty(
 				'msg',
 				'you need to add your business details before proceeding'
@@ -121,38 +153,33 @@ describe('business endpoints', () => {
 		});
 	});
 
-	describe('POST /business', () => {
+	describe('POST / business', () => {
 		it('creates business details for user with valid details', async () => {
 			const res = await request(app)
 				.post('/api/business')
 				.set('Cookie', cookies)
-				.send({ userId, ...businessDetails });
-
+				.send(businessDetails);
 			expect(res.status).toBe(200);
 		});
 
-		it('userId in form has to match user_id from jwt', async () => {
-			const fakeUser = await savedUser();
-			const res = await request(app)
-				.post('/api/business')
-				.set('Cookie', cookies)
-				.send({ userId: fakeUser._id, ...businessDetails });
-			expect(res.status).toBe(400);
-			expect(res.body).toHaveProperty(
-				'msg',
-				"Something doesn't add up, give it another go"
-			);
-		});
-
 		it('return an error msg if no auth', async () => {
-			const fakeUser = await savedUser();
 			cookies = 'iamafaketoken';
 			const res = await request(app)
 				.post('/api/business')
 				.set('Cookie', cookies)
-				.send({ userId: fakeUser._id, ...businessDetails });
+				.send(businessDetails);
 			expect(res.status).toBe(401);
-			expect(res.body).toHaveProperty('msg', 'Authorization denied');
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
+		it('will not accept additional fields', async () => {
+			const extraField = { ...businessDetails, extraField: 'sneaky input' };
+			const res = await request(app)
+				.post('/api/business')
+				.set('Cookie', cookies)
+				.send(extraField);
+			expect(res.status).toBe(400);
+			expect(res.body).toHaveProperty('msg', '"extraField" is not allowed');
 		});
 
 		it('400 response and error message if incorrect value for useMileage', () => {
@@ -162,7 +189,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -179,7 +206,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid Business name required');
 			});
@@ -193,7 +220,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid contact name required');
 			});
@@ -207,7 +234,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid email address required');
 			});
@@ -221,7 +248,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -238,7 +265,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -255,7 +282,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -272,7 +299,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -289,7 +316,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid postcode required');
 			});
@@ -310,7 +337,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid bank name required');
 			});
@@ -333,7 +360,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -360,7 +387,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -388,7 +415,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid tax reference required');
 			});
@@ -402,7 +429,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -419,7 +446,7 @@ describe('business endpoints', () => {
 				const res = await request(app)
 					.post('/api/business')
 					.set('Cookie', cookies)
-					.send({ userId, ...businessDetails });
+					.send(businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -427,6 +454,249 @@ describe('business endpoints', () => {
 				);
 			});
 			businessDetails.farewell = 'with thanks';
+		});
+	});
+
+	describe('PUT / business', () => {
+		const createBusinessID = async () => {
+			const response = await request(app)
+				.post('/api/business')
+				.set('Cookie', cookies)
+				.send(businessDetails);
+			const { _id } = response.body;
+			return _id;
+		};
+		const updateBusiness = (id, update) => {
+			return request(app)
+				.put(`/api/business/${id}`)
+				.set('Cookie', cookies)
+				.send(update);
+		};
+
+		it('updates business record with valid input', async () => {
+			const id = await createBusinessID();
+			const res = await updateBusiness(id, updateDetails);
+			expect(res.status).toBe(200);
+			expect(res.body).toMatchObject(returnedUpdatedDetails);
+		});
+
+		it("won't accept any additional fields", async () => {
+			const id = await createBusinessID();
+			const res = await updateBusiness(id, {
+				...updateDetails,
+				fakeField: 'naughty input'
+			});
+			expect(res.status).toBe(400);
+			expect(res.body).toHaveProperty('msg', '"fakeField" is not allowed');
+		});
+
+		it('sends 404 if params id not found', async () => {
+			const fakeId = mongoose.Types.ObjectId().toHexString();
+			const res = await updateBusiness(fakeId, updateDetails);
+			expect(res.status).toBe(404);
+			expect(res.body).toHaveProperty('msg', 'Business details not found.');
+		});
+
+		it('send 403 if userId in record !== req.user.id', async () => {
+			const id = await createBusinessID();
+			// get new cookies for different user
+			const registerUser = () => {
+				return request(app)
+					.post('/api/users')
+					.send({
+						name: 'A Different Drummer',
+						email: 'drumming@differently.com',
+						password: '1@P!a$£$word'
+					});
+			};
+			const response = await registerUser();
+			cookies = response.headers['set-cookie'];
+
+			const res = await updateBusiness(id, updateDetails);
+			expect(res.status).toBe(403);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
+		describe('validates form date', () => {
+			it('validates useMileage', async () => {
+				const id = await createBusinessID();
+				const options = ['', 'yes', 1];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, useMileage: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Yes or no for simplified mileage'
+					);
+				});
+			});
+
+			it('validates use name', async () => {
+				const id = await createBusinessID();
+				const options = ['*&()', '<>', 1, ''];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, name: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid Business name required'
+					);
+				});
+			});
+
+			it('validates use contact', async () => {
+				const id = await createBusinessID();
+				const options = ['*&()', '<>', 1, ''];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, contact: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty('msg', 'Valid contact name required');
+				});
+			});
+
+			it('validates use email', async () => {
+				const id = await createBusinessID();
+				const options = ['*&()', '<>', 1, '', '@email'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, email: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid email address required'
+					);
+				});
+			});
+
+			it('validates use phone', async () => {
+				const id = await createBusinessID();
+				const options = ['0127345982735235', '<>', 1, '', '@phone', '876'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, phone: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid phone number required - just digits'
+					);
+				});
+			});
+
+			it('validates use add1', async () => {
+				const id = await createBusinessID();
+				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, add1: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid first line of address required, just word characters'
+					);
+				});
+			});
+
+			it('validates use add2', async () => {
+				const id = await createBusinessID();
+				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, add2: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Check second line of address - just word characters'
+					);
+				});
+			});
+
+			it('validates use add3', async () => {
+				const id = await createBusinessID();
+				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, add3: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Check third line of address - just word characters'
+					);
+				});
+			});
+
+			it('validates use postcode', async () => {
+				const id = await createBusinessID();
+				const options = ['<>', 1, '', '@phone', '876!@£$%*^%', 'postcode'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, postcode: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty('msg', 'Valid postcode required');
+				});
+			});
+
+			it('validates use accountNo', async () => {
+				const id = await createBusinessID();
+				const options = [
+					'<>',
+					1,
+					'',
+					'@phone',
+					'876!@£$%*^%',
+					'accountNo',
+					'987238971247124',
+					'121'
+				];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, accountNo: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid account number required - 8 digits only'
+					);
+				});
+			});
+
+			it('validates use utr', async () => {
+				const id = await createBusinessID();
+				const options = [
+					'<>',
+					1,
+					'',
+					'@phone',
+					'876!@£$%*^%',
+					'utr',
+					'987238923471247124',
+					'121'
+				];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, utr: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'Valid tax reference required'
+					);
+				});
+			});
+
+			it('validates use terms', async () => {
+				const id = await createBusinessID();
+				const options = ['<>', '876!@£$%*^%'];
+				options.forEach(async option => {
+					amendedDetails = { ...updateDetails, terms: option };
+					const res = await updateBusiness(id, amendedDetails);
+					expect(res.status).toBe(400);
+					expect(res.body).toHaveProperty(
+						'msg',
+						'enter your terms - just regular characters'
+					);
+				});
+			});
 		});
 	});
 });

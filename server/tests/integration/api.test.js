@@ -45,7 +45,7 @@ describe('/api', () => {
 
 			expect(res.status).toBe(401);
 			expect(res.body).toMatchObject({
-				msg: 'Authorization denied'
+				msg: 'Not Authorised'
 			});
 		});
 	});

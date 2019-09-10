@@ -1,7 +1,6 @@
 const express = require('express');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
-const { User } = require('../models/user');
 const { Business, validate } = require('../models/business');
 
 const router = express.Router();
@@ -11,8 +10,9 @@ router.get('/', auth, async (req, res) => {
 		const business = await Business.findUsersBusiness(req.user.id).select(
 			'-__v -userId'
 		);
+
 		if (!business) {
-			res.status(400).json({
+			res.status(404).json({
 				msg: 'you need to add your business details before proceeding'
 			});
 		} else {
@@ -25,7 +25,8 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-	const { error } = validate(req.body);
+	const businessDetails = { userId: req.user.id, ...req.body };
+	const { error } = validate(businessDetails);
 
 	if (error) {
 		logger.warn(
@@ -35,28 +36,52 @@ router.post('/', auth, async (req, res) => {
 	}
 
 	try {
-		const owner = await User.findById(req.body.userId);
-
-		if (!owner || req.body.userId !== req.user.id) {
-			logger.warn(
-				`user details mismatch on create business, logged in as ${req.user.name} (${req.user.id}) -  id passed on form as ${req.body.userId}`
-			);
-			return res.status(400).json({
-				msg: "Something doesn't add up, give it another go"
-			});
-		}
-
 		const dupe = await Business.findUsersBusiness(req.user.id);
-
 		if (dupe) {
 			return res.status(400).json({
-				msg: `business details already exist for ${req.user.name} - please edit if they have changed`
+				msg: `business details already exist for ${req.user.name} - please edit if the details have changed`
 			});
 		}
-
-		const business = new Business({ ...req.body });
+		const business = new Business(businessDetails);
 		await business.save();
 		res.status(200).json(business);
+	} catch (e) {
+		res.status(500).send(`server error ${e}`);
+	}
+});
+
+router.put('/:id', auth, async (req, res) => {
+	// add userId to req.body to pass validation..
+	const businessDetails = { userId: req.user.id, ...req.body };
+	// validate the object
+	const { error } = validate(businessDetails);
+	// reject any validation errors
+	if (error) {
+		logger.warn(
+			`failed business details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
+		);
+		return res.status(400).json({ msg: error.details[0].message });
+	}
+	// retrieve the record by id
+	try {
+		let business = await Business.findById(req.params.id);
+		// throw error if not found
+		if (!business) {
+			return res.status(404).json({
+				msg: 'Business details not found.'
+			});
+		}
+		// throw error if logged in user not match user on business record
+		if (business.userId.toString() !== req.user.id.toString()) {
+			return res.status(403).json({ msg: 'Not Authorised' });
+		}
+		// save and return updated record..
+		business = await Business.findByIdAndUpdate(
+			req.params.id,
+			{ $set: { ...req.body } },
+			{ new: true }
+		);
+		res.json(business);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

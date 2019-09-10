@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
 
 	// if not found reject
 	if (!signature || !payload) {
-		return res.status(401).json({ msg: 'Authorization denied' });
+		return res.status(401).json({ msg: 'Not Authorised' });
 	}
 
 	// put together and auth...
@@ -18,6 +18,6 @@ module.exports = (req, res, next) => {
 		req.user = decoded.user;
 		next();
 	} catch (error) {
-		res.status(401).json({ msg: 'token is not valid' });
+		res.status(403).json({ msg: 'Authorisation Failed' });
 	}
 };
