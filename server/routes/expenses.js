@@ -1,22 +1,22 @@
 const express = require('express');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
-const { Client, validate } = require('../models/client');
+const { Expense, validate } = require('../models/expense');
 
 const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const clients = await Client.findUsersClients(req.user.id).select(
+		const expenses = await Expense.findUsersExpenses(req.user.id).select(
 			'-__v -userId'
 		);
 
-		if (clients.length < 1) {
+		if (expenses.length < 1) {
 			res.status(404).json({
-				msg: 'you need to add atleast one client before proceeding'
+				msg: 'you have no expenses so far'
 			});
 		} else {
-			res.status(200).json(clients);
+			res.status(200).json(expenses);
 		}
 	} catch (error) {
 		logger.error(error.message);
@@ -25,21 +25,21 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-	const clientDetails = { userId: req.user.id, ...req.body };
+	const expenseDetails = { userId: req.user.id, ...req.body };
 
-	const { error } = validate(clientDetails);
+	const { error } = validate(expenseDetails);
 
 	if (error) {
 		logger.warn(
-			`failed client details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
+			`failed expense details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
 		);
 		return res.status(400).json({ msg: error.details[0].message });
 	}
 
 	try {
-		const client = new Client(clientDetails);
-		await client.save();
-		res.status(200).json(client);
+		const expense = new Expense(expenseDetails);
+		await expense.save();
+		res.status(200).json(expense);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -47,36 +47,36 @@ router.post('/', auth, async (req, res) => {
 
 router.put('/:id', auth, async (req, res) => {
 	// add userId to req.body to pass validation..
-	const clientDetails = { userId: req.user.id, ...req.body };
+	const expenseDetails = { userId: req.user.id, ...req.body };
 	// validate the object
-	const { error } = validate(clientDetails);
+	const { error } = validate(expenseDetails);
 	// reject any validation errors
 	if (error) {
 		logger.warn(
-			`failed client details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
+			`failed expense details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
 		);
 		return res.status(400).json({ msg: error.details[0].message });
 	}
 	// retrieve the record by id
 	try {
-		let client = await Client.findById(req.params.id);
+		let expense = await Expense.findById(req.params.id);
 		// throw error if not found
-		if (!client) {
+		if (!expense) {
 			return res.status(404).json({
-				msg: 'client details not found.'
+				msg: 'expense details not found'
 			});
 		}
-		// throw error if logged in user not match user on client record
-		if (client.userId.toString() !== req.user.id.toString()) {
+		// throw error if logged in user not match user on expense record
+		if (expense.userId.toString() !== req.user.id.toString()) {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
 		// save and return updated record..
-		client = await Client.findByIdAndUpdate(
+		expense = await Expense.findByIdAndUpdate(
 			req.params.id,
 			{ $set: { ...req.body } },
 			{ new: true }
 		);
-		res.json(client);
+		res.json(expense);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -85,19 +85,19 @@ router.put('/:id', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
 	// retrieve the record by id
 	try {
-		const client = await Client.findById(req.params.id);
+		const expense = await Expense.findById(req.params.id);
 		// throw error if not found
-		if (!client) {
+		if (!expense) {
 			return res.status(404).json({
-				msg: 'Client details not found'
+				msg: 'expense details not found'
 			});
 		}
-		// throw error if logged in user not match user on client record
-		if (client.userId.toString() !== req.user.id.toString()) {
+		// throw error if logged in user not match user on expense record
+		if (expense.userId.toString() !== req.user.id.toString()) {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
 
-		res.json(client);
+		res.json(expense);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -106,22 +106,24 @@ router.get('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
 	// retrieve the record by id
 	try {
-		let client = await Client.findById(req.params.id);
+		let expense = await Expense.findById(req.params.id);
 		// throw error if not found
-		if (!client) {
-			return res.status(404).json({ msg: 'Client details not found' });
+		if (!expense) {
+			return res.status(404).json({
+				msg: 'expense details not found.'
+			});
 		}
-		// throw error if logged in user not match user on client record
-		if (client.userId.toString() !== req.user.id.toString()) {
+		// throw error if logged in user not match user on expense record
+		if (expense.userId.toString() !== req.user.id.toString()) {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
 
-		// TODO - check if client on any invoice....
+		// TODO - check if expense on any invoice....
 
-		client = await Client.findByIdAndRemove(req.params.id);
+		expense = await Expense.findByIdAndRemove(req.params.id);
 
 		res.status(200).json({
-			msg: `${client.name} deleted!`
+			msg: `${expense.desc} deleted!`
 		});
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);

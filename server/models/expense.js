@@ -47,7 +47,7 @@ const expenseSchema = new mongoose.Schema({
 			validator: v => {
 				return v >= 0;
 			},
-			message: 'Check amount - value cannot be negative.'
+			message: 'Check amount - value cannot be negative'
 		}
 	},
 	desc: {
@@ -64,9 +64,13 @@ const expenseSchema = new mongoose.Schema({
 	}
 });
 
+expenseSchema.statics.findUsersExpenses = function(userId) {
+	return this.find({ userId });
+};
+
 const validate = expense => {
 	const schema = {
-		userID: Joi.string()
+		userId: Joi.string()
 			.regex(objectId)
 			.required()
 			.error(() => 'Invalid user id'),
@@ -77,17 +81,17 @@ const validate = expense => {
 			.error(() => 'A date is required, today or earlier'),
 		category: Joi.string()
 			.required()
-			.valid(Joi.in(categories.values))
-			.error(() => 'select valid category'),
+			.valid([...categories.values])
+			.error(() => 'select a valid category'),
 		amount: Joi.number()
 			.precision(2)
 			.required()
 			.min(0.0)
-			.error(() => 'An amount is required'),
+			.error(() => 'Valid amount is required'),
 		desc: Joi.string()
 			.required()
 			.regex(businessName)
-			.error(() => 'Check description for invalid characters')
+			.error(() => 'Valid description is required')
 	};
 	return Joi.validate(expense, schema);
 };

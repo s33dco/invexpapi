@@ -5,7 +5,6 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const { Business } = require('../../models/business');
 const { User } = require('../../models/user');
-const { savedUser } = require('../seed/user');
 const app = require('../../app');
 const { connectDB, disconnectDB } = require('../../startup/db');
 
@@ -79,7 +78,6 @@ const updateDetails = {
 	farewell: 'ta ra'
 };
 let cookies;
-let userId;
 let amendedDetails;
 
 describe('business endpoints', () => {
@@ -95,14 +93,6 @@ describe('business endpoints', () => {
 		};
 		const res = await registerUser();
 		cookies = res.headers['set-cookie'];
-
-		const getUserId = () => {
-			return request(app)
-				.get('/api/auth')
-				.set('Cookie', cookies);
-		};
-		const response = await getUserId();
-		userId = response.body._id;
 	});
 
 	afterEach(async () => {
@@ -117,7 +107,7 @@ describe('business endpoints', () => {
 	describe('GET / business', () => {
 		const makeBusiness = () => {
 			return request(app)
-				.post('/api/business')
+				.post('/api/businesses')
 				.set('Cookie', cookies)
 				.send(businessDetails);
 		};
@@ -125,7 +115,7 @@ describe('business endpoints', () => {
 		it('returns the users business record', async () => {
 			await makeBusiness();
 			const res = await request(app)
-				.get('/api/business')
+				.get('/api/businesses')
 				.set('Cookie', cookies);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedBusinessDetails);
@@ -135,7 +125,7 @@ describe('business endpoints', () => {
 			await makeBusiness();
 			cookies = 'nogood';
 			const res = await request(app)
-				.get('/api/business')
+				.get('/api/businesses')
 				.set('Cookie', cookies);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
@@ -143,7 +133,7 @@ describe('business endpoints', () => {
 
 		it('returns message if no business record', async () => {
 			const res = await request(app)
-				.get('/api/business')
+				.get('/api/businesses')
 				.set('Cookie', cookies);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty(
@@ -156,7 +146,7 @@ describe('business endpoints', () => {
 	describe('POST / business', () => {
 		it('creates business details for user with valid details', async () => {
 			const res = await request(app)
-				.post('/api/business')
+				.post('/api/businesses')
 				.set('Cookie', cookies)
 				.send(businessDetails);
 			expect(res.status).toBe(200);
@@ -165,7 +155,7 @@ describe('business endpoints', () => {
 		it('return an error msg if no auth', async () => {
 			cookies = 'iamafaketoken';
 			const res = await request(app)
-				.post('/api/business')
+				.post('/api/businesses')
 				.set('Cookie', cookies)
 				.send(businessDetails);
 			expect(res.status).toBe(401);
@@ -175,7 +165,7 @@ describe('business endpoints', () => {
 		it('will not accept additional fields', async () => {
 			const extraField = { ...businessDetails, extraField: 'sneaky input' };
 			const res = await request(app)
-				.post('/api/business')
+				.post('/api/businesses')
 				.set('Cookie', cookies)
 				.send(extraField);
 			expect(res.status).toBe(400);
@@ -187,7 +177,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.useMileage = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -204,7 +194,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.name = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -218,7 +208,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.contact = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -232,7 +222,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.email = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -246,7 +236,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.phone = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -263,7 +253,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.add1 = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -280,7 +270,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.add2 = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -297,7 +287,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.add3 = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -314,7 +304,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.postcode = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -335,7 +325,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.bankName = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -358,7 +348,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.sortCode = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -385,7 +375,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.accountNo = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -413,7 +403,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.utr = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -427,7 +417,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.terms = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -444,7 +434,7 @@ describe('business endpoints', () => {
 			options.forEach(async option => {
 				businessDetails.farewell = option;
 				const res = await request(app)
-					.post('/api/business')
+					.post('/api/businesses')
 					.set('Cookie', cookies)
 					.send(businessDetails);
 				expect(res.status).toBe(400);
@@ -460,7 +450,7 @@ describe('business endpoints', () => {
 	describe('PUT / business', () => {
 		const createBusinessID = async () => {
 			const response = await request(app)
-				.post('/api/business')
+				.post('/api/businesses')
 				.set('Cookie', cookies)
 				.send(businessDetails);
 			const { _id } = response.body;
@@ -468,7 +458,7 @@ describe('business endpoints', () => {
 		};
 		const updateBusiness = (id, update) => {
 			return request(app)
-				.put(`/api/business/${id}`)
+				.put(`/api/businesses/${id}`)
 				.set('Cookie', cookies)
 				.send(update);
 		};
@@ -517,7 +507,7 @@ describe('business endpoints', () => {
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
-		describe('validates form date', () => {
+		describe('validates form data', () => {
 			it('validates useMileage', async () => {
 				const id = await createBusinessID();
 				const options = ['', 'yes', 1];

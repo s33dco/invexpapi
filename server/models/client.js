@@ -116,29 +116,31 @@ const validate = client => {
 			.min(1)
 			.max(255)
 			.required()
-			.error(() => 'Need Client name for Invoice'),
+			.error(() => 'Valid Client name required'),
 		email: Joi.string()
 			.email({ minDomainSegments: 2 })
 			.required()
-			.error(() => 'email must be a valid address'),
+			.error(() => 'Valid email address required'),
 		phone: Joi.string()
 			.required()
 			.regex(phoneNumber)
-			.error(() => 'Invalid phone number - just digits'),
+			.error(() => 'Valid phone number required - just digits'),
 		add1: Joi.string()
 			.required()
 			.regex(name)
-			.error(() => 'first line of address required, just word characters.'),
+			.error(
+				() => 'Valid first line of address required, just word characters'
+			),
 		add2: Joi.string()
 			.regex(name)
-			.error(() => 'just word characters.'),
+			.error(() => 'Check second line of address - just word characters'),
 		add3: Joi.string()
 			.regex(name)
-			.error(() => 'just word characters.'),
+			.error(() => 'Check third line of address - just word characters'),
 		postcode: Joi.string()
 			.required()
 			.regex(postCode)
-			.error(() => 'enter a valid postcode')
+			.error(() => 'Valid postcode required')
 	};
 	return Joi.validate(client, schema);
 };

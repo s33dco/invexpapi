@@ -9,6 +9,7 @@ const users = require('../routes/users');
 const auth = require('../routes/auth');
 const businesses = require('../routes/businesses');
 const clients = require('../routes/clients');
+const expenses = require('../routes/expenses');
 
 const initialize = app => {
 	const middlewares = [
@@ -25,6 +26,7 @@ const initialize = app => {
 	app.use('/api/auth', auth);
 	app.use('/api/businesses', businesses);
 	app.use('/api/clients', clients);
+	app.use('/api/expenses', expenses);
 	app.use('/api', api);
 
 	// serve static assests in production
