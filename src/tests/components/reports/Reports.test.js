@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Reports from '../../../components/pages/Reports';
+import Reports from '../../../components/reports/Reports';
 
 let wrapper;
 

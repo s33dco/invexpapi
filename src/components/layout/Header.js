@@ -10,47 +10,7 @@ const Header = () => (
 				activeClassName="is-active"
 				exact
 			>
-				Dashboard
-			</NavLink>
-			<NavLink
-				className="header__link"
-				to="/contact"
-				activeClassName="is-active"
-				exact
-			>
-				Contact
-			</NavLink>
-			<NavLink
-				className="header__link"
-				to="/about"
-				activeClassName="is-active"
-				exact
-			>
-				About
-			</NavLink>
-			<NavLink
-				className="header__link"
-				to="/register"
-				activeClassName="is-active"
-				exact
-			>
-				Register
-			</NavLink>
-			<NavLink
-				className="header__link"
-				to="/login"
-				activeClassName="is-active"
-				exact
-			>
-				Login
-			</NavLink>
-			<NavLink
-				className="header__link"
-				to="/business"
-				activeClassName="is-active"
-				exact
-			>
-				Business
+				Home
 			</NavLink>
 			<NavLink
 				className="header__link"
@@ -83,6 +43,22 @@ const Header = () => (
 				exact
 			>
 				Reports
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/business"
+				activeClassName="is-active"
+				exact
+			>
+				Business
+			</NavLink>
+			<NavLink
+				className="header__link"
+				to="/contact"
+				activeClassName="is-active"
+				exact
+			>
+				Contact
 			</NavLink>
 		</nav>
 	</header>

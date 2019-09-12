@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import NoMatch from '../../../components/pages/NoMatch';
+import NoMatch from '../../components/NoMatch';
 
 let wrapper;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Expenses from '../../../components/pages/Expenses';
+import Expenses from '../../../components/expenses/Expenses';
 
 let wrapper;
 
