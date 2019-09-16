@@ -8,9 +8,9 @@ const logger = require('./startup/logger');
 
 const environment = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || config.get('backend_port');
+const httpsPort = process.env.PORT || config.get('backend_https_port');
 
 if (environment === 'development') {
-	const httpsPort = port + 1;
 	const certOptions = {
 		key: fs.readFileSync(path.resolve(__dirname, '../config', 'server.key')),
 		cert: fs.readFileSync(path.resolve(__dirname, '../config', 'server.crt'))

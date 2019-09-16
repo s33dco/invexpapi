@@ -5,8 +5,8 @@ const config = require('config');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
 const { User, validateLogin } = require('../models/user');
-const { sigOptions, payOptions } = require('../../config/cookieOptions');
-const jwtCookies = require('../utils/jwtCookies');
+// const { sigOptions, payOptions } = require('../../config/cookieOptions');
+// const jwtCookies = require('../utils/jwtCookies');
 
 const router = express.Router();
 
@@ -16,7 +16,8 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).select('name email id');
+		const user = await User.findById(req.user.id).select('name id');
+
 		res.status(200).json(user);
 	} catch (error) {
 		logger.error(error.message);
@@ -67,11 +68,7 @@ router.post('/', async (req, res) => {
 			(err, token) => {
 				if (err) throw err;
 
-				const { headPay, signature } = jwtCookies(token);
-
-				res.cookie('payload', headPay, payOptions);
-				res.cookie('signature', signature, sigOptions);
-				res.json({ msg: `${user.name} successfully logged in` });
+				res.json({ token });
 			}
 		);
 	} catch (e) {

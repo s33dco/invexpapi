@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
-const { name, password, simpleEmail } = require('../../config/regexps');
+const { checkName, checkPassword, simpleEmail } = require('../../config/regexps');
 
 const userSchema = new mongoose.Schema({
 	name: {
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 		maxlength: [32, 'Name too long'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: `Name contains blacklisted character`
 		},
@@ -40,7 +40,7 @@ const validate = user => {
 	const schema = {
 		name: Joi.string()
 			.max(32)
-			.regex(name)
+			.regex(checkName)
 			.required()
 			.error(() => 'name should be 1-32 letters'),
 
@@ -50,7 +50,7 @@ const validate = user => {
 		password: Joi.string()
 			.min(8)
 			.max(50)
-			.regex(password)
+			.regex(checkPassword)
 			.required()
 			.error(
 				() =>
@@ -68,7 +68,7 @@ const validateLogin = user => {
 		password: Joi.string()
 			.min(8)
 			.max(255)
-			.regex(password)
+			.regex(checkPassword)
 			.required()
 			.error(
 				() =>

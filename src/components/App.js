@@ -5,9 +5,11 @@ import importedComponent from 'react-imported-component';
 import 'materialize-css/dist/css/materialize.min.css';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import { Provider } from 'react-redux';
-import Header from './layout/Header';
+import NavBar from './layout/NavBar';
+import Alerts from './layout/Alerts';
 import Footer from './layout/Footer';
 import Loading from './layout/Loading';
+import PrivateRoute from './PrivateRoute';
 import Home from './home/Home';
 
 import store from '../store';
@@ -63,26 +65,29 @@ const App = () => {
 	});
 
 	return (
-		<div className="container">
-			<Provider store={store}>
-				<Router>
-					<Header />
-					<main className="container">
+		<Provider store={store}>
+			<Router>
+				<header>
+					<NavBar />
+				</header>
+				<main>
+					<Alerts />
+					<div className="container">
 						<Switch>
 							<Route exact path="/" component={Home} />
-							<Route exact path="/invoices" component={AsyncInvoices} />
-							<Route exact path="/clients" component={AsyncClients} />
-							<Route exact path="/expenses" component={AsyncExpenses} />
-							<Route exact path="/business" component={AsyncBusiness} />
-							<Route exact path="/reports" component={AsyncReports} />
+							<PrivateRoute exact path="/invoices" component={AsyncInvoices} />
+							<PrivateRoute exact path="/clients" component={AsyncClients} />
+							<PrivateRoute exact path="/expenses" component={AsyncExpenses} />
+							<PrivateRoute exact path="/business" component={AsyncBusiness} />
+							<PrivateRoute exact path="/reports" component={AsyncReports} />
 							<Route exact path="/contact" component={AsyncContact} />
 							<Route component={AsyncNoMatch} />
 						</Switch>
-					</main>
-					<Footer />
-				</Router>
-			</Provider>
-		</div>
+					</div>
+				</main>
+				<Footer />
+			</Router>
+		</Provider>
 	);
 };
 

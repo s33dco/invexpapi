@@ -6,12 +6,13 @@ const request = require('supertest');
 const app = require('../../app');
 const { User } = require('../../models/user');
 
-const wholeCookie = cookie => cookie.split(';');
-const cleanCookie = cookie =>
-	cookie
-		.split(';')
-		.shift()
-		.split('=');
+// const wholeCookie = cookie => cookie.split(';');
+// const cleanCookie = cookie =>
+// 	cookie
+// 		.split(';')
+// 		.shift()
+// 		.split('=');
+
 let name = 'True User';
 let email = 'valid@email.co.uk';
 let password = '1Aa$word';
@@ -31,10 +32,7 @@ describe('api/users', () => {
 		it('should return 200 status and json msg', async () => {
 			const res = await registerUser();
 			expect(res.status).toBe(200);
-			expect(res.body).toHaveProperty(
-				'msg',
-				'True User successfully registered'
-			);
+			expect(res.body).toHaveProperty('token');
 		});
 
 		it('saved password should be hashed', async () => {
@@ -44,49 +42,49 @@ describe('api/users', () => {
 			expect(user.password).not.toEqual(password);
 		});
 
-		it('should set 2 cookies to make the jwt', async () => {
-			const res = await registerUser();
-			const setCookie = res.headers['set-cookie'];
-			expect(setCookie.length).toBe(2);
-		});
+		// it('should set 2 cookies to make the jwt', async () => {
+		// 	const res = await registerUser();
+		// 	const setCookie = res.headers['set-cookie'];
+		// 	expect(setCookie.length).toBe(2);
+		// });
 
-		it('should set the signature cookie correctly', async () => {
-			const res = await registerUser();
-			const setCookie = res.headers['set-cookie'];
-			const sig = setCookie[1];
-			const fullSignature = wholeCookie(sig);
-			expect(fullSignature).toBeArrayOfSize(5);
-			expect(fullSignature).toIncludeAnyMembers([
-				' Path=/',
-				' HttpOnly',
-				' Secure',
-				' SameSite=Strict'
-			]);
-			expect(fullSignature).not.toIncludeAnyMembers([' Max-Age=1800']);
-			expect(cleanCookie(sig)[0]).toBe('signature');
-		});
+		// it('should set the signature cookie correctly', async () => {
+		// 	const res = await registerUser();
+		// 	const setCookie = res.headers['set-cookie'];
+		// 	const sig = setCookie[1];
+		// 	const fullSignature = wholeCookie(sig);
+		// 	expect(fullSignature).toBeArrayOfSize(5);
+		// 	expect(fullSignature).toIncludeAnyMembers([
+		// 		' Path=/',
+		// 		' HttpOnly',
+		// 		' Secure',
+		// 		' SameSite=Strict'
+		// 	]);
+		// 	expect(fullSignature).not.toIncludeAnyMembers([' Max-Age=1800']);
+		// 	expect(cleanCookie(sig)[0]).toBe('signature');
+		// });
 
-		it('should set the payload cookie correctly', async () => {
-			const res = await registerUser();
-			const setCookie = res.headers['set-cookie'];
-			const pay = setCookie[0];
-			const fullPayload = wholeCookie(pay);
-			expect(fullPayload).toBeArrayOfSize(6);
-			expect(fullPayload).toIncludeAnyMembers([
-				' Path=/',
-				' HttpOnly',
-				' Secure',
-				' SameSite=Strict',
-				' Max-Age=1800'
-			]);
-			expect(cleanCookie(pay)[0]).toEqual('payload');
-		});
+		// it('should set the payload cookie correctly', async () => {
+		// 	const res = await registerUser();
+		// 	const setCookie = res.headers['set-cookie'];
+		// 	const pay = setCookie[0];
+		// 	const fullPayload = wholeCookie(pay);
+		// 	expect(fullPayload).toBeArrayOfSize(6);
+		// 	expect(fullPayload).toIncludeAnyMembers([
+		// 		' Path=/',
+		// 		' HttpOnly',
+		// 		' Secure',
+		// 		' SameSite=Strict',
+		// 		' Max-Age=1800'
+		// 	]);
+		// 	expect(cleanCookie(pay)[0]).toEqual('payload');
+		// });
 
 		it('return 400 if email address already exists', async () => {
 			await registerUser();
 			const res = await registerUser();
 			expect(res.status).toBe(400);
-			expect(res.body).toHaveProperty('msg', 'User already exists');
+			expect(res.body).toHaveProperty('msg', 'Email address already in use!');
 		});
 
 		it('should return 400 if no name sent', async () => {

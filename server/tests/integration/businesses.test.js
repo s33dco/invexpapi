@@ -13,6 +13,11 @@ const registerUserDetails = {
 	email: 'code@s33d.co',
 	password: '1@P!a$£$word'
 };
+const otherUser = {
+	name: 'A Different Drummer',
+	email: 'drumming@differently.com',
+	password: '1@P!a$£$word'
+};
 const businessDetails = {
 	useMileage: true,
 	name: 's33dco',
@@ -77,8 +82,49 @@ const updateDetails = {
 	terms: 'cash only',
 	farewell: 'ta ra'
 };
-let cookies;
+let authToken;
 let amendedDetails;
+
+const registerUser = details => {
+	return request(app)
+		.post('/api/users')
+		.send(details);
+};
+
+const makeBusiness = auth => {
+	return request(app)
+		.post('/api/businesses')
+		.set('x-auth-token', auth)
+		.send(businessDetails);
+};
+
+const getBusiness = auth => {
+	return request(app)
+		.get('/api/businesses')
+		.set('x-auth-token', auth);
+};
+
+const createBusiness = (auth, details) => {
+	return request(app)
+		.post('/api/businesses')
+		.set('x-auth-token', auth)
+		.send(details);
+};
+
+const createBusinessID = async (token, businessDetails) => {
+	const response = await request(app)
+		.post('/api/businesses')
+		.set('x-auth-token', token)
+		.send(businessDetails);
+	const { _id } = response.body;
+	return _id;
+};
+const updateBusiness = (token, id, update) => {
+	return request(app)
+		.put(`/api/businesses/${id}`)
+		.set('x-auth-token', token)
+		.send(update);
+};
 
 describe('business endpoints', () => {
 	beforeAll(async () => {
@@ -86,13 +132,9 @@ describe('business endpoints', () => {
 	});
 
 	beforeEach(async () => {
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send(registerUserDetails);
-		};
-		const res = await registerUser();
-		cookies = res.headers['set-cookie'];
+		const res = await registerUser(registerUserDetails);
+		const { token } = res.body;
+		authToken = token;
 	});
 
 	afterEach(async () => {
@@ -105,36 +147,29 @@ describe('business endpoints', () => {
 	});
 
 	describe('GET / business', () => {
-		const makeBusiness = () => {
-			return request(app)
-				.post('/api/businesses')
-				.set('Cookie', cookies)
-				.send(businessDetails);
-		};
-
 		it('returns the users business record', async () => {
-			await makeBusiness();
-			const res = await request(app)
-				.get('/api/businesses')
-				.set('Cookie', cookies);
+			await makeBusiness(authToken);
+			const res = await getBusiness(authToken);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedBusinessDetails);
 		});
 
-		it('returns error message if not auth', async () => {
-			await makeBusiness();
-			cookies = 'nogood';
-			const res = await request(app)
-				.get('/api/businesses')
-				.set('Cookie', cookies);
+		it('returns 401 and error message if not auth', async () => {
+			await makeBusiness(authToken);
+			const res = await getBusiness('');
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
+		it('returns 403 and error message if not auth', async () => {
+			await makeBusiness(authToken);
+			const res = await getBusiness('faeAuthToekn3284787481274');
+			expect(res.status).toBe(403);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
 		it('returns message if no business record', async () => {
-			const res = await request(app)
-				.get('/api/businesses')
-				.set('Cookie', cookies);
+			const res = await getBusiness(authToken);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty(
 				'msg',
@@ -145,29 +180,25 @@ describe('business endpoints', () => {
 
 	describe('POST / business', () => {
 		it('creates business details for user with valid details', async () => {
-			const res = await request(app)
-				.post('/api/businesses')
-				.set('Cookie', cookies)
-				.send(businessDetails);
+			const res = await createBusiness(authToken, businessDetails);
 			expect(res.status).toBe(200);
 		});
 
-		it('return an error msg if no auth', async () => {
-			cookies = 'iamafaketoken';
-			const res = await request(app)
-				.post('/api/businesses')
-				.set('Cookie', cookies)
-				.send(businessDetails);
+		it('return 401 and an error msg if no auth', async () => {
+			const res = await createBusiness('', businessDetails);
 			expect(res.status).toBe(401);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
+		it('return 403 and an error msg if no auth', async () => {
+			const res = await createBusiness('faketoken39843849384', businessDetails);
+			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('will not accept additional fields', async () => {
 			const extraField = { ...businessDetails, extraField: 'sneaky input' };
-			const res = await request(app)
-				.post('/api/businesses')
-				.set('Cookie', cookies)
-				.send(extraField);
+			const res = await createBusiness(authToken, extraField);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty('msg', '"extraField" is not allowed');
 		});
@@ -176,10 +207,7 @@ describe('business endpoints', () => {
 			const options = ['', 'what', 1];
 			options.forEach(async option => {
 				businessDetails.useMileage = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -193,10 +221,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 1];
 			options.forEach(async option => {
 				businessDetails.name = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid Business name required');
 			});
@@ -207,10 +232,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**'];
 			options.forEach(async option => {
 				businessDetails.contact = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid contact name required');
 			});
@@ -221,10 +243,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', '@me.com'];
 			options.forEach(async option => {
 				businessDetails.email = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid email address required');
 			});
@@ -235,10 +254,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a', '@me.com'];
 			options.forEach(async option => {
 				businessDetails.phone = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -252,10 +268,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a', '@me.com'];
 			options.forEach(async option => {
 				businessDetails.add1 = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -269,10 +282,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a', '@me.com'];
 			options.forEach(async option => {
 				businessDetails.add2 = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -286,10 +296,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a', '@me.com'];
 			options.forEach(async option => {
 				businessDetails.add3 = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -303,10 +310,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a', '@me.com', 'ASD12 238fgg'];
 			options.forEach(async option => {
 				businessDetails.postcode = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid postcode required');
 			});
@@ -324,10 +328,7 @@ describe('business endpoints', () => {
 			];
 			options.forEach(async option => {
 				businessDetails.bankName = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid bank name required');
 			});
@@ -347,10 +348,7 @@ describe('business endpoints', () => {
 			];
 			options.forEach(async option => {
 				businessDetails.sortCode = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -374,10 +372,7 @@ describe('business endpoints', () => {
 			];
 			options.forEach(async option => {
 				businessDetails.accountNo = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -402,10 +397,7 @@ describe('business endpoints', () => {
 			];
 			options.forEach(async option => {
 				businessDetails.utr = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid tax reference required');
 			});
@@ -416,10 +408,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a'];
 			options.forEach(async option => {
 				businessDetails.terms = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -433,10 +422,7 @@ describe('business endpoints', () => {
 			const options = ['', '<>', '!@£$%^&**', 'n/a!', '?'];
 			options.forEach(async option => {
 				businessDetails.farewell = option;
-				const res = await request(app)
-					.post('/api/businesses')
-					.set('Cookie', cookies)
-					.send(businessDetails);
+				const res = await createBusiness(authToken, businessDetails);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -448,31 +434,34 @@ describe('business endpoints', () => {
 	});
 
 	describe('PUT / business', () => {
-		const createBusinessID = async () => {
-			const response = await request(app)
-				.post('/api/businesses')
-				.set('Cookie', cookies)
-				.send(businessDetails);
-			const { _id } = response.body;
-			return _id;
-		};
-		const updateBusiness = (id, update) => {
-			return request(app)
-				.put(`/api/businesses/${id}`)
-				.set('Cookie', cookies)
-				.send(update);
-		};
-
 		it('updates business record with valid input', async () => {
-			const id = await createBusinessID();
-			const res = await updateBusiness(id, updateDetails);
+			const id = await createBusinessID(authToken, businessDetails);
+			const res = await updateBusiness(authToken, id, updateDetails);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedUpdatedDetails);
 		});
 
+		it('returns 401 if no token', async () => {
+			const id = await createBusinessID(authToken, businessDetails);
+			const res = await updateBusiness('', id, updateDetails);
+			expect(res.status).toBe(401);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
+		it('returns 403 if wrong token', async () => {
+			const id = await createBusinessID(authToken, businessDetails);
+			const res = await updateBusiness(
+				'faketoken329842398759283',
+				id,
+				updateDetails
+			);
+			expect(res.status).toBe(403);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
 		it("won't accept any additional fields", async () => {
-			const id = await createBusinessID();
-			const res = await updateBusiness(id, {
+			const id = await createBusinessID(authToken, businessDetails);
+			const res = await updateBusiness(authToken, id, {
 				...updateDetails,
 				fakeField: 'naughty input'
 			});
@@ -482,38 +471,27 @@ describe('business endpoints', () => {
 
 		it('sends 404 if params id not found', async () => {
 			const fakeId = mongoose.Types.ObjectId().toHexString();
-			const res = await updateBusiness(fakeId, updateDetails);
+			const res = await updateBusiness(authToken, fakeId, updateDetails);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty('msg', 'Business details not found.');
 		});
 
 		it('send 403 if userId in record !== req.user.id', async () => {
-			const id = await createBusinessID();
-			// get new cookies for different user
-			const registerUser = () => {
-				return request(app)
-					.post('/api/users')
-					.send({
-						name: 'A Different Drummer',
-						email: 'drumming@differently.com',
-						password: '1@P!a$£$word'
-					});
-			};
-			const response = await registerUser();
-			cookies = response.headers['set-cookie'];
-
-			const res = await updateBusiness(id, updateDetails);
+			const id = await createBusinessID(authToken, businessDetails);
+			const response = await registerUser(otherUser);
+			const diffToken = response.body.token;
+			const res = await updateBusiness(diffToken, id, updateDetails);
 			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		describe('validates form data', () => {
 			it('validates useMileage', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['', 'yes', 1];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, useMileage: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -523,11 +501,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use name', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['*&()', '<>', 1, ''];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, name: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -537,22 +515,22 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use contact', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['*&()', '<>', 1, ''];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, contact: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'Valid contact name required');
 				});
 			});
 
 			it('validates use email', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['*&()', '<>', 1, '', '@email'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, email: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -562,11 +540,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use phone', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['0127345982735235', '<>', 1, '', '@phone', '876'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, phone: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -576,11 +554,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use add1', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, add1: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -590,11 +568,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use add2', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, add2: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -604,11 +582,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use add3', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['<>', 1, '', '@phone', '876!@£$%*^%'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, add3: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -618,18 +596,18 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use postcode', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['<>', 1, '', '@phone', '876!@£$%*^%', 'postcode'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, postcode: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'Valid postcode required');
 				});
 			});
 
 			it('validates use accountNo', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = [
 					'<>',
 					1,
@@ -642,7 +620,7 @@ describe('business endpoints', () => {
 				];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, accountNo: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -652,7 +630,7 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use utr', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = [
 					'<>',
 					1,
@@ -665,7 +643,7 @@ describe('business endpoints', () => {
 				];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, utr: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -675,11 +653,11 @@ describe('business endpoints', () => {
 			});
 
 			it('validates use terms', async () => {
-				const id = await createBusinessID();
+				const id = await createBusinessID(authToken, businessDetails);
 				const options = ['<>', '876!@£$%*^%'];
 				options.forEach(async option => {
 					amendedDetails = { ...updateDetails, terms: option };
-					const res = await updateBusiness(id, amendedDetails);
+					const res = await updateBusiness(authToken, id, amendedDetails);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',

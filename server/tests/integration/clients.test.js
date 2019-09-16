@@ -30,17 +30,62 @@ const returnedClientDetails = {
 	add3: 'COUNTY'.toLowerCase(),
 	postcode: 'ww12 3io'.toUpperCase()
 };
-let cookies;
+let authToken;
 let clients;
 
+const makeToken = async user => {
+	const res = await request(app)
+		.post('/api/users')
+		.send(user);
+	const { token } = res.body;
+	return token;
+};
+const makeClients = (auth, number) => {
+	clients = [];
+	while (clients.length < number) {
+		clients.push(testClient);
+	}
+	clients.forEach(async client => {
+		await makeClient(auth, client);
+	});
+};
+const makeClient = (auth, details) => {
+	return request(app)
+		.post('/api/clients')
+		.set('x-auth-token', auth)
+		.send(details);
+};
+const createClientID = async (token, details) => {
+	const response = await request(app)
+		.post('/api/clients')
+		.set('x-auth-token', token)
+		.send(details);
+	const { _id } = response.body;
+	return _id;
+};
+const updateClient = (token, id, update) => {
+	return request(app)
+		.put(`/api/clients/${id}`)
+		.set('x-auth-token', token)
+		.send(update);
+};
+const getClient = (token, id) => {
+	return request(app)
+		.get(`/api/clients/${id}`)
+		.set('x-auth-token', token);
+};
+const getClients = token => {
+	return request(app)
+		.get('/api/clients')
+		.set('x-auth-token', token);
+};
+const deleteClient = (token, id) => {
+	return request(app)
+		.get(`/api/clients/${id}`)
+		.set('x-auth-token', token);
+};
 beforeEach(async () => {
-	const registerUser = () => {
-		return request(app)
-			.post('/api/users')
-			.send(registerUserDetails);
-	};
-	const res = await registerUser();
-	cookies = res.headers['set-cookie'];
+	authToken = await makeToken(registerUserDetails);
 });
 
 afterEach(async () => {
@@ -49,56 +94,33 @@ afterEach(async () => {
 });
 
 describe('GET /', () => {
-	const makeClient = async details => {
-		await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(details);
-	};
-	const makeFiveClients = async () => {
-		clients = [];
-		while (clients.length < 5) {
-			clients.push(testClient);
-		}
-		clients.forEach(async c => {
-			await makeClient(c);
-		});
-	};
-
 	it('returns the users clients', async () => {
-		await makeFiveClients();
-		const res = await request(app)
-			.get('/api/clients')
-			.set('Cookie', cookies);
+		await makeClients(authToken, 5);
+		const res = await getClients(authToken);
 		expect(res.status).toBe(200);
 		expect(res.body).toBeArray();
 		expect(res.body).toHaveLength(5);
 	});
 
 	it('returns 401 and message if not auth', async () => {
-		cookies = '';
-		const res = await request(app)
-			.get('/api/clients')
-			.set('Cookie', cookies);
+		const res = await getClients('');
 		expect(res.status).toBe(401);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
+	it('returns 403 and message if invalid auth', async () => {
+		const res = await getClients('7u32h3yf9238f9238fy98f');
+		expect(res.status).toBe(403);
+		expect(res.body).toHaveProperty('msg', 'Not Authorised');
+	});
+
 	it('returns 404 and message if no client found', async () => {
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'A Different Drummer',
-					email: 'drumming@differently.com',
-					password: '1@P!a$£$word'
-				});
-		};
-		const response = await registerUser();
-		cookies = response.headers['set-cookie'];
-		const res = await request(app)
-			.get('/api/clients')
-			.set('Cookie', cookies);
+		const diffToken = await makeToken({
+			...registerUserDetails,
+			email: 'today@tomorrow.co.uk',
+			name: 'Different Person'
+		});
+		const res = await getClients(diffToken);
 		expect(res.status).toBe(404);
 		expect(res.body).toHaveProperty(
 			'msg',
@@ -107,60 +129,54 @@ describe('GET /', () => {
 	});
 
 	it('only returns logged in users clients', async () => {
-		await makeFiveClients();
-		const resa = await request(app)
-			.get('/api/clients')
-			.set('Cookie', cookies);
-		expect(resa.status).toBe(200);
-		expect(resa.body).toBeArray();
-		expect(resa.body).toHaveLength(5);
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'A Different Drummer',
-					email: 'drumming@differently.com',
-					password: '1@P!a$£$word'
-				});
-		};
-		const response = await registerUser();
-		cookies = response.headers['set-cookie'];
-		await makeClient(testClient);
-		const res = await request(app)
-			.get('/api/clients')
-			.set('Cookie', cookies);
-		expect(res.status).toBe(200);
-		expect(res.body).toBeArray();
-		expect(res.body).toHaveLength(1);
+		const userOneToken = await makeToken({
+			...registerUserDetails,
+			email: 'today@tomorrow.co.uk',
+			name: 'Different Person'
+		});
+		await makeClients(userOneToken, 9);
+		const userTwoToken = await makeToken({
+			...registerUserDetails,
+			email: 'hello@token.co.uk',
+			name: 'Another Person'
+		});
+		await makeClients(userTwoToken, 3);
+		const resOne = await getClients(userOneToken);
+		const resTwo = await getClients(userTwoToken);
+		expect(resOne.status).toBe(200);
+		expect(resTwo.status).toBe(200);
+		expect(resOne.body).toBeArray();
+		expect(resOne.body).toHaveLength(9);
+		expect(resTwo.body).toBeArray();
+		expect(resTwo.body).toHaveLength(3);
 	});
 });
 
 describe('POST /', () => {
 	it('creates client details for user with valid details', async () => {
-		const res = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(testClient);
+		const res = await makeClient(authToken, testClient);
 		expect(res.status).toBe(200);
 		expect(res.body).toMatchObject(returnedClientDetails);
 	});
 
 	it("won't accept additional form fields", async () => {
-		const res = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send({ ...testClient, fakeField: 'erroneous info' });
+		const res = await makeClient(authToken, {
+			...testClient,
+			fakeField: 'erroneous info'
+		});
 		expect(res.status).toBe(400);
 		expect(res.body).toHaveProperty('msg', '"fakeField" is not allowed');
 	});
 
-	it('return an error msg if no auth', async () => {
-		cookies = 'iamafaketoken';
-		const res = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(testClient);
+	it('returns 401 an error msg if no token', async () => {
+		const res = await makeClient('', testClient);
 		expect(res.status).toBe(401);
+		expect(res.body).toHaveProperty('msg', 'Not Authorised');
+	});
+
+	it('returns 403 an error msg if invalid token', async () => {
+		const res = await makeClient('8787978798wqdhkqwhdkqwd', testClient);
+		expect(res.status).toBe(403);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
@@ -168,10 +184,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**', 1];
 		options.forEach(async option => {
 			testClient.name = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty('msg', 'Valid Client name required');
 		});
@@ -182,10 +195,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**', 1, '@email'];
 		options.forEach(async option => {
 			testClient.email = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty('msg', 'Valid email address required');
 		});
@@ -196,10 +206,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**', 1, '01273', '076542776868678936'];
 		options.forEach(async option => {
 			testClient.phone = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
@@ -213,10 +220,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**'];
 		options.forEach(async option => {
 			testClient.add1 = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
@@ -230,10 +234,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**'];
 		options.forEach(async option => {
 			testClient.add2 = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
@@ -247,10 +248,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**'];
 		options.forEach(async option => {
 			testClient.add3 = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty(
 				'msg',
@@ -264,10 +262,7 @@ describe('POST /', () => {
 		const options = ['', '<>', '!@£$%^&**', 'qwertyuoi', 'no postcode'];
 		options.forEach(async option => {
 			testClient.postcode = option;
-			const res = await request(app)
-				.post('/api/clients')
-				.set('Cookie', cookies)
-				.send(testClient);
+			const res = await makeClient(authToken, testClient);
 			expect(res.status).toBe(400);
 			expect(res.body).toHaveProperty('msg', 'Valid postcode required');
 		});
@@ -276,25 +271,9 @@ describe('POST /', () => {
 });
 
 describe('PUT / :id', () => {
-	const createClientID = async () => {
-		const response = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(testClient);
-		const { _id } = response.body;
-		return _id;
-	};
-
-	const updateClient = (id, update) => {
-		return request(app)
-			.put(`/api/clients/${id}`)
-			.set('Cookie', cookies)
-			.send(update);
-	};
-
 	it('updates a client record with valid input', async () => {
-		const id = await createClientID();
-		const res = await updateClient(id, {
+		const id = await createClientID(authToken, testClient);
+		const res = await updateClient(authToken, id, {
 			...testClient,
 			name: "You've Changed"
 		});
@@ -303,8 +282,8 @@ describe('PUT / :id', () => {
 	});
 
 	it("won't accept additional form fields", async () => {
-		const id = await createClientID();
-		const res = await updateClient(id, {
+		const id = await createClientID(authToken, testClient);
+		const res = await updateClient(authToken, id, {
 			...testClient,
 			fakeField: "You've Changed"
 		});
@@ -313,9 +292,8 @@ describe('PUT / :id', () => {
 	});
 
 	it('return a 401 and error msg if no auth', async () => {
-		const id = await createClientID();
-		cookies = '';
-		const res = await updateClient(id, {
+		const id = await createClientID(authToken, testClient);
+		const res = await updateClient('', id, {
 			...testClient,
 			name: "You've Changed"
 		});
@@ -324,19 +302,9 @@ describe('PUT / :id', () => {
 	});
 
 	it('returns 403 if usedId !== req.user.id', async () => {
-		const id = await createClientID();
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'A Different Drummer',
-					email: 'drumming@differently.com',
-					password: '1@P!a$£$word'
-				});
-		};
-		const response = await registerUser();
-		cookies = response.headers['set-cookie'];
-		const res = await updateClient(id, {
+		const id = await createClientID(authToken);
+		const diffToken = makeToken({ ...registerUserDetails, name: 'Benny Jets' });
+		const res = await updateClient(diffToken, id, {
 			...testClient,
 			name: "You've Changed"
 		});
@@ -346,31 +314,37 @@ describe('PUT / :id', () => {
 
 	describe('validates form data', () => {
 		it('validates name', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['', '<>', '!@£$%^&**', 1];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, name: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					name: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid Client name required');
 			});
 		});
 
 		it('validates email', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['', '<>', '!@£$%^&**', 1, '@tony', 'no email'];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, email: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					email: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid email address required');
 			});
 		});
 
 		it('validates phone', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['01273', '+44 7899 678678', '0113246782345'];
 			options.forEach(async option => {
 				const update = { ...testClient, phone: option };
-				const res = await updateClient(id, update);
+				const res = await updateClient(authToken, id, update);
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -380,10 +354,13 @@ describe('PUT / :id', () => {
 		});
 
 		it('validates add1', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['', '<>', '!@£$%^&**', 1, '<%>', {}];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, add1: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					add1: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -393,10 +370,13 @@ describe('PUT / :id', () => {
 		});
 
 		it('validates add2', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['', '<>', '!@£$%^&**', 1, '<%>', {}];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, add2: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					add2: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -406,10 +386,13 @@ describe('PUT / :id', () => {
 		});
 
 		it('validates add3', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = ['', '<>', '!@£$%^&**', 1, '<%>', {}];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, add3: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					add3: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty(
 					'msg',
@@ -419,7 +402,7 @@ describe('PUT / :id', () => {
 		});
 
 		it('validates postcode', async () => {
-			const id = await createClientID();
+			const id = await createClientID(authToken);
 			const options = [
 				'',
 				'<>',
@@ -431,7 +414,10 @@ describe('PUT / :id', () => {
 				'91232'
 			];
 			options.forEach(async option => {
-				const res = await updateClient(id, { ...testClient, postcode: option });
+				const res = await updateClient(authToken, id, {
+					...testClient,
+					postcode: option
+				});
 				expect(res.status).toBe(400);
 				expect(res.body).toHaveProperty('msg', 'Valid postcode required');
 			});
@@ -440,114 +426,68 @@ describe('PUT / :id', () => {
 });
 
 describe('GET / :id', () => {
-	const createClientID = async () => {
-		const response = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(testClient);
-		const { _id } = response.body;
-		return _id;
-	};
-
-	const getClient = id => {
-		return request(app)
-			.get(`/api/clients/${id}`)
-			.set('Cookie', cookies);
-	};
-
 	it('returns the correct client record', async () => {
-		const id = await createClientID();
-		const res = await getClient(id);
+		const id = await createClientID(authToken, testClient);
+		const res = await getClient(authToken, id);
 		expect(res.status).toBe(200);
 		expect(res.body).toMatchObject(returnedClientDetails);
 	});
 
 	it('return a 401 and error msg if no auth', async () => {
-		const id = await createClientID();
-		cookies = '';
-		const res = await getClient(id);
+		const id = await createClientID(authToken, testClient);
+		const res = await getClient('', id);
 		expect(res.status).toBe(401);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
 	it('returns 403 if usedId !== req.user.id', async () => {
-		const id = await createClientID();
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'A Different Drummer',
-					email: 'drumming@differently.com',
-					password: '1@P!a$£$word'
-				});
-		};
-		const response = await registerUser();
-		cookies = response.headers['set-cookie'];
-		const res = await getClient(id);
+		const id = await createClientID(authToken, testClient);
+		const diffToken = await makeToken({
+			...registerUserDetails,
+			email: 'bob@james.com'
+		});
+		const res = await getClient(diffToken, id);
 		expect(res.status).toBe(403);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
 	it('return a 404 if client not found', async () => {
 		const id = mongoose.Types.ObjectId();
-		const res = await getClient(id);
+		const res = await getClient(authToken, id);
 		expect(res.status).toBe(404);
 		expect(res.body).toHaveProperty('msg', 'Client details not found');
 	});
 });
 
 describe('DELETE / :id', () => {
-	const createClientID = async () => {
-		const response = await request(app)
-			.post('/api/clients')
-			.set('Cookie', cookies)
-			.send(testClient);
-		const { _id } = response.body;
-		return _id;
-	};
-
-	const deleteClient = id => {
-		return request(app)
-			.get(`/api/clients/${id}`)
-			.set('Cookie', cookies);
-	};
-
 	it('returns the correct client record', async () => {
-		const id = await createClientID();
-		const res = await deleteClient(id);
+		const id = await createClientID(authToken, testClient);
+		const res = await deleteClient(authToken, id);
 		expect(res.status).toBe(200);
 		expect(res.body).toMatchObject(returnedClientDetails);
 	});
 
 	it('return a 401 and error msg if no auth', async () => {
-		const id = await createClientID();
-		cookies = '';
-		const res = await deleteClient(id);
+		const id = await createClientID(authToken, testClient);
+		const res = await deleteClient('', id);
 		expect(res.status).toBe(401);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
 	it('returns 403 if usedId !== req.user.id', async () => {
-		const id = await createClientID();
-		const registerUser = () => {
-			return request(app)
-				.post('/api/users')
-				.send({
-					name: 'A Different Drummer',
-					email: 'drumming@differently.com',
-					password: '1@P!a$£$word'
-				});
-		};
-		const response = await registerUser();
-		cookies = response.headers['set-cookie'];
-		const res = await deleteClient(id);
+		const id = await createClientID(authToken, testClient);
+		const diffToken = await makeToken({
+			...registerUserDetails,
+			email: 'bob@bob.com'
+		});
+		const res = await deleteClient(diffToken, id);
 		expect(res.status).toBe(403);
 		expect(res.body).toHaveProperty('msg', 'Not Authorised');
 	});
 
 	it('return a 404 if client not found', async () => {
 		const id = mongoose.Types.ObjectId();
-		const res = await deleteClient(id);
+		const res = await deleteClient(authToken, id);
 		expect(res.status).toBe(404);
 		expect(res.body).toHaveProperty('msg', 'Client details not found');
 	});

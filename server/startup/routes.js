@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const config = require('config');
-const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const logger = require('./logger');
 const api = require('../routes/api');
 const users = require('../routes/users');
@@ -12,10 +12,15 @@ const clients = require('../routes/clients');
 const expenses = require('../routes/expenses');
 
 const initialize = app => {
+	const corsOptions = {
+		origin: config.get('frontendURL'),
+		optionsSuccessStatus: 200
+	};
+
 	const middlewares = [
 		morgan('dev', { stream: logger.stream }),
 		express.json({ extended: false }),
-		cookieParser()
+		cors(corsOptions)
 	];
 
 	app.use(middlewares);

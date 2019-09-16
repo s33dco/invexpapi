@@ -1,7 +1,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const getValue = require('config');
 const webpack = require('webpack');
 const { appEntry } = require('./common-paths');
+
+const api_url = getValue.get('apiURL');
 
 const config = {
 	entry: appEntry,
@@ -41,6 +44,9 @@ const config = {
 		new CopyWebpackPlugin([{ from: './src/static/images', to: './images' }]),
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+		}),
+		new webpack.DefinePlugin({
+			'process.env.API_URL': JSON.stringify(api_url)
 		})
 	]
 };

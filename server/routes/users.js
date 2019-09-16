@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const logger = require('../startup/logger');
 const { User, validate } = require('../models/user');
-const { sigOptions, payOptions } = require('../../config/cookieOptions');
-const jwtCookies = require('../utils/jwtCookies');
+// const { sigOptions, payOptions } = require('../../config/cookieOptions');
+// const jwtCookies = require('../utils/jwtCookies');
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 
 		if (user) {
 			logger.info('failed registration attempt - Email already used.');
-			return res.status(400).json({ msg: 'User already exists' });
+			return res.status(400).json({ msg: 'Email address already in use!' });
 		}
 
 		// create user
@@ -70,16 +70,16 @@ router.post('/', async (req, res) => {
 				if (err) throw err;
 
 				// send jwt
-				const { headPay, signature } = jwtCookies(token);
+				// const { headPay, signature } = jwtCookies(token);
 
-				res.cookie('payload', headPay, payOptions);
-				res.cookie('signature', signature, sigOptions);
-				res.json({ msg: `${user.name} successfully registered` });
+				// res.cookie('payload', headPay, payOptions);
+				// res.cookie('signature', signature, sigOptions);
+				res.json({ token });
 			}
 		);
 	} catch (err) {
 		logger.error(err.message);
-		res.status(500).send('server error');
+		res.status(500).send('Something went wrong, have another go');
 	}
 });
 

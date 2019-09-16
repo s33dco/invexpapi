@@ -8,7 +8,7 @@ const { Expense } = require('../../models/expense');
 const { User } = require('../../models/user');
 const app = require('../../app');
 
-let cookies;
+let authToken;
 let expenses;
 
 const registerUserDetails = {
@@ -37,69 +37,71 @@ const returnedExpense = {
 	desc: 'some paper and stationary supplies'
 };
 
-const getExpenses = () => {
+const registerUser = details => {
 	return request(app)
-		.get('/api/expenses')
-		.set('Cookie', cookies);
-};
-
-const getExpense = id => {
-	return request(app)
-		.get(`/api/expenses/${id}`)
-		.set('Cookie', cookies);
-};
-
-const makeExpense = details => {
-	return request(app)
-		.post('/api/expenses')
-		.set('Cookie', cookies)
+		.post('/api/users')
 		.send(details);
 };
 
-const getExpenseId = async () => {
-	const res = await makeExpense(testExpense);
+const getExpenses = auth => {
+	return request(app)
+		.get('/api/expenses')
+		.set('x-auth-token', auth);
+};
+
+const getExpense = (auth, id) => {
+	return request(app)
+		.get(`/api/expenses/${id}`)
+		.set('x-auth-token', auth);
+};
+
+const makeExpense = (auth, details) => {
+	return request(app)
+		.post('/api/expenses')
+		.set('x-auth-token', auth)
+		.send(details);
+};
+
+const getExpenseId = async (auth, details) => {
+	const res = await makeExpense(auth, details);
 	const { _id } = res.body;
 	return _id;
 };
 
-const makeExpenses = async n => {
+const makeExpenses = async (auth, n) => {
 	expenses = [];
 	while (expenses.length < n) {
 		expenses.push(testExpense);
 	}
 	expenses.forEach(async exp => {
-		await makeExpense(exp);
+		await makeExpense(auth, exp);
 	});
 };
 
-const postExpense = exp => {
+const postExpense = (auth, exp) => {
 	return request(app)
 		.post('/api/expenses')
-		.set('Cookie', cookies)
+		.set('x-auth-token', auth)
 		.send(exp);
 };
 
-const updateExpense = (id, update) => {
+const updateExpense = (auth, id, update) => {
 	return request(app)
 		.put(`/api/expenses/${id}`)
-		.set('Cookie', cookies)
+		.set('x-auth-token', auth)
 		.send(update);
 };
 
-const deleteExpense = id => {
+const deleteExpense = (auth, id) => {
 	return request(app)
 		.get(`/api/expenses/${id}`)
-		.set('Cookie', cookies);
+		.set('x-auth-token', auth);
 };
 
 beforeEach(async () => {
-	const registerUser = () => {
-		return request(app)
-			.post('/api/users')
-			.send(registerUserDetails);
-	};
-	const res = await registerUser();
-	cookies = res.headers['set-cookie'];
+	const res = await registerUser(registerUserDetails);
+	const { token } = res.body;
+	authToken = token;
 });
 
 afterEach(async () => {
@@ -110,41 +112,40 @@ afterEach(async () => {
 describe('expenses endpoints', () => {
 	describe('GET /', () => {
 		it('returns 404 and message if no users expenses found', async () => {
-			const res = await getExpenses();
+			const res = await getExpenses(authToken);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty('msg', 'you have no expenses so far');
 		});
 
 		it('returns the users expenses', async () => {
-			await makeExpenses(4);
-			const res = await getExpenses();
+			await makeExpenses(authToken, 4);
+			const res = await getExpenses(authToken);
 			expect(res.status).toBe(200);
 			expect(res.body).toBeArray();
 			expect(res.body).toHaveLength(4);
 		});
 
-		it('returns 401 and message if not auth', async () => {
-			cookies = '';
-			const res = await getExpenses();
+		it('returns 401 and message if no token', async () => {
+			const res = await getExpenses('');
 			expect(res.status).toBe(401);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+		it('returns 403 and message if invalid token', async () => {
+			const res = await getExpenses('878923yh4k2h34k2h34hk234j23h4kj2h34');
+			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('only returns logged in users clients', async () => {
-			await makeExpenses(12);
-			const registerUser = () => {
-				return request(app)
-					.post('/api/users')
-					.send({
-						name: 'A Different Drummer',
-						email: 'drumming@differently.com',
-						password: '1@P!a$£$word'
-					});
-			};
-			const response = await registerUser();
-			cookies = response.headers['set-cookie'];
-			await makeExpenses(2);
-			const res = await getExpenses();
+			await makeExpenses(authToken, 12);
+			const response = await registerUser({
+				name: 'A Different Drummer',
+				email: 'drumming@differently.com',
+				password: '1@P!a$£$word'
+			});
+			const newAuth = response.body.token;
+			await makeExpenses(newAuth, 2);
+			const res = await getExpenses(newAuth);
 			expect(res.status).toBe(200);
 			expect(res.body).toBeArray();
 			expect(res.body).toHaveLength(2);
@@ -153,13 +154,13 @@ describe('expenses endpoints', () => {
 
 	describe('POST /', () => {
 		it('creates client details for user with valid details', async () => {
-			const res = await postExpense(testExpense);
+			const res = await postExpense(authToken, testExpense);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedExpense);
 		});
 
 		it("won't accept additional form fields", async () => {
-			const res = await postExpense({
+			const res = await postExpense(authToken, {
 				...testExpense,
 				fakeField: 'erroneous info'
 			});
@@ -167,9 +168,14 @@ describe('expenses endpoints', () => {
 			expect(res.body).toHaveProperty('msg', '"fakeField" is not allowed');
 		});
 
-		it('returns 401 and error msg if no auth', async () => {
-			cookies = 'iamafaketoken';
-			const res = await postExpense(testExpense);
+		it('returns 403 if invalid token', async () => {
+			const res = await postExpense('iamafaketoken', testExpense);
+			expect(res.status).toBe(403);
+			expect(res.body).toHaveProperty('msg', 'Not Authorised');
+		});
+
+		it('returns 401 if no token', async () => {
+			const res = await postExpense('', testExpense);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
@@ -189,7 +195,7 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, date: option };
-					const res = await postExpense(expense);
+					const res = await postExpense(authToken, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -209,7 +215,7 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, category: option };
-					const res = await postExpense(expense);
+					const res = await postExpense(authToken, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'select a valid category');
 				});
@@ -226,7 +232,7 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, amount: option };
-					const res = await postExpense(expense);
+					const res = await postExpense(authToken, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'Valid amount is required');
 				});
@@ -236,7 +242,7 @@ describe('expenses endpoints', () => {
 				const options = ['', '<%= %>', '!%^&*(_)'];
 				options.forEach(async option => {
 					const expense = { ...testExpense, desc: option };
-					const res = await postExpense(expense);
+					const res = await postExpense(authToken, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -249,9 +255,8 @@ describe('expenses endpoints', () => {
 
 	describe('PUT / :id', () => {
 		it('updates an expense with valid input', async () => {
-			const resA = await makeExpense(testExpense);
-			const { _id } = resA.body;
-			const res = await updateExpense(_id, {
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await updateExpense(authToken, id, {
 				...testExpense,
 				desc: 'this is a test'
 			});
@@ -261,7 +266,7 @@ describe('expenses endpoints', () => {
 
 		it('returns 404 if expense not found', async () => {
 			const fake = mongoose.Types.ObjectId();
-			const res = await updateExpense(fake, {
+			const res = await updateExpense(authToken, fake, {
 				...testExpense,
 				desc: 'this is a test'
 			});
@@ -270,9 +275,8 @@ describe('expenses endpoints', () => {
 		});
 
 		it('wont accept additional form fields', async () => {
-			const resA = await makeExpense(testExpense);
-			const { _id } = resA.body;
-			const res = await updateExpense(_id, {
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await updateExpense(authToken, id, {
 				...testExpense,
 				fakeField: "You've Changed"
 			});
@@ -281,29 +285,21 @@ describe('expenses endpoints', () => {
 		});
 
 		it('returns 401 and error msg if no auth', async () => {
-			const resA = await makeExpense(testExpense);
-			const { _id } = resA.body;
-			cookies = '';
-			const res = await updateExpense(_id, testExpense);
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await updateExpense('', id, testExpense);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('returns 403 if userId !== req.user.id', async () => {
-			const resA = await makeExpense(testExpense);
-			const { _id } = resA.body;
-			const registerUser = () => {
-				return request(app)
-					.post('/api/users')
-					.send({
-						name: 'A Different Drummer',
-						email: 'drumming@differently.com',
-						password: '1@P!a$£$word'
-					});
-			};
-			const response = await registerUser();
-			cookies = response.headers['set-cookie'];
-			const res = await updateExpense(_id, testExpense);
+			const id = await getExpenseId(authToken, testExpense);
+			const diffUser = await registerUser({
+				name: 'A Different Drummer',
+				email: 'drumming@differently.com',
+				password: '1@P!a$£$word'
+			});
+			const diffToken = diffUser.body.token;
+			const res = await updateExpense(diffToken, id, testExpense);
 			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
@@ -323,9 +319,8 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, date: option };
-					const resA = await makeExpense(testExpense);
-					const { _id } = resA.body;
-					const res = await updateExpense(_id, expense);
+					const id = await getExpenseId(authToken, testExpense);
+					const res = await updateExpense(authToken, id, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -349,9 +344,8 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, category: option };
-					const resA = await makeExpense(testExpense);
-					const { _id } = resA.body;
-					const res = await updateExpense(_id, expense);
+					const id = await getExpenseId(authToken, testExpense);
+					const res = await updateExpense(authToken, id, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'select a valid category');
 				});
@@ -373,9 +367,8 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, amount: option };
-					const resA = await makeExpense(testExpense);
-					const { _id } = resA.body;
-					const res = await updateExpense(_id, expense);
+					const id = await getExpenseId(authToken, testExpense);
+					const res = await updateExpense(authToken, id, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty('msg', 'Valid amount is required');
 				});
@@ -393,9 +386,8 @@ describe('expenses endpoints', () => {
 				];
 				options.forEach(async option => {
 					const expense = { ...testExpense, desc: option };
-					const resA = await makeExpense(testExpense);
-					const { _id } = resA.body;
-					const res = await updateExpense(_id, expense);
+					const id = await getExpenseId(authToken, testExpense);
+					const res = await updateExpense(authToken, id, expense);
 					expect(res.status).toBe(400);
 					expect(res.body).toHaveProperty(
 						'msg',
@@ -408,37 +400,35 @@ describe('expenses endpoints', () => {
 
 	describe('GET / :id', () => {
 		it('returns the correct expense record', async () => {
-			const id = await getExpenseId();
-			const res = await getExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await getExpense(authToken, id);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedExpense);
 		});
 
 		it('returns 404 if no expense record', async () => {
 			const id = await mongoose.Types.ObjectId();
-			const res = await getExpense(id);
+			const res = await getExpense(authToken, id);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty('msg', 'expense details not found');
 		});
 
 		it('return a 401 and error msg if no auth', async () => {
-			const id = await getExpenseId();
-			cookies = '';
-			const res = await getExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await getExpense('', id);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('returns 403 if usedId !== req.user.id', async () => {
-			const id = await getExpenseId();
-			const registerNewUser = () => {
-				return request(app)
-					.post('/api/users')
-					.send({ ...registerUserDetails, email: 'john@newuser.com' });
-			};
-			const resA = await registerNewUser();
-			cookies = resA.headers['set-cookie'];
-			const res = await getExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const diffUser = await registerUser({
+				name: 'A Different Drummer',
+				email: 'drumming@differently.com',
+				password: '1@P!a$£$word'
+			});
+			const diffToken = diffUser.body.token;
+			const res = await getExpense(diffToken, id);
 			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
@@ -446,37 +436,35 @@ describe('expenses endpoints', () => {
 
 	describe('DELETE / :id', () => {
 		it('returns the correct expense record', async () => {
-			const id = await getExpenseId();
-			const res = await deleteExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await deleteExpense(authToken, id);
 			expect(res.status).toBe(200);
 			expect(res.body).toMatchObject(returnedExpense);
 		});
 
 		it('returns 404 if no expense record', async () => {
 			const id = await mongoose.Types.ObjectId();
-			const res = await deleteExpense(id);
+			const res = await deleteExpense(authToken, id);
 			expect(res.status).toBe(404);
 			expect(res.body).toHaveProperty('msg', 'expense details not found');
 		});
 
 		it('return a 401 and error msg if no auth', async () => {
-			const id = await getExpenseId();
-			cookies = '';
-			const res = await deleteExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const res = await deleteExpense('', id);
 			expect(res.status).toBe(401);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});
 
 		it('returns 403 if usedId !== req.user.id', async () => {
-			const id = await getExpenseId();
-			const registerNewUser = () => {
-				return request(app)
-					.post('/api/users')
-					.send({ ...registerUserDetails, email: 'john@newuser.com' });
-			};
-			const resA = await registerNewUser();
-			cookies = resA.headers['set-cookie'];
-			const res = await deleteExpense(id);
+			const id = await getExpenseId(authToken, testExpense);
+			const diffUser = await registerUser({
+				name: 'A Different Drummer',
+				email: 'drumming@differently.com',
+				password: '1@P!a$£$word'
+			});
+			const diffToken = diffUser.body.token;
+			const res = await deleteExpense(diffToken, id);
 			expect(res.status).toBe(403);
 			expect(res.body).toHaveProperty('msg', 'Not Authorised');
 		});

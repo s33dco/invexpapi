@@ -2,7 +2,7 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 // const Joi = require('@hapi/joi');
 const {
-	name,
+	checkName,
 	businessName,
 	simpleEmail,
 	phoneNumber,
@@ -21,13 +21,6 @@ const InvoiceSchema = new mongoose.Schema({
 	invNo: {
 		type: Number,
 		required: [true, 'Invoice number is required']
-		// validate: {
-		// 	validator: async v => {
-		// 		const dupe = await Invoice.findOne({ invNo: v });
-		// 		if (dupe) return false;
-		// 	},
-		// 	message: 'Invoice number already in used.'
-		// }
 	},
 	invDate: {
 		type: Date,
@@ -47,7 +40,7 @@ const InvoiceSchema = new mongoose.Schema({
 		required: [true, 'Greeting for email required'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'Invalid character used.'
 		},
@@ -59,7 +52,7 @@ const InvoiceSchema = new mongoose.Schema({
 		required: [true, 'Message for email required'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'Invalid character used.'
 		},
@@ -105,7 +98,7 @@ const InvoiceSchema = new mongoose.Schema({
 				required: [true, 'Item description required'],
 				validate: {
 					validator: v => {
-						return v.match(name);
+						return v.match(checkName);
 					},
 					message: 'Invalid character used.'
 				},
@@ -174,7 +167,7 @@ const InvoiceSchema = new mongoose.Schema({
 			required: [true, 'First line of address required'],
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect chatacter in address'
 			},
@@ -186,7 +179,7 @@ const InvoiceSchema = new mongoose.Schema({
 			lowercase: true,
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect character in address'
 			},
@@ -197,7 +190,7 @@ const InvoiceSchema = new mongoose.Schema({
 			lowercase: true,
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect character in address'
 			},
@@ -242,7 +235,7 @@ const InvoiceSchema = new mongoose.Schema({
 			maxlength: [255, 'Contact Name too long'],
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: `contains invalid character`
 			},
@@ -278,7 +271,7 @@ const InvoiceSchema = new mongoose.Schema({
 			required: [true, 'First line of address required'],
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect character in address'
 			},
@@ -290,7 +283,7 @@ const InvoiceSchema = new mongoose.Schema({
 			lowercase: true,
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect character in address'
 			},
@@ -301,7 +294,7 @@ const InvoiceSchema = new mongoose.Schema({
 			lowercase: true,
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect chatacter in address'
 			},
@@ -325,7 +318,7 @@ const InvoiceSchema = new mongoose.Schema({
 			required: [true, 'Bank name required'],
 			validate: {
 				validator: v => {
-					return v.match(name);
+					return v.match(checkName);
 				},
 				message: 'incorrect chatacter in Bank name'
 			},

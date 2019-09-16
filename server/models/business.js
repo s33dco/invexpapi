@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
 const {
 	businessName,
-	name,
+	checkName,
 	phoneNumber,
 	postCode,
 	sortCode,
@@ -41,7 +41,7 @@ const businessSchema = new mongoose.Schema({
 		maxlength: [255, 'Contact Name too long'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: `contains blacklisted character`
 		},
@@ -77,7 +77,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'First line of address required'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'incorrect chatacter in address'
 		},
@@ -89,7 +89,7 @@ const businessSchema = new mongoose.Schema({
 		lowercase: true,
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'incorrect chatacter in address'
 		},
@@ -100,7 +100,7 @@ const businessSchema = new mongoose.Schema({
 		lowercase: true,
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'incorrect chatacter in address'
 		},
@@ -124,7 +124,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'Bank name required'],
 		validate: {
 			validator: v => {
-				return v.match(name);
+				return v.match(checkName);
 			},
 			message: 'incorrect chatacter in Bank name'
 		},
@@ -210,7 +210,7 @@ const validate = business => {
 			.required()
 			.error(() => 'Valid Business name required'),
 		contact: Joi.string()
-			.regex(name)
+			.regex(checkName)
 			.min(1)
 			.max(255)
 			.required()
@@ -225,15 +225,15 @@ const validate = business => {
 			.error(() => 'Valid phone number required - just digits'),
 		add1: Joi.string()
 			.required()
-			.regex(name)
+			.regex(checkName)
 			.error(
 				() => 'Valid first line of address required, just word characters'
 			),
 		add2: Joi.string()
-			.regex(name)
+			.regex(checkName)
 			.error(() => 'Check second line of address - just word characters'),
 		add3: Joi.string()
-			.regex(name)
+			.regex(checkName)
 			.error(() => 'Check third line of address - just word characters'),
 		postcode: Joi.string()
 			.required()
@@ -241,7 +241,7 @@ const validate = business => {
 			.error(() => 'Valid postcode required'),
 		bankName: Joi.string()
 			.required()
-			.regex(name)
+			.regex(checkName)
 			.error(() => 'Valid bank name required'),
 		sortCode: Joi.string()
 			.required()
