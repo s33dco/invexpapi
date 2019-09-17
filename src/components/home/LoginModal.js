@@ -6,9 +6,9 @@ import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { registerUser, clearErrors } from '../../actions/authActions';
+import { loginUser, clearErrors } from '../../actions/authActions';
 import { setAlert } from '../../actions/alertActions';
-import { checkName, simpleEmail, checkPassword } from '../../../config/regexps';
+import { simpleEmail, checkPassword } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
@@ -24,9 +24,9 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const RegisterModal = props => {
+const LoginModal = props => {
 	const {
-		registerUser,
+		loginUser,
 		setAlert,
 		clearErrors,
 		error,
@@ -36,26 +36,13 @@ const RegisterModal = props => {
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
-	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setpassword] = useState('');
-	const [password2, setpassword2] = useState('');
 	const [disabled, setDisabled] = useState(true);
 	const [formErrors, setFormErrors] = useState({
-		name: '',
 		email: '',
-		password: '',
-		password2: ''
+		password: ''
 	});
-
-	const onNameChange = e => {
-		setName(e.target.value);
-		if (e.target.value.match(checkName)) {
-			setFormErrors({ ...formErrors, name: 'ok' });
-		} else {
-			setFormErrors({ ...formErrors, name: "Your name doesn't look right!" });
-		}
-	};
 
 	const onEmailChange = e => {
 		setEmail(e.target.value);
@@ -79,15 +66,6 @@ const RegisterModal = props => {
 		}
 	};
 
-	const onPassword2Change = e => {
-		setpassword2(e.target.value);
-		if (e.target.value === password) {
-			setFormErrors({ ...formErrors, password2: 'ok' });
-		} else {
-			setFormErrors({ ...formErrors, password2: 'Passwords need to match.' });
-		}
-	};
-
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -97,12 +75,7 @@ const RegisterModal = props => {
 	};
 
 	const canSend = () => {
-		if (
-			(formErrors.name &&
-				formErrors.email &&
-				formErrors.password &&
-				formErrors.password2) === 'ok'
-		) {
+		if ((formErrors.email && formErrors.password) === 'ok') {
 			setDisabled(false);
 		} else {
 			setDisabled(true);
@@ -112,16 +85,16 @@ const RegisterModal = props => {
 	const onSubmit = e => {
 		e.preventDefault();
 		const newUser = {
-			name,
 			email,
 			password
 		};
-		registerUser(newUser);
+		loginUser(newUser);
 	};
 
 	useEffect(() => {
 		// if authenticated redirect to root
 		if (isAuthenticated && user) {
+			handleClose();
 			props.history.push('/');
 		}
 
@@ -143,7 +116,7 @@ const RegisterModal = props => {
 				color="primary"
 				onClick={handleOpen}
 			>
-				Sign Up
+				Sign In
 			</Button>
 			<Modal
 				aria-labelledby="transition-modal-title"
@@ -159,27 +132,15 @@ const RegisterModal = props => {
 			>
 				<Fade in={open}>
 					<div className={classes.paper}>
-						<h2 id="transition-modal-title">Sign Up</h2>
-						<p id="transition-modal-description">Register to use</p>
+						<h2 id="transition-modal-title">Sign In</h2>
+						<p id="transition-modal-description">Sign In and get the cash</p>
+
 						<form className="container">
 							<div className="row">
 								<div className="input-field">
 									<input
-										placeholder="Name"
-										id="name"
-										type="text"
-										value={name}
-										onChange={onNameChange}
-										onBlur={canSend}
-									/>
-									{formErrors.name && <p>{formErrors.name}</p>}
-								</div>
-							</div>
-							<div className="row">
-								<div className="input-field">
-									<input
 										placeholder="Email Address"
-										id="email"
+										id="logEmail"
 										type="email"
 										value={email}
 										onChange={onEmailChange}
@@ -192,7 +153,7 @@ const RegisterModal = props => {
 								<div className="input-field">
 									<input
 										placeholder="password"
-										id="password"
+										id="logPassword"
 										type="password"
 										value={password}
 										onChange={onPasswordChange}
@@ -202,20 +163,6 @@ const RegisterModal = props => {
 								{formErrors.password && <p>{formErrors.password}</p>}
 							</div>
 							<div className="row">
-								<div className="input-field">
-									<input
-										placeholder="Confirm password"
-										id="password2"
-										type="password"
-										value={password2}
-										onChange={onPassword2Change}
-										onBlur={canSend}
-									/>
-								</div>
-								{formErrors.password2 && <p>{formErrors.password2}</p>}
-							</div>
-
-							<div className="row">
 								<Button
 									type="button"
 									variant="contained"
@@ -223,7 +170,7 @@ const RegisterModal = props => {
 									onClick={onSubmit}
 									disabled={disabled}
 								>
-									Register
+									Sign In
 								</Button>
 							</div>
 						</form>
@@ -234,8 +181,8 @@ const RegisterModal = props => {
 	);
 };
 
-RegisterModal.propTypes = {
-	registerUser: PropTypes.func.isRequired,
+LoginModal.propTypes = {
+	loginUser: PropTypes.func.isRequired,
 	setAlert: PropTypes.func.isRequired,
 	clearErrors: PropTypes.func.isRequired,
 	error: PropTypes.string,
@@ -250,5 +197,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ registerUser, clearErrors, setAlert }
-)(RegisterModal);
+	{ loginUser, clearErrors, setAlert }
+)(LoginModal);

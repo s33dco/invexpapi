@@ -2,9 +2,8 @@ import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
-import 'materialize-css/dist/css/materialize.min.css';
-import M from 'materialize-css/dist/js/materialize.min.js';
 import { Provider } from 'react-redux';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
 import Footer from './layout/Footer';
@@ -59,13 +58,9 @@ const AsyncNoMatch = importedComponent(
 );
 
 const App = () => {
-	useEffect(() => {
-		// Init Materialize JS
-		M.AutoInit();
-	});
-
 	return (
 		<Provider store={store}>
+			<CssBaseline />
 			<Router>
 				<header>
 					<NavBar />

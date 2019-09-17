@@ -1,8 +1,7 @@
 import React from 'react';
 
 const Business = () => {
-	// isLoggedIn ? <Dashboard /> : <About />
-	return <h1>Business Information</h1>;
+	return <h4>Invoice Info</h4>;
 };
 
 export default Business;

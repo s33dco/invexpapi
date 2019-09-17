@@ -71,7 +71,7 @@ export const loginUser = formData => async dispatch => {
 
 	try {
 		const res = await axios.post(
-			`${process.env.API_URL}/users`,
+			`${process.env.API_URL}/auth`,
 			formData,
 			config
 		);

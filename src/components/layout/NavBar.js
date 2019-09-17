@@ -67,6 +67,11 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 					Invoice Info
 				</NavLink>
 			</li>
+			<li>
+				<a className="header__link" onClick={logout}>
+					Log out
+				</a>
+			</li>
 		</Fragment>
 	);
 	const publicLinks = (
@@ -100,7 +105,6 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 			<div className="nav-wrapper">
 				<ul className="right">{isAuthenticated ? authLinks : publicLinks}</ul>
 			</div>
-			{user !== null && <a onClick={logout}>Log out</a>}
 		</nav>
 	);
 };
