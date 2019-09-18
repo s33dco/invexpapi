@@ -4,10 +4,12 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginUser, clearErrors } from '../../actions/authActions';
-import { setAlert } from '../../actions/alertActions';
 import { simpleEmail, checkPassword } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
@@ -20,25 +22,29 @@ const useStyles = makeStyles(theme => ({
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3)
+		padding: theme.spacing(2, 4, 3),
+		width: '80vw'
+	},
+	textField: {
+		marginLeft: '0',
+		marginRight: '0',
+		width: '100%'
+	},
+	form: {
+		margin: '0',
+		width: '100%'
 	}
 }));
 
 const LoginModal = props => {
-	const {
-		loginUser,
-		setAlert,
-		clearErrors,
-		error,
-		user,
-		isAuthenticated
-	} = props;
+	const { loginUser, clearErrors, error, user, isAuthenticated } = props;
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [email, setEmail] = useState('');
 	const [password, setpassword] = useState('');
 	const [disabled, setDisabled] = useState(true);
+	const [dbError, setDbError] = useState('');
 	const [formErrors, setFormErrors] = useState({
 		email: '',
 		password: ''
@@ -71,6 +77,13 @@ const LoginModal = props => {
 	};
 
 	const handleClose = () => {
+		setEmail('');
+		setpassword('');
+		setDbError('');
+		setFormErrors({
+			email: '',
+			password: ''
+		});
 		setOpen(false);
 	};
 
@@ -99,9 +112,10 @@ const LoginModal = props => {
 		}
 
 		if (error) {
-			setAlert(error, 'danger');
+			setDbError(error);
 			clearErrors();
 			setEmail('');
+			setTimeout(() => setDbError(''), 3000);
 			setDisabled(true);
 		}
 
@@ -119,8 +133,8 @@ const LoginModal = props => {
 				Sign In
 			</Button>
 			<Modal
-				aria-labelledby="transition-modal-title"
-				aria-describedby="transition-modal-description"
+				aria-labelledby="modal-title"
+				aria-describedby="modal-description"
 				className={classes.modal}
 				open={open}
 				onClose={handleClose}
@@ -132,37 +146,57 @@ const LoginModal = props => {
 			>
 				<Fade in={open}>
 					<div className={classes.paper}>
-						<h2 id="transition-modal-title">Sign In</h2>
-						<p id="transition-modal-description">Sign In and get the cash</p>
-
-						<form className="container">
-							<div className="row">
-								<div className="input-field">
-									<input
-										placeholder="Email Address"
-										id="logEmail"
-										type="email"
-										value={email}
-										onChange={onEmailChange}
-										onBlur={canSend}
-									/>
-									{formErrors.email && <p>{formErrors.email}</p>}
-								</div>
-							</div>
-							<div className="row">
-								<div className="input-field">
-									<input
-										placeholder="password"
-										id="logPassword"
-										type="password"
-										value={password}
-										onChange={onPasswordChange}
-										onBlur={canSend}
-									/>
-								</div>
-								{formErrors.password && <p>{formErrors.password}</p>}
-							</div>
-							<div className="row">
+						<Container component="form" className={classes.form}>
+							{dbError && (
+								<Typography
+									variant="headline"
+									component="h4"
+									align="center"
+									color="error"
+								>
+									{dbError}
+								</Typography>
+							)}
+							<Typography variant="h5" component="h1" align="center">
+								Sign In
+							</Typography>
+							<TextField
+								required
+								error={!!(formErrors.email && formErrors.email !== 'ok')}
+								placeholder="Email"
+								label="Email"
+								id="email"
+								type="email"
+								value={email}
+								onChange={onEmailChange}
+								onBlur={canSend}
+								className={classes.textField}
+								margin="normal"
+								helperText={
+									formErrors.email && formErrors.email !== 'ok'
+										? formErrors.email
+										: ''
+								}
+							/>
+							<TextField
+								required
+								error={!!(formErrors.password && formErrors.password !== 'ok')}
+								placeholder="Password"
+								label="Password"
+								id="password"
+								type="password"
+								value={password}
+								onChange={onPasswordChange}
+								onBlur={canSend}
+								className={classes.textField}
+								margin="normal"
+								helperText={
+									formErrors.password && formErrors.password !== 'ok'
+										? formErrors.password
+										: ''
+								}
+							/>
+							<div>
 								<Button
 									type="button"
 									variant="contained"
@@ -170,10 +204,10 @@ const LoginModal = props => {
 									onClick={onSubmit}
 									disabled={disabled}
 								>
-									Sign In
+									Register
 								</Button>
 							</div>
-						</form>
+						</Container>
 					</div>
 				</Fade>
 			</Modal>
@@ -197,5 +231,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ loginUser, clearErrors, setAlert }
+	{ loginUser, clearErrors }
 )(LoginModal);
