@@ -149,7 +149,7 @@ const LoginModal = props => {
 						<Container component="form" className={classes.form}>
 							{dbError && (
 								<Typography
-									variant="headline"
+									variant="subtitle2"
 									component="h4"
 									align="center"
 									color="error"
@@ -217,7 +217,6 @@ const LoginModal = props => {
 
 LoginModal.propTypes = {
 	loginUser: PropTypes.func.isRequired,
-	setAlert: PropTypes.func.isRequired,
 	clearErrors: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	isAuthenticated: PropTypes.bool.isRequired

@@ -1,13 +1,27 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 
+const useStyles = makeStyles(() => ({
+	root: {
+		padding: '1vh 1vw'
+		// background: '#4caf50'
+	}
+}));
+
 const Alerts = ({ alerts }) => {
+	const classes = useStyles();
+
 	return (
 		alerts.length > 0 &&
 		alerts.map(alert => (
-			<div key={alert.id} className={`alert alert-${alert.type}`}>
-				{alert.msg}
-			</div>
+			<Paper className={classes.root} key={alert.id}>
+				<Typography align="center" component="p">
+					{alert.msg}
+				</Typography>
+			</Paper>
 		))
 	);
 };
