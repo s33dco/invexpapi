@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 const PrivateRoute = ({
 	component: Component,
 	isAuthenticated,
-	loading,
+	user,
 	...rest
 }) => {
 	return (
 		<Route
 			{...rest}
 			render={props =>
-				!isAuthenticated && !loading ? (
+				!isAuthenticated && !user ? (
 					<Redirect to="/" />
 				) : (
 					<Component {...props} />
@@ -27,7 +27,7 @@ const PrivateRoute = ({
 
 const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	loading: state.auth.loading
+	user: state.auth.user
 });
 
 export default connect(mapStateToProps)(PrivateRoute);

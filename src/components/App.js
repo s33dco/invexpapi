@@ -1,9 +1,11 @@
 import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import importedComponent from 'react-imported-component';
 import { Provider } from 'react-redux';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
 import Footer from './layout/Footer';
@@ -57,17 +59,41 @@ const AsyncNoMatch = importedComponent(
 	}
 );
 
+const useStyles = makeStyles(theme => ({
+	body: {
+		display: 'flex',
+		flexDirection: 'column',
+		margin: '0',
+		padding: '0',
+		minHeight: '100vh'
+	},
+	header: {
+		height: '5vh'
+	},
+	main: {
+		flex: '1',
+		minHeight: '90vh',
+		paddingTop: '5vh'
+	},
+	footer: {
+		flex: '0',
+		padding: '1vh 2.5vw'
+	}
+}));
+
 const App = () => {
+	const classes = useStyles();
 	return (
 		<Provider store={store}>
 			<CssBaseline />
 			<Router>
-				<header>
-					<NavBar />
-				</header>
-				<main>
-					<Alerts />
-					<div className="container">
+				<Container component="div" className={classes.body}>
+					<Container component="header" className={classes.header}>
+						<NavBar />
+					</Container>
+					<Container component="main" className={classes.main}>
+						{/* <main> */}
+						<Alerts />
 						<Switch>
 							<Route exact path="/" component={Home} />
 							<PrivateRoute exact path="/invoices" component={AsyncInvoices} />
@@ -78,9 +104,12 @@ const App = () => {
 							<Route exact path="/contact" component={AsyncContact} />
 							<Route component={AsyncNoMatch} />
 						</Switch>
-					</div>
-				</main>
-				<Footer />
+					</Container>
+					{/* </main> */}
+					<Container component="footer" className={classes.footer}>
+						<Footer />
+					</Container>
+				</Container>
 			</Router>
 		</Provider>
 	);

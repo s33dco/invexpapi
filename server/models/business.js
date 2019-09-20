@@ -3,11 +3,11 @@ const Joi = require('@hapi/joi');
 const {
 	businessName,
 	checkName,
-	phoneNumber,
-	postCode,
-	sortCode,
-	accountNo,
-	utr,
+	checkPhoneNumber,
+	checkPostcode,
+	checkSortcode,
+	checkAccountno,
+	checkUTR,
 	objectId,
 	simpleEmail
 } = require('../../config/regexps');
@@ -66,7 +66,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'Phone number required'],
 		validate: {
 			validator: v => {
-				return v.match(phoneNumber);
+				return v.match(checkPhoneNumber);
 			},
 			message: `check phone number`
 		},
@@ -111,7 +111,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'Postcode required'],
 		validate: {
 			validator: v => {
-				return v.match(postCode);
+				return v.match(checkPostcode);
 			},
 			message: 'check postcode'
 		},
@@ -135,7 +135,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'Sort code required'],
 		validate: {
 			validator: v => {
-				return v.match(sortCode);
+				return v.match(checkSortcode);
 			},
 			message: 'check sort code'
 		},
@@ -146,7 +146,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'Account number required'],
 		validate: {
 			validator: v => {
-				return v.match(accountNo);
+				return v.match(checkAccountno);
 			},
 			message: 'check account nummber'
 		},
@@ -157,7 +157,7 @@ const businessSchema = new mongoose.Schema({
 		required: [true, 'UTR required'],
 		validate: {
 			validator: v => {
-				return v.match(utr);
+				return v.match(checkUTR);
 			},
 			message: 'check UTR'
 		},
@@ -221,7 +221,7 @@ const validate = business => {
 			.error(() => 'Valid email address required'),
 		phone: Joi.string()
 			.required()
-			.regex(phoneNumber)
+			.regex(checkPhoneNumber)
 			.error(() => 'Valid phone number required - just digits'),
 		add1: Joi.string()
 			.required()
@@ -237,7 +237,7 @@ const validate = business => {
 			.error(() => 'Check third line of address - just word characters'),
 		postcode: Joi.string()
 			.required()
-			.regex(postCode)
+			.regex(checkPostcode)
 			.error(() => 'Valid postcode required'),
 		bankName: Joi.string()
 			.required()
@@ -245,14 +245,14 @@ const validate = business => {
 			.error(() => 'Valid bank name required'),
 		sortCode: Joi.string()
 			.required()
-			.regex(sortCode)
+			.regex(checkSortcode)
 			.error(() => 'Valid sort code required (XX-XX-XX)'),
 		accountNo: Joi.string()
 			.required()
-			.regex(accountNo)
+			.regex(checkAccountno)
 			.error(() => 'Valid account number required - 8 digits only'),
 		utr: Joi.string()
-			.regex(utr)
+			.regex(checkUTR)
 			.required()
 			.error(() => 'Valid tax reference required'),
 		terms: Joi.string()

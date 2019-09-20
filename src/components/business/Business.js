@@ -1,7 +1,8 @@
 import React from 'react';
+import AddBusiness from './AddBusiness';
 
 const Business = () => {
-	return <h4>Invoice Info</h4>;
+	return <AddBusiness />;
 };
 
 export default Business;

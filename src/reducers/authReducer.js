@@ -5,7 +5,7 @@ import {
 	LOGIN_SUCCESS,
 	LOGIN_FAIL,
 	AUTH_ERROR,
-	CLEAR_ERRORS,
+	CLEAR_AUTH_ERRORS,
 	LOGOUT
 } from '../actions/types';
 
@@ -48,7 +48,7 @@ export default (state = initialState, action) => {
 				user: null,
 				error: action.payload
 			};
-		case CLEAR_ERRORS:
+		case CLEAR_AUTH_ERRORS:
 			return {
 				...state,
 				error: null

@@ -162,6 +162,7 @@ const LoginModal = props => {
 							</Typography>
 							<TextField
 								required
+								controlled="true"
 								error={!!(formErrors.email && formErrors.email !== 'ok')}
 								placeholder="Email"
 								label="Email"
@@ -180,6 +181,7 @@ const LoginModal = props => {
 							/>
 							<TextField
 								required
+								controlled="true"
 								error={!!(formErrors.password && formErrors.password !== 'ok')}
 								placeholder="Password"
 								label="Password"
@@ -198,13 +200,13 @@ const LoginModal = props => {
 							/>
 							<div>
 								<Button
-									type="button"
+									type="submit"
 									variant="contained"
 									color="primary"
 									onClick={onSubmit}
 									disabled={disabled}
 								>
-									Register
+									Log In
 								</Button>
 							</div>
 						</Container>

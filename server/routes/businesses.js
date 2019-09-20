@@ -13,7 +13,8 @@ router.get('/', auth, async (req, res) => {
 
 		if (!business) {
 			res.status(404).json({
-				msg: 'you need to add your business details before proceeding'
+				msg:
+					'You need to add your business details (Invoice Info) before proceeding.'
 			});
 		} else {
 			res.status(200).json(business);

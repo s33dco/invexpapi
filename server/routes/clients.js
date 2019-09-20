@@ -13,7 +13,7 @@ router.get('/', auth, async (req, res) => {
 
 		if (clients.length < 1) {
 			res.status(404).json({
-				msg: 'you need to add atleast one client before proceeding'
+				msg: 'You need to add atleast one client before proceeding.'
 			});
 		} else {
 			res.status(200).json(clients);

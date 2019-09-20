@@ -192,9 +192,10 @@ const RegisterModal = props => {
 
 							<TextField
 								required
+								controlled="true"
 								error={!!(formErrors.name && formErrors.name !== 'ok')}
-								placeholder="Name"
-								label="Name"
+								placeholder="Your Name"
+								label="Your Name"
 								id="name"
 								type="text"
 								value={name}
@@ -210,9 +211,10 @@ const RegisterModal = props => {
 							/>
 							<TextField
 								required
+								controlled="true"
 								error={!!(formErrors.email && formErrors.email !== 'ok')}
-								placeholder="Email"
-								label="Email"
+								placeholder="Email Address"
+								label="Email Address"
 								id="email"
 								type="email"
 								value={email}
@@ -228,6 +230,7 @@ const RegisterModal = props => {
 							/>
 							<TextField
 								required
+								controlled="true"
 								error={!!(formErrors.password && formErrors.password !== 'ok')}
 								placeholder="Password"
 								label="Password"
@@ -246,6 +249,7 @@ const RegisterModal = props => {
 							/>
 							<TextField
 								required
+								controlled="true"
 								error={
 									!!(formErrors.password2 && formErrors.password2 !== 'ok')
 								}
@@ -266,7 +270,7 @@ const RegisterModal = props => {
 							/>
 							<div>
 								<Button
-									type="button"
+									type="submit"
 									variant="contained"
 									color="primary"
 									onClick={onSubmit}

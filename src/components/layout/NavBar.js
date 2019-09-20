@@ -204,6 +204,7 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 						}}
 					>
 						<div className={classes.toolbar} />
+
 						{drawer}
 					</Drawer>
 				</Hidden>
