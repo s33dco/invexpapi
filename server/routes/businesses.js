@@ -27,6 +27,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
 	const businessDetails = { userId: req.user.id, ...req.body };
+	console.log(businessDetails);
 	const { error } = validate(businessDetails);
 
 	if (error) {
@@ -47,6 +48,9 @@ router.post('/', auth, async (req, res) => {
 		await business.save();
 		res.status(200).json(business);
 	} catch (e) {
+		logger.error(
+			`failed business details from ${req.user.name} (${req.user.id}) - ${e}`
+		);
 		res.status(500).send(`server error ${e}`);
 	}
 });

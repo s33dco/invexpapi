@@ -49,7 +49,6 @@ export const addBusiness = formData => async dispatch => {
 			type: ADD_BUSINESS,
 			payload: res.data
 		});
-
 		await dispatch(setAlert('Business Details Added!', 'info'));
 	} catch (error) {
 		dispatch({

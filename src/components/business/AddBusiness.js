@@ -8,7 +8,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
+import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addBusiness, clearErrors } from '../../actions/businessActions';
@@ -44,11 +46,14 @@ const useStyles = makeStyles(theme => ({
 	form: {
 		margin: '0',
 		width: '100%'
+	},
+	divider: {
+		margin: '1vh 0'
 	}
 }));
 
 const AddBusiness = props => {
-	const { addBusiness, clearErrors, error } = props;
+	const { addBusiness, clearErrors, error, newBusiness } = props;
 	const classes = useStyles();
 	const [business, setBusiness] = useState({
 		name: '',
@@ -67,27 +72,42 @@ const AddBusiness = props => {
 		useMileage: 'false'
 	});
 	const [formErrors, setFormErrors] = useState({
-		name: 'ok',
-		contact: 'ok',
-		phone: 'ok',
-		email: 'ok',
-		add1: 'ok',
-		add2: 'ok',
-		add3: 'ok',
-		postCode: 'ok',
-		bankName: 'ok',
-		accountNo: 'ok',
-		sortCode: 'ok',
-		utr: 'ok',
-		terms: 'ok',
-		farewell: 'ok'
+		name: '0',
+		contact: '0',
+		phone: '0',
+		email: '0',
+		add1: '0',
+		add2: '1',
+		add3: '1',
+		postCode: '0',
+		bankName: '0',
+		accountNo: '0',
+		sortCode: '0',
+		utr: '0',
+		terms: '0',
+		farewell: '0'
 	});
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
+	// const [toHome, setToHome] = useState(false);
+
+	// useEffect(() => {
+	// 	// if authenticated redirect to root
+
+	// 	if (error) {
+	// 		setDbError(error);
+	// 		clearErrors();
+	// 		setTimeout(() => setDbError(''), 7000);
+	// 		setDisabled(true);
+	// 	} else {
+	// 		setTimeout(() => setToHome(true), 2000);
+	// 	}
+
+	// 	// eslint - disable - next - line;
+	// }, [error, newBusiness]); // dependencies for useEffect
 
 	const canSend = () => {
-		console.log(formErrors);
-		if (Object.values(formErrors).filter(v => v !== 'ok').length < 1) {
+		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			setDisabled(false);
 		} else {
 			setDisabled(true);
@@ -96,6 +116,8 @@ const AddBusiness = props => {
 
 	const onSubmit = e => {
 		e.preventDefault();
+		const create = { ...business };
+		console.log(create);
 		addBusiness(business);
 	};
 
@@ -125,10 +147,11 @@ const AddBusiness = props => {
 				break;
 			case 'phone':
 				regExp = checkPhoneNumber;
-				message = 'digits only for the phone number';
+				message = 'check the number - just digits';
 				break;
 			case 'terms':
 			case 'name':
+			case 'farewell':
 				regExp = businessName;
 				message = 'Just word characters please';
 				break;
@@ -143,7 +166,7 @@ const AddBusiness = props => {
 		if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: 'ok'
+				[e.target.id]: '1'
 			});
 		} else {
 			setFormErrors({
@@ -174,124 +197,125 @@ const AddBusiness = props => {
 				you produce.
 			</Typography>
 			<TextField
+				controlled="true"
 				required
-				error={!(formErrors.name === 'ok')}
+				error={!(formErrors.name.length === 1)}
 				placeholder="Business Name"
 				label="Business Name"
 				id="name"
-				type="name"
+				type="text"
 				value={business.name}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.name === 'ok' ? '' : formErrors.name}
+				helperText={formErrors.name.length > 1 ? formErrors.name : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.contact === 'ok')}
+				error={!(formErrors.contact.length === 1)}
 				placeholder="Contact Name"
 				label="Contact Name"
 				name="contact"
 				id="contact"
-				type="contact"
+				type="text"
 				value={business.contact}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.contact === 'ok' ? '' : formErrors.contact}
+				helperText={formErrors.contact.length > 1 ? formErrors.contact : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.email === 'ok')}
-				placeholder="Email"
-				label="Email"
+				error={!(formErrors.email.length === 1)}
+				placeholder="Email Address"
+				label="Email Address"
 				name="email"
 				id="email"
-				type="email"
+				type="text"
 				value={business.email}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.email === 'ok' ? '' : formErrors.email}
+				helperText={formErrors.email.length > 1 ? formErrors.email : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.phone === 'ok')}
-				placeholder="Phone"
-				label="Phone"
+				error={!(formErrors.phone.length === 1)}
+				placeholder="Phone Number"
+				label="Phone Number"
 				name="phone"
 				id="phone"
-				type="phone"
+				type="text"
 				value={business.phone}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.phone === 'ok' ? '' : formErrors.phone}
+				helperText={formErrors.phone.length > 1 ? formErrors.phone : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.add1 === 'ok')}
+				error={!(formErrors.add1.length === 1)}
 				placeholder="First Line of address"
 				label="First Line of address"
 				name="add1"
 				id="add1"
-				type="add1"
+				type="text"
 				value={business.add1}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.add1 === 'ok' ? '' : formErrors.add1}
+				helperText={formErrors.add1.length > 1 ? formErrors.add1 : ''}
 			/>
 
 			<TextField
 				controlled="true"
-				error={!(formErrors.add2 === 'ok')}
+				error={!(formErrors.add2.length === 1)}
 				placeholder="Address"
 				label="Address"
 				name="add2"
 				id="add2"
-				type="add2"
+				type="text"
 				value={business.add2}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.add2 === 'ok' ? '' : formErrors.add2}
+				helperText={formErrors.add2.length > 1 ? formErrors.add2 : ''}
 			/>
 
 			<TextField
 				controlled="true"
-				error={!(formErrors.add3 === 'ok')}
+				error={!(formErrors.add3.length === 1)}
 				placeholder="Address"
 				label="Address"
 				name="add3"
 				id="add3"
-				type="add3"
+				type="text"
 				value={business.add3}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.add3 === 'ok' ? '' : formErrors.add3}
+				helperText={formErrors.add3.length > 1 ? formErrors.add3 : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.postCode === 'ok')}
+				error={!(formErrors.postCode.length === 1)}
 				placeholder="Postcode"
 				label="Postcode"
 				name="postCode"
@@ -302,109 +326,112 @@ const AddBusiness = props => {
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.postCode === 'ok' ? '' : formErrors.postCode}
+				helperText={formErrors.postCode.length > 1 ? formErrors.postCode : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.bankName === 'ok')}
+				error={!(formErrors.bankName.length === 1)}
 				placeholder="Your Bank's name"
 				label="Your Bank's name"
 				name="bankName"
 				id="bankName"
-				type="bankName"
+				type="text"
 				value={business.bankName}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.bankName === 'ok' ? '' : formErrors.bankName}
+				helperText={formErrors.bankName.length > 1 ? formErrors.bankName : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.accountNo === 'ok')}
+				error={!(formErrors.accountNo.length === 1)}
 				placeholder="Bank Account Number"
 				label="Bank Account Number"
 				name="accountNo"
 				id="accountNo"
-				type="accountNo"
+				type="text"
 				value={business.accountNo}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.accountNo === 'ok' ? '' : formErrors.accountNo}
+				helperText={formErrors.accountNo.length > 1 ? formErrors.accountNo : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.sortCode === 'ok')}
-				placeholder="Bank Sortcode"
-				label="Bank Sortcode"
+				error={!(formErrors.sortCode.length === 1)}
+				placeholder="Your Account's sortcode"
+				label="Your Account's sortcode"
 				name="sortCode"
 				id="sortCode"
-				type="sortCode"
+				type="text"
 				value={business.sortCode}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.sortCode === 'ok' ? '' : formErrors.sortCode}
+				helperText={formErrors.sortCode.length > 1 ? formErrors.sortCode : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.utr === 'ok')}
+				error={!(formErrors.utr.length === 1)}
 				placeholder="Unique Tax Reference"
 				label="Unique Tax Reference"
 				name="utr"
 				id="utr"
-				type="utr"
+				type="text"
 				value={business.utr}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.utr === 'ok' ? '' : formErrors.utr}
+				helperText={formErrors.utr.length > 1 ? formErrors.utr : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.terms === 'ok')}
+				error={!(formErrors.terms.length === 1)}
 				placeholder="Invoice Terms"
 				label="Invoice Terms"
 				name="terms"
 				id="terms"
-				type="terms"
+				type="text"
+				multiline
+				rows={1}
+				rowsMax={8}
 				value={business.terms}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.terms === 'ok' ? '' : formErrors.terms}
+				helperText={formErrors.terms.length > 1 ? formErrors.terms : ''}
 			/>
 
 			<TextField
 				controlled="true"
 				required
-				error={!(formErrors.farewell === 'ok')}
+				error={!(formErrors.farewell.length === 1)}
 				placeholder="Invoice farewell"
 				label="Invoice farewell"
 				name="farewell"
 				id="farewell"
-				type="farewell"
+				type="text"
 				value={business.farewell}
 				onChange={handleChange}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.farewell === 'ok' ? '' : formErrors.farewell}
+				helperText={formErrors.farewell.length > 1 ? formErrors.farewell : ''}
 			/>
 
 			<FormControl component="fieldset" className={classes.formControl}>
@@ -428,9 +455,17 @@ const AddBusiness = props => {
 						labelPlacement="start"
 					/>
 				</RadioGroup>
+				<FormHelperText>
+					Choosing yes enables miles travelled on a per invoice basis to be
+					tracked, making it easy to work out deductions under the HMRC
+					simplified mileage scheme.{' '}
+				</FormHelperText>
 			</FormControl>
 
 			<div>
+				<div>
+					<Divider className={classes.divider} />
+				</div>
 				<Button
 					type="submit"
 					variant="contained"
@@ -451,7 +486,8 @@ AddBusiness.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	error: state.business.error
+	error: state.business.error,
+	newBusiness: state.business.business
 });
 
 export default connect(

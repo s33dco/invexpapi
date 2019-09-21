@@ -4,6 +4,7 @@ const path = require('path');
 const config = require('config');
 const cors = require('cors');
 const logger = require('./logger');
+const removeEmptyProperties = require('../middleware/omitEmpty');
 const api = require('../routes/api');
 const users = require('../routes/users');
 const auth = require('../routes/auth');
@@ -20,7 +21,8 @@ const initialize = app => {
 	const middlewares = [
 		morgan('dev', { stream: logger.stream }),
 		express.json({ extended: false }),
-		cors(corsOptions)
+		cors(corsOptions),
+		removeEmptyProperties()
 	];
 
 	app.use(middlewares);

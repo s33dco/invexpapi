@@ -106,7 +106,7 @@ const businessSchema = new mongoose.Schema({
 		},
 		trim: true
 	},
-	postcode: {
+	postCode: {
 		type: String,
 		required: [true, 'Postcode required'],
 		validate: {
@@ -235,7 +235,7 @@ const validate = business => {
 		add3: Joi.string()
 			.regex(checkName)
 			.error(() => 'Check third line of address - just word characters'),
-		postcode: Joi.string()
+		postCode: Joi.string()
 			.required()
 			.regex(checkPostcode)
 			.error(() => 'Valid postcode required'),
