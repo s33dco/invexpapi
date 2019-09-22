@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -89,22 +90,21 @@ const AddBusiness = props => {
 	});
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
-	// const [toHome, setToHome] = useState(false);
 
-	// useEffect(() => {
-	// 	// if authenticated redirect to root
+	useEffect(() => {
+		// if authenticated redirect to root
 
-	// 	if (error) {
-	// 		setDbError(error);
-	// 		clearErrors();
-	// 		setTimeout(() => setDbError(''), 7000);
-	// 		setDisabled(true);
-	// 	} else {
-	// 		setTimeout(() => setToHome(true), 2000);
-	// 	}
+		if (error) {
+			setDbError(error);
+			clearErrors();
+			setTimeout(() => setDbError(''), 7000);
+			setDisabled(true);
+		} else {
+			props.history.push('/');
+		}
 
-	// 	// eslint - disable - next - line;
-	// }, [error, newBusiness]); // dependencies for useEffect
+		// eslint - disable - next - line;
+	}, [error, props.history]); // dependencies for useEffect
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
@@ -476,6 +476,16 @@ const AddBusiness = props => {
 					Create Business
 				</Button>
 			</div>
+			{dbError && (
+				<Typography
+					variant="subtitle2"
+					component="h4"
+					align="center"
+					color="error"
+				>
+					{dbError}
+				</Typography>
+			)}
 		</Container>
 	);
 };
@@ -486,11 +496,10 @@ AddBusiness.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	error: state.business.error,
-	newBusiness: state.business.business
+	error: state.business.error
 });
 
 export default connect(
 	mapStateToProps,
 	{ addBusiness, clearErrors }
-)(AddBusiness);
+)(withRouter(AddBusiness));

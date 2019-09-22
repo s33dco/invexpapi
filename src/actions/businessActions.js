@@ -66,7 +66,7 @@ export const updateBusiness = (id, formData) => async dispatch => {
 	};
 
 	try {
-		const res = await axios.post(
+		const res = await axios.put(
 			`${process.env.API_URL}/businesses/${id}`,
 			formData,
 			config

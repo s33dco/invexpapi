@@ -85,7 +85,7 @@ router.put('/:id', auth, async (req, res) => {
 			req.params.id,
 			{ $set: { ...req.body } },
 			{ new: true }
-		);
+		).select('-__v -userId');
 		res.json(business);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);

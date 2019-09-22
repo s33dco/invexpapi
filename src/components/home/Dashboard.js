@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getBusiness } from '../../actions/businessActions';
@@ -30,4 +31,4 @@ const mapStateToProps = state => ({
 export default connect(
 	mapStateToProps,
 	{ getBusiness, setAlert }
-)(Dashboard);
+)(withRouter(Dashboard));

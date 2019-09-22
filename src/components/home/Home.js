@@ -7,7 +7,7 @@ import Dashboard from './Dashboard';
 const Home = ({ isAuthenticated, user, token }) => {
 	return (
 		<div className="container">
-			{isAuthenticated && user && token ? <Dashboard /> : <About />}
+			{isAuthenticated && user && token ? <Dashboard/> : <About />}
 		</div>
 	);
 };

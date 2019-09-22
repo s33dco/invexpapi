@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 
 const useStyles = makeStyles(() => ({
 	root: {
-		padding: '1vh 1vw'
+		padding: '1vh 1vw',
+		marginBottom: '2.5vh'
 		// background: '#4caf50'
 	}
 }));
