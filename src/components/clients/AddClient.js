@@ -49,10 +49,11 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const AddClient = props => {
-	const { addClient, clearClientErrors, error, clients } = props;
+const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
+	const [disabled, setDisabled] = useState(true);
+	const [dbError, setDbError] = useState('');
 	const [client, setClient] = useState({
 		name: '',
 		email: '',
@@ -66,34 +67,28 @@ const AddClient = props => {
 	const [formErrors, setFormErrors] = useState({
 		name: '0',
 		phone: '0',
-		email: '1',
+		email: '0',
 		add1: '0',
 		add2: '1',
 		add3: '1',
 		postCode: '0',
 		greeting: '0'
 	});
-	const [disabled, setDisabled] = useState(true);
-	const [dbError, setDbError] = useState('');
 
 	useEffect(() => {
 		if (error) {
-			setDbError(error);
-			// clearClientErrors();
-			setFormErrors({
-				...formErrors,
-				email: 'this email address is invalid!'
-			});
-			setTimeout(() => setDbError(''), 7000);
-			setDisabled(true);
+			// if api error
+			setDbError('Please take another look...'); // set form level error
+			setFormErrors({ ...formErrors, email: error }); // set field level error
+			clearClientErrors(); // clear api level error
 		}
-		if (formErrors.email === '1' && disabled === false && !error) {
+		if (!error && !dbError && !disabled) {
+			// no api or form errors and form enabled
 			clearForm();
-			// clearClientErrors();
 			handleClose();
 		}
 		// eslint - disable - next - line;
-	}, [error, clients]); // dependencies for useEffect
+	}, [error, clients]); // check for changes from api, api error and change in record being updated
 
 	const clearForm = () => {
 		setDisabled(true);
@@ -121,17 +116,17 @@ const AddClient = props => {
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
-			setDisabled(false);
+			// if no field level errors
+			setDisabled(false); // enable form
+			setDbError(''); // clear form level error
 		} else {
-			setDisabled(true);
+			setDisabled(true); // if field errors disable form
 		}
 	};
 
 	const onSubmit = e => {
 		e.preventDefault();
-		const create = { ...client };
-		console.log(create);
-		addClient(create);
+		addClient({ ...client });
 	};
 
 	const handleChange = e => {
@@ -148,7 +143,8 @@ const AddClient = props => {
 				break;
 			case 'phone':
 				regExp = checkPhoneNumber;
-				message = 'check the number - just digits';
+				message =
+					'check the phone number - just the right anount of digits needed';
 				break;
 			case 'name':
 			case 'greeting':
@@ -209,6 +205,9 @@ const AddClient = props => {
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
+							<Typography variant="h5" component="h1" align="center">
+								Add A New Client
+							</Typography>
 							{dbError && (
 								<Typography
 									variant="subtitle2"
@@ -219,9 +218,6 @@ const AddClient = props => {
 									{dbError}
 								</Typography>
 							)}
-							<Typography variant="h5" component="h1" align="center">
-								Add A New Client
-							</Typography>
 							<TextField
 								controlled="true"
 								required
@@ -393,7 +389,7 @@ const AddClient = props => {
 
 AddClient.propTypes = {
 	addClient: PropTypes.func.isRequired,
-	clearErrors: PropTypes.func.isRequired
+	clearClientErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

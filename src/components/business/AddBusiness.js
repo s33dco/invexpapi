@@ -186,6 +186,10 @@ const AddBusiness = ({
 
 	return (
 		<Container component="form" className={classes.form}>
+			<Typography variant="h5" component="h1" align="center">
+				Add Your Business Details, these will appear on the Invoices and Emails
+				you produce.
+			</Typography>
 			{dbError && (
 				<Typography
 					variant="subtitle2"
@@ -196,10 +200,6 @@ const AddBusiness = ({
 					{dbError}
 				</Typography>
 			)}
-			<Typography variant="h5" component="h1" align="center">
-				Add Your Business Details, these will appear on the Invoices and Emails
-				you produce.
-			</Typography>
 			<TextField
 				controlled="true"
 				required

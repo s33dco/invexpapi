@@ -8,7 +8,7 @@ import {
 
 const initialState = {
 	clients: [],
-	error: { error: '', msg: '' }
+	error: ''
 };
 
 export default (state = initialState, action) => {
@@ -17,13 +17,13 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				clients: [...action.payload],
-				error: { error: '', msg: '' }
+				error: ''
 			};
 		case ADD_CLIENT:
 			return {
 				...state,
 				clients: [...state.clients, action.payload],
-				error: { msg: '' }
+				error: ''
 			};
 		case CLIENT_ERROR:
 			return {
@@ -33,13 +33,13 @@ export default (state = initialState, action) => {
 		case CLEAR_CLIENT_ERRORS:
 			return {
 				...state,
-				error: { msg: '' }
+				error: ''
 			};
 		case CLEAR_CLIENTS:
 			return {
 				...state,
 				clients: [],
-				error: { msg: '' }
+				error: ''
 			};
 		default:
 			return state;

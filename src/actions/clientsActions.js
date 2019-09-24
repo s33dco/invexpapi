@@ -10,6 +10,19 @@ import {
 	CLEAR_CLIENT_ERRORS
 } from './types';
 
+export const clearClients = () => async dispatch => {
+	dispatch({
+		type: CLEAR_CLIENTS
+	});
+	await dispatch(setAlert('Clients cleared', 'warn'));
+};
+
+export const clearClientErrors = () => async dispatch => {
+	dispatch({
+		type: CLEAR_CLIENT_ERRORS
+	});
+};
+
 export const getClients = () => async dispatch => {
 	try {
 		const res = await axios.get(`${process.env.API_URL}/clients`);
@@ -23,6 +36,7 @@ export const getClients = () => async dispatch => {
 			payload: { msg: error.response.data.msg }
 		});
 		await dispatch(setAlert(error.response.data.msg, 'warn'));
+		await dispatch(clearClientErrors());
 	}
 };
 
@@ -49,7 +63,7 @@ export const addClient = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: { msg: error.response.data.msg }
+			payload: error.response.data.msg
 		});
 	}
 };
@@ -76,7 +90,7 @@ export const updateClient = (id, formData) => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: { msg: error.response.data.msg }
+			payload: error.response.data.msg
 		});
 	}
 };
@@ -103,20 +117,7 @@ export const deleteClient = id => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: { msg: error.response.data.msg }
+			payload: error.response.data.msg
 		});
 	}
-};
-
-export const clearClients = () => async dispatch => {
-	dispatch({
-		type: CLEAR_CLIENTS
-	});
-	await dispatch(setAlert('Clients cleared', 'warn'));
-};
-
-export const clearClientErrors = () => async dispatch => {
-	dispatch({
-		type: CLEAR_CLIENT_ERRORS
-	});
 };
