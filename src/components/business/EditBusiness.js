@@ -16,7 +16,10 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { updateBusiness, clearErrors } from '../../actions/businessActions';
+import {
+	updateBusiness,
+	clearBusinessErrors
+} from '../../actions/businessActions';
 import {
 	businessName,
 	checkName,
@@ -26,7 +29,7 @@ import {
 	checkAccountno,
 	checkUTR,
 	simpleEmail
-} from '../../../config/regexps';
+} from '../../../config/regexps'; // regExp's to check fields input against
 
 const useStyles = makeStyles(theme => ({
 	modal: {
@@ -58,20 +61,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const EditBusiness = props => {
-	const { updateBusiness, clearErrors, error, upBus } = props;
+	const { updateBusiness, clearBusinessErrors, error, upBus } = props;
 
-	const { _id, ...details } = upBus;
+	const { _id, ...details } = upBus; // destructure record from api
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
+	const [disabled, setDisabled] = useState(false); // disable form
+	const [dbError, setDbError] = useState(''); // set form level error
 	const [business, setBusiness] = useState({
+		// set component fields
 		...details
 	});
 	const [formErrors, setFormErrors] = useState({
 		name: '1',
-		contact: '1',
-		phone: '1',
-		email: '1',
+		contact: '1', // set field level error state,
+		phone: '1', // 1 = no error
+		email: '1', // (on an add form required field set to 0, unrequired fields set to 0)
 		add1: '1',
 		add2: '1',
 		add3: '1',
@@ -84,37 +90,39 @@ const EditBusiness = props => {
 		farewell: '1',
 		useMileage: '1'
 	});
-	const [disabled, setDisabled] = useState(false);
-	const [dbError, setDbError] = useState('');
 
 	useEffect(() => {
 		if (error) {
-			setDbError(error);
-			clearErrors();
-			setTimeout(() => setDbError(''), 7000);
-			setDisabled(true);
-		} else {
+			// if api error
+			setDbError('Please take another look...'); // set form level error
+			setFormErrors({ ...formErrors, email: error }); // set field level error
+			clearBusinessErrors(); // clear api level error
+		}
+		if (!error && !dbError && !disabled) {
+			// no api or form errors and form enabled
 			handleClose();
 		}
-
 		// eslint - disable - next - line;
-	}, [error, upBus]); // dependencies for useEffect
+	}, [error, upBus]); // check for changes from api, api error and change in record being updated
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
-			setDisabled(false);
+			// if no field level errors
+			setDisabled(false); // enable form
+			setDbError(''); // clear form level error
 		} else {
-			setDisabled(true);
+			setDisabled(true); // if field errors disable form
 		}
 	};
 
 	const onSubmit = e => {
 		e.preventDefault();
 		const update = { ...business };
-		updateBusiness(_id, update);
+		updateBusiness(_id, update); // send updated form fields to api
 	};
 
 	const handleChange = e => {
+		// set field level errors if regExp match false with returned string
 		let regExp;
 		let message;
 		switch (e.target.id) {
@@ -189,7 +197,7 @@ const EditBusiness = props => {
 				color="primary"
 				onClick={handleOpen}
 			>
-				Edit Details
+				Edit
 			</Button>
 			<Modal
 				aria-labelledby="modal-title"
@@ -533,7 +541,7 @@ const EditBusiness = props => {
 
 EditBusiness.propTypes = {
 	updateBusiness: PropTypes.func.isRequired,
-	clearErrors: PropTypes.func.isRequired
+	clearBusinessErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -543,5 +551,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ updateBusiness, clearErrors }
+	{ updateBusiness, clearBusinessErrors }
 )(EditBusiness);

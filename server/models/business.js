@@ -12,183 +12,193 @@ const {
 	simpleEmail
 } = require('../../config/regexps');
 
-const businessSchema = new mongoose.Schema({
-	userId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'users',
-		required: true
-	},
-	useMileage: {
-		type: Boolean,
-		required: true
-	},
-	name: {
-		type: String,
-		required: [true, 'Business Name required'],
-		maxlength: [255, 'Business Name too long'],
-		validate: {
-			validator: v => {
-				return v.match(businessName);
-			},
-			message: `contains blacklisted character`
+const businessSchema = new mongoose.Schema(
+	{
+		userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'users',
+			required: true
 		},
-		lowercase: true,
-		trim: true
-	},
-	contact: {
-		type: String,
-		required: [true, 'Contact Name required'],
-		maxlength: [255, 'Contact Name too long'],
-		validate: {
-			validator: v => {
-				return v.match(checkName);
-			},
-			message: `contains blacklisted character`
+		useMileage: {
+			type: Boolean,
+			required: true
 		},
-		lowercase: true,
-		trim: true
-	},
-	email: {
-		type: String,
-		required: [true, 'Email address required'],
-		lowercase: true,
-		maxlength: [255, 'Email address too long'],
-		validate: {
-			validator: v => {
-				return v.match(simpleEmail);
+		name: {
+			type: String,
+			required: [true, 'Business Name required'],
+			maxlength: [255, 'Business Name too long'],
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: `contains blacklisted character`
 			},
-			message: `Check email address`
+			lowercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	phone: {
-		type: String,
-		required: [true, 'Phone number required'],
-		validate: {
-			validator: v => {
-				return v.match(checkPhoneNumber);
+		contact: {
+			type: String,
+			required: [true, 'Contact Name required'],
+			maxlength: [255, 'Contact Name too long'],
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: `contains blacklisted character`
 			},
-			message: `check phone number`
+			lowercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	add1: {
-		type: String,
-		required: [true, 'First line of address required'],
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		email: {
+			type: String,
+			required: [true, 'Email address required'],
+			lowercase: true,
+			maxlength: [255, 'Email address too long'],
+			validate: {
+				validator: v => {
+					return v.match(simpleEmail);
+				},
+				message: `Check email address`
 			},
-			message: 'incorrect chatacter in address'
+			trim: true
 		},
-		lowercase: true,
-		trim: true
-	},
-	add2: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		phone: {
+			type: String,
+			required: [true, 'Phone number required'],
+			validate: {
+				validator: v => {
+					return v.match(checkPhoneNumber);
+				},
+				message: `check phone number`
 			},
-			message: 'incorrect chatacter in address'
+			trim: true
 		},
-		trim: true
-	},
-	add3: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		add1: {
+			type: String,
+			required: [true, 'First line of address required'],
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect chatacter in address'
 			},
-			message: 'incorrect chatacter in address'
+			lowercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	postCode: {
-		type: String,
-		required: [true, 'Postcode required'],
-		validate: {
-			validator: v => {
-				return v.match(checkPostcode);
+		add2: {
+			type: String,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect chatacter in address'
 			},
-			message: 'check postcode'
+			trim: true
 		},
-		uppercase: true,
-		trim: true
-	},
-	bankName: {
-		type: String,
-		lowercase: true,
-		required: [true, 'Bank name required'],
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		add3: {
+			type: String,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect chatacter in address'
 			},
-			message: 'incorrect chatacter in Bank name'
+			trim: true
 		},
-		trim: true
-	},
-	sortCode: {
-		type: String,
-		required: [true, 'Sort code required'],
-		validate: {
-			validator: v => {
-				return v.match(checkSortcode);
+		postCode: {
+			type: String,
+			required: [true, 'Postcode required'],
+			validate: {
+				validator: v => {
+					return v.match(checkPostcode);
+				},
+				message: 'check postcode'
 			},
-			message: 'check sort code'
+			uppercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	accountNo: {
-		type: String,
-		required: [true, 'Account number required'],
-		validate: {
-			validator: v => {
-				return v.match(checkAccountno);
+		bankName: {
+			type: String,
+			lowercase: true,
+			required: [true, 'Bank name required'],
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect chatacter in Bank name'
 			},
-			message: 'check account nummber'
+			trim: true
 		},
-		trim: true
-	},
-	utr: {
-		type: String,
-		required: [true, 'UTR required'],
-		validate: {
-			validator: v => {
-				return v.match(checkUTR);
+		sortCode: {
+			type: String,
+			required: [true, 'Sort code required'],
+			validate: {
+				validator: v => {
+					return v.match(checkSortcode);
+				},
+				message: 'check sort code'
 			},
-			message: 'check UTR'
+			trim: true
 		},
-		trim: true
-	},
-	terms: {
-		type: String,
-		required: [true, 'payment terms required'],
-		minlength: 1,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(businessName);
+		accountNo: {
+			type: String,
+			required: [true, 'Account number required'],
+			validate: {
+				validator: v => {
+					return v.match(checkAccountno);
+				},
+				message: 'check account nummber'
 			},
-			message: 'incorrect chatacter in terms'
+			trim: true
 		},
-		trim: true
-	},
-	farewell: {
-		type: String,
-		required: [true, 'farewell required'],
-		validate: {
-			validator: v => {
-				return v.match(businessName);
+		utr: {
+			type: String,
+			required: [true, 'UTR required'],
+			validate: {
+				validator: v => {
+					return v.match(checkUTR);
+				},
+				message: 'check UTR'
 			},
-			message: 'incorrect chatacter in farewell'
+			trim: true
 		},
-		lowercase: true,
-		trim: true
+		terms: {
+			type: String,
+			required: [true, 'payment terms required'],
+			minlength: 1,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: 'incorrect chatacter in terms'
+			},
+			trim: true
+		},
+		farewell: {
+			type: String,
+			required: [true, 'farewell required'],
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: 'incorrect chatacter in farewell'
+			},
+			lowercase: true,
+			trim: true
+		}
+	},
+	{
+		toObject: {
+			transform: function(doc, ret) {
+				delete ret.userId;
+				delete ret.__v;
+			}
+		}
 	}
-});
+);
 
 businessSchema.statics.findUsersBusiness = function(userId) {
 	return this.findOne({ userId });

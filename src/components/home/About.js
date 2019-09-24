@@ -7,9 +7,18 @@ import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
 
 const useStyles = makeStyles(theme => ({
+	container: {
+		display: 'flex',
+		flexDirection: 'column'
+	},
 	root: {
+		flexGrow: '1',
 		width: '100%',
 		marginBottom: '2.5vh'
+	},
+	buttons: {
+		width: '100%',
+		margin: '10vh 0'
 	}
 }));
 
@@ -17,17 +26,17 @@ const About = () => {
 	const classes = useStyles();
 
 	return (
-		<Fragment>
+		<Container className={classes.container}>
 			<Container className={classes.root}>
 				<Grid>
-					<Typography variant="h3" component="h1" align="center">
-						Running your business just got easier...
+					<Typography variant="h4" component="h1" align="center">
+						Running your business just got a whole lot easier...
 					</Typography>
 				</Grid>
 			</Container>
 			<Container className={classes.root}>
 				<Grid>
-					<Typography>
+					<Typography align="center">
 						You can manage you're business from your phone, track expenses,
 						produce invoices and easily handle your self assesment HMRC tax
 						return.
@@ -36,7 +45,7 @@ const About = () => {
 			</Container>
 			<Container className={classes.root}>
 				<Grid>
-					<Typography>
+					<Typography align="center">
 						We know you don't have time for this admin so we're here to help.
 						You don't even have to capitalize the sentances you type - we'll do
 						it for you!
@@ -45,16 +54,18 @@ const About = () => {
 			</Container>
 			<Container className={classes.root}>
 				<Grid>
-					<Typography>Sign up and start making life easier...</Typography>
+					<Typography align="center">
+						Sign up and start making life easier...
+					</Typography>
 				</Grid>
 			</Container>
-			<Container className={classes.root}>
+			<Container className={classes.buttons}>
 				<Grid container direction="row" justify="space-evenly">
 					<RegisterModal />
 					<LoginModal />
 				</Grid>
 			</Container>
-		</Fragment>
+		</Container>
 	);
 };
 

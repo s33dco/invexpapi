@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -14,7 +13,10 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addBusiness, clearErrors } from '../../actions/businessActions';
+import {
+	addBusiness,
+	clearBusinessErrors
+} from '../../actions/businessActions';
 import {
 	businessName,
 	checkName,
@@ -53,9 +55,15 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const AddBusiness = props => {
-	const { addBusiness, clearErrors, error, newBusiness } = props;
+const AddBusiness = ({
+	addBusiness,
+	clearBusinessErrors,
+	error,
+	businessAppState
+}) => {
 	const classes = useStyles();
+	const [disabled, setDisabled] = useState(true);
+	const [dbError, setDbError] = useState('');
 	const [business, setBusiness] = useState({
 		name: '',
 		contact: '',
@@ -88,27 +96,25 @@ const AddBusiness = props => {
 		terms: '0',
 		farewell: '0'
 	});
-	const [disabled, setDisabled] = useState(true);
-	const [dbError, setDbError] = useState('');
 
 	useEffect(() => {
-		// if authenticated redirect to root
-
 		if (error) {
-			setDbError(error);
-			clearErrors();
-			setTimeout(() => setDbError(''), 7000);
-			setDisabled(true);
-		} else {
-			props.history.push('/');
+			// if api error
+			setDbError('Please take another look...'); // set form level error
+			setFormErrors({ ...formErrors, email: error }); // set field level error
+			clearBusinessErrors(); // clear api level error
 		}
-
+		if (!error && !dbError && !disabled) {
+			// no api or form errors and form enabled
+			handleClose();
+		}
 		// eslint - disable - next - line;
-	}, [error, props.history]); // dependencies for useEffect
+	}, [error, businessAppState]); // check for changes from api, api error and change in record being updated
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			setDisabled(false);
+			setDbError('');
 		} else {
 			setDisabled(true);
 		}
@@ -116,8 +122,6 @@ const AddBusiness = props => {
 
 	const onSubmit = e => {
 		e.preventDefault();
-		const create = { ...business };
-		console.log(create);
 		addBusiness(business);
 	};
 
@@ -496,10 +500,11 @@ AddBusiness.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	error: state.business.error
+	error: state.business.error,
+	businessAppState: state.business.business
 });
 
 export default connect(
 	mapStateToProps,
-	{ addBusiness, clearErrors }
-)(withRouter(AddBusiness));
+	{ addBusiness, clearBusinessErrors }
+)(AddBusiness);

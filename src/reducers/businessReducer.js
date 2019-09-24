@@ -3,7 +3,8 @@ import {
 	ADD_BUSINESS,
 	UPDATE_BUSINESS,
 	BUSINESS_ERROR,
-	CLEAR_BUSINESS
+	CLEAR_BUSINESS,
+	CLEAR_BUSINESS_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -25,6 +26,11 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				error: action.payload
+			};
+		case CLEAR_BUSINESS_ERROR:
+			return {
+				...state,
+				error: ''
 			};
 		case CLEAR_BUSINESS:
 			return {

@@ -7,9 +7,7 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const clients = await Client.findUsersClients(req.user.id).select(
-			'-__v -userId'
-		);
+		const clients = await Client.findUsersClients(req.user.id);
 
 		if (clients.length < 1) {
 			res.status(404).json({
@@ -39,7 +37,7 @@ router.post('/', auth, async (req, res) => {
 	try {
 		const client = new Client(clientDetails);
 		await client.save();
-		res.status(200).json(client);
+		res.status(200).json(client.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -76,7 +74,7 @@ router.put('/:id', auth, async (req, res) => {
 			{ $set: { ...req.body } },
 			{ new: true }
 		);
-		res.json(client);
+		res.json(client.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -97,7 +95,7 @@ router.get('/:id', auth, async (req, res) => {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
 
-		res.json(client);
+		res.json(client.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

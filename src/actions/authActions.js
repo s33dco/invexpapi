@@ -1,7 +1,8 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import { setAlert } from './alertActions';
-import { clearBusiness } from './businessActions';
+import { clearBusiness, getBusiness } from './businessActions';
+import { clearClients, getClients } from './clientsActions';
 import {
 	USER_LOADED,
 	REGISTER_SUCCESS,
@@ -26,6 +27,8 @@ const loadUser = () => async dispatch => {
 			type: USER_LOADED,
 			payload: res.data
 		});
+		await dispatch(getBusiness());
+		await dispatch(getClients());
 	} catch (error) {
 		dispatch({
 			type: AUTH_ERROR,
@@ -97,7 +100,8 @@ export const logout = () => async dispatch => {
 		type: LOGOUT
 	});
 	await dispatch(clearBusiness());
-	await dispatch(setAlert('Come back soon!', 'info'));
+	await dispatch(clearClients());
+	await dispatch(setAlert('See you soon!', 'info'));
 };
 
 export const clearErrors = () => async dispatch => {

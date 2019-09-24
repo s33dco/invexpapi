@@ -3,103 +3,125 @@ const Joi = require('@hapi/joi');
 const {
 	businessName,
 	checkName,
-	phoneNumber,
-	postCode,
+	checkPhoneNumber,
+	checkPostcode,
 	objectId,
 	simpleEmail
 } = require('../../config/regexps');
 
-const clientSchema = new mongoose.Schema({
-	userId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'users',
-		required: true
-	},
-	name: {
-		type: String,
-		required: [true, 'Name required'],
-		minlength: 1,
-		maxlength: [255, 'Name too long'],
-		validate: {
-			validator: v => {
-				return v.match(businessName);
-			},
-			message: `Name contains invalid character`
+const clientSchema = new mongoose.Schema(
+	{
+		userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'users',
+			required: true
 		},
-		lowercase: true,
-		trim: true
-	},
-	email: {
-		type: String,
-		required: [true, 'Email address required'],
-		lowercase: true,
-		maxlength: [255, 'Email address too long'],
-		validate: {
-			validator: v => {
-				return v.match(simpleEmail);
+		name: {
+			type: String,
+			required: [true, 'Name required'],
+			minlength: 1,
+			maxlength: [255, 'Name too long'],
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: `Name contains invalid character`
 			},
-			message: `Check email address`
+			lowercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	phone: {
-		type: String,
-		required: [true, 'Phone number required'],
-		validate: {
-			validator: v => {
-				return v.match(phoneNumber);
+		email: {
+			type: String,
+			required: [true, 'Email address required'],
+			lowercase: true,
+			maxlength: [255, 'Email address too long'],
+			validate: {
+				validator: v => {
+					return v.match(simpleEmail);
+				},
+				message: `Check email address`
 			},
-			message: `Check phone number`
+			trim: true
 		},
-		trim: true
-	},
-	add1: {
-		type: String,
-		required: [true, 'First line of address required'],
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		phone: {
+			type: String,
+			required: [true, 'Phone number required'],
+			validate: {
+				validator: v => {
+					return v.match(checkPhoneNumber);
+				},
+				message: `Check phone number`
 			},
-			message: 'incorrect chatacter in address'
+			trim: true
 		},
-		lowercase: true,
-		trim: true
-	},
-	add2: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		add1: {
+			type: String,
+			required: [true, 'First line of address required'],
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect chatacter in address'
 			},
-			message: 'incorrect character in address'
+			lowercase: true,
+			trim: true
 		},
-		trim: true
-	},
-	add3: {
-		type: String,
-		lowercase: true,
-		validate: {
-			validator: v => {
-				return v.match(checkName);
+		add2: {
+			type: String,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect character in address'
 			},
-			message: 'incorrect character in address'
+			trim: true
 		},
-		trim: true
-	},
-	postcode: {
-		type: String,
-		required: [true, 'Postcode required'],
-		validate: {
-			validator: v => {
-				return v.match(postCode);
+		add3: {
+			type: String,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(checkName);
+				},
+				message: 'incorrect character in address'
 			},
-			message: 'Check postcode'
+			trim: true
 		},
-		uppercase: true,
-		trim: true
+		postCode: {
+			type: String,
+			required: [true, 'Postcode required'],
+			validate: {
+				validator: v => {
+					return v.match(checkPostcode);
+				},
+				message: 'Check postcode'
+			},
+			uppercase: true,
+			trim: true
+		},
+		greeting: {
+			type: String,
+			lowercase: true,
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: 'incorrect character in greeting'
+			},
+			uppercase: true,
+			trim: true
+		}
+	},
+	{
+		toObject: {
+			transform: function(doc, ret) {
+				delete ret.userId;
+				delete ret.__v;
+			}
+		}
 	}
-});
+);
 
 clientSchema.statics.findUsersClients = function(userId) {
 	return this.find({ userId });
@@ -123,7 +145,7 @@ const validate = client => {
 			.error(() => 'Valid email address required'),
 		phone: Joi.string()
 			.required()
-			.regex(phoneNumber)
+			.regex(checkPhoneNumber)
 			.error(() => 'Valid phone number required - just digits'),
 		add1: Joi.string()
 			.required()
@@ -137,10 +159,14 @@ const validate = client => {
 		add3: Joi.string()
 			.regex(checkName)
 			.error(() => 'Check third line of address - just word characters'),
-		postcode: Joi.string()
+		postCode: Joi.string()
 			.required()
-			.regex(postCode)
-			.error(() => 'Valid postcode required')
+			.regex(checkPostcode)
+			.error(() => 'Valid postcode required'),
+		greeting: Joi.string()
+			.required()
+			.regex(businessName)
+			.error(() => 'Invalid character in greeting')
 	};
 	return Joi.validate(client, schema);
 };

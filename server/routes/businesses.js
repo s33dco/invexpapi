@@ -7,9 +7,7 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const business = await Business.findUsersBusiness(req.user.id).select(
-			'-__v -userId'
-		);
+		const business = await Business.findUsersBusiness(req.user.id);
 
 		if (!business) {
 			res.status(404).json({
@@ -17,7 +15,7 @@ router.get('/', auth, async (req, res) => {
 					'You need to add your business details (Invoice Info) before proceeding.'
 			});
 		} else {
-			res.status(200).json(business);
+			res.status(200).json(business.toObject());
 		}
 	} catch (error) {
 		logger.error(error.message);
@@ -27,7 +25,6 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
 	const businessDetails = { userId: req.user.id, ...req.body };
-	console.log(businessDetails);
 	const { error } = validate(businessDetails);
 
 	if (error) {
@@ -46,7 +43,7 @@ router.post('/', auth, async (req, res) => {
 		}
 		const business = new Business(businessDetails);
 		await business.save();
-		res.status(200).json(business);
+		res.status(200).json(business.toObject());
 	} catch (e) {
 		logger.error(
 			`failed business details from ${req.user.name} (${req.user.id}) - ${e}`
@@ -85,8 +82,8 @@ router.put('/:id', auth, async (req, res) => {
 			req.params.id,
 			{ $set: { ...req.body } },
 			{ new: true }
-		).select('-__v -userId');
-		res.json(business);
+		);
+		res.json(business.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

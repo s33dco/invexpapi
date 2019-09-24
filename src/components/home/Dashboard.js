@@ -1,23 +1,27 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getBusiness } from '../../actions/businessActions';
+import { getClients } from '../../actions/clientsActions';
 import { setAlert } from '../../actions/alertActions';
-// import { setAlert } from '../../actions/alertActions';
 
-const Dashboard = ({ userId, businessError, getBusiness, setAlert }) => {
-	useEffect(() => {
-		getBusiness();
-		// getClients();
-		// getInvoices();
-		// getExpenses();
-		if (businessError) {
-			setAlert(businessError, 'warn');
+const Dashboard = ({
+	setAlert,
+	business,
+	clients,
+	businessError,
+	clientError
+}) => {
+	useEffect((clients, business) => {
+		if (businessError.error === 'notFound') {
+			setAlert(businessError.msg, 'warn');
 		}
-	}, [businessError, userId]);
+		if (clientError.error === 'notFound') {
+			setAlert(clientError.msg, 'warn');
+		}
+	}, []);
 
-	return <div>{userId}</div>;
+	return <div>DashBoard!</div>;
 };
 
 Dashboard.propTypes = {};
@@ -25,10 +29,12 @@ Dashboard.propTypes = {};
 const mapStateToProps = state => ({
 	business: state.business.business,
 	businessError: state.business.error,
+	clients: state.clients.clients,
+	clientError: state.clients.error,
 	userId: state.auth.user._id
 });
 
 export default connect(
 	mapStateToProps,
-	{ getBusiness, setAlert }
-)(withRouter(Dashboard));
+	{ getBusiness, getClients, setAlert }
+)(Dashboard);
