@@ -14,7 +14,8 @@ router.get('/', auth, async (req, res) => {
 				msg: 'You need to add atleast one client before proceeding.'
 			});
 		} else {
-			res.status(200).json(clients);
+			const clientJSON = clients.map(client => client.toObject());
+			res.status(200).json(clientJSON);
 		}
 	} catch (error) {
 		logger.error(error.message);

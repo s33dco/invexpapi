@@ -3,12 +3,16 @@ import {
 	ADD_CLIENT,
 	CLIENT_ERROR,
 	CLEAR_CLIENTS,
-	CLEAR_CLIENT_ERRORS
+	CLEAR_CLIENT_ERRORS,
+	SET_CURRENT_CLIENT,
+	CLEAR_CURRENT_CLIENT,
+	UPDATE_CLIENT
 } from '../actions/types';
 
 const initialState = {
 	clients: [],
-	error: ''
+	error: '',
+	current: null
 };
 
 export default (state = initialState, action) => {
@@ -16,14 +20,12 @@ export default (state = initialState, action) => {
 		case GET_CLIENTS:
 			return {
 				...state,
-				clients: [...action.payload],
-				error: ''
+				clients: [...action.payload]
 			};
 		case ADD_CLIENT:
 			return {
 				...state,
-				clients: [...state.clients, action.payload],
-				error: ''
+				clients: [...state.clients, action.payload]
 			};
 		case CLIENT_ERROR:
 			return {
@@ -34,6 +36,23 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				error: ''
+			};
+		case SET_CURRENT_CLIENT:
+			return {
+				...state,
+				current: action.payload
+			};
+		case CLEAR_CURRENT_CLIENT:
+			return {
+				...state,
+				current: null
+			};
+		case UPDATE_CLIENT:
+			return {
+				...state,
+				clients: state.clients.map(client =>
+					client._id === action.payload._id ? action.payload : client
+				)
 			};
 		case CLEAR_CLIENTS:
 			return {

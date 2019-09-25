@@ -125,12 +125,16 @@ const Business = ({
 								<ListItem>
 									<ListItemText className={classes.text}>{add1}</ListItemText>
 								</ListItem>
-								<ListItem>
-									<ListItemText className={classes.text}>{add2}</ListItemText>
-								</ListItem>
-								<ListItem>
-									<ListItemText className={classes.text}>{add3}</ListItemText>
-								</ListItem>
+								{add2 && (
+									<ListItem>
+										<ListItemText className={classes.text}>{add2}</ListItemText>
+									</ListItem>
+								)}
+								{add3 && (
+									<ListItem>
+										<ListItemText className={classes.text}>{add3}</ListItemText>
+									</ListItem>
+								)}
 								<ListItem>
 									<ListItemText>{postCode}</ListItemText>
 								</ListItem>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 // import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -10,7 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addClient, clearClientErrors } from '../../actions/clientsActions';
+import titleCase from '../../../config/titleCase';
+import {
+	updateClient,
+	clearClientErrors,
+	clearCurrentClient
+} from '../../actions/clientsActions';
 import {
 	businessName,
 	checkName,
@@ -48,11 +53,20 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
+const EditClient = ({
+	updateClient,
+	clearClientErrors,
+	clearCurrentClient,
+	error,
+	current
+}) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
+	const [hasSent, setHasSent] = useState(false);
+	const [inProcess, setInProcess] = useState(false);
+	const [record, setRecord] = useState({ id: '' });
 	const [client, setClient] = useState({
 		name: '',
 		email: '',
@@ -64,33 +78,44 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 		greeting: ''
 	});
 	const [formErrors, setFormErrors] = useState({
-		name: '0',
-		phone: '0',
-		email: '0',
-		add1: '0',
+		name: '1',
+		phone: '1',
+		email: '1',
+		add1: '1',
 		add2: '1',
 		add3: '1',
-		postCode: '0',
-		greeting: '0'
+		postCode: '1',
+		greeting: '1'
 	});
 
 	useEffect(() => {
+		if (current && !inProcess) {
+			setOpen(true);
+			const { _id, ...toUpdate } = current;
+			const objId = _id.toString();
+			setRecord({ ...record, id: objId });
+			setClient({ ...client, ...toUpdate });
+			setInProcess(true);
+		}
+
 		if (error) {
-			// if api error
+			setHasSent(false);
 			setDbError('Please take another look...'); // set form level error
 			setFormErrors({ ...formErrors, email: error }); // set field level error
-			clearClientErrors(); // clear api level error
+			setClient({ ...client, email: '' }); // clear email field on form
+			setDisabled(true); // disable sebd button on form
 		}
-		if (!error && !dbError && !disabled) {
-			// no api or form errors and form enabled
-			clearForm();
+
+		if (current && hasSent && !error && !dbError && !disabled) {
 			handleClose();
 		}
 		// eslint - disable - next - line;
-	}, [error, clients]); // check for changes from api, api error and change in record being updated
+	}, [error, current, hasSent, inProcess, dbError]);
 
-	const clearForm = () => {
+	const resetForm = () => {
 		setDisabled(true);
+		setHasSent(false);
+		setRecord({ ...record, id: '' });
 		setClient({
 			name: '',
 			email: '',
@@ -102,30 +127,40 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 			greeting: ''
 		});
 		setFormErrors({
-			name: '0',
-			phone: '0',
-			email: '0',
-			add1: '0',
+			name: '1',
+			phone: '1',
+			email: '1',
+			add1: '1',
 			add2: '1',
 			add3: '1',
-			postCode: '0',
-			greeting: '0'
+			postCode: '1',
+			greeting: '1'
 		});
 	};
-
+	const resetFormErrors = async () => {
+		await clearClientErrors();
+		setDbError('');
+	};
+	const handleClose = () => {
+		setOpen(false);
+		resetFormErrors();
+		resetForm();
+		clearCurrentClient();
+		setInProcess(false);
+	};
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			// if no field level errors
-			setDisabled(false); // enable form
+			setDisabled(false); // enable send button on form
 			setDbError(''); // clear form level error
 		} else {
 			setDisabled(true); // if field errors disable form
 		}
 	};
-
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault();
-		addClient({ ...client });
+		await updateClient(record.id, { ...client });
+		setHasSent(true);
 	};
 
 	const handleChange = e => {
@@ -171,24 +206,8 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 		}
 	};
 
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
-
 	return (
-		<div>
-			<Button
-				type="button"
-				variant="contained"
-				color="primary"
-				onClick={handleOpen}
-			>
-				Add
-			</Button>
+		<Fragment>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -204,9 +223,11 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
-							<Typography variant="h5" component="h1" align="center">
-								Add A New Client
-							</Typography>
+							{current && (
+								<Typography variant="h5" component="h1" align="center">
+									{titleCase(current.name)}
+								</Typography>
+							)}
 							{dbError && (
 								<Typography
 									variant="subtitle2"
@@ -362,7 +383,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 									onClick={onSubmit}
 									disabled={disabled}
 								>
-									Add Client
+									Update
 								</Button>
 							</div>
 							{dbError && (
@@ -379,21 +400,23 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 					</div>
 				</Fade>
 			</Modal>
-		</div>
+		</Fragment>
 	);
 };
 
-AddClient.propTypes = {
-	addClient: PropTypes.func.isRequired,
-	clearClientErrors: PropTypes.func.isRequired
+EditClient.propTypes = {
+	updateClient: PropTypes.func.isRequired,
+	clearClientErrors: PropTypes.func.isRequired,
+	clearCurrentClient: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-	clients: state.clients.clients,
+	current: state.clients.clients,
+	current: state.clients.current,
 	error: state.clients.error
 });
 
 export default connect(
 	mapStateToProps,
-	{ addClient, clearClientErrors }
-)(AddClient);
+	{ updateClient, clearClientErrors, clearCurrentClient }
+)(EditClient);

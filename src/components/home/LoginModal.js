@@ -147,6 +147,9 @@ const LoginModal = props => {
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
+							<Typography variant="h5" component="h1" align="center">
+								Sign In
+							</Typography>
 							{dbError && (
 								<Typography
 									variant="subtitle2"
@@ -157,9 +160,6 @@ const LoginModal = props => {
 									{dbError}
 								</Typography>
 							)}
-							<Typography variant="h5" component="h1" align="center">
-								Sign In
-							</Typography>
 							<TextField
 								required
 								controlled="true"

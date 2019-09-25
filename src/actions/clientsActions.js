@@ -7,7 +7,9 @@ import {
 	DELETE_CLIENT,
 	CLIENT_ERROR,
 	CLEAR_CLIENTS,
-	CLEAR_CLIENT_ERRORS
+	CLEAR_CLIENT_ERRORS,
+	SET_CURRENT_CLIENT,
+	CLEAR_CURRENT_CLIENT
 } from './types';
 
 export const clearClients = () => async dispatch => {
@@ -20,6 +22,19 @@ export const clearClients = () => async dispatch => {
 export const clearClientErrors = () => async dispatch => {
 	dispatch({
 		type: CLEAR_CLIENT_ERRORS
+	});
+};
+
+export const setCurrentClient = client => async dispatch => {
+	dispatch({
+		type: SET_CURRENT_CLIENT,
+		payload: client
+	});
+};
+
+export const clearCurrentClient = () => async dispatch => {
+	dispatch({
+		type: CLEAR_CURRENT_CLIENT
 	});
 };
 
