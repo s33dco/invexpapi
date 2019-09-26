@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import EditIcon from '@material-ui/icons/Edit';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -57,6 +59,16 @@ const useStyles = makeStyles(theme => ({
 	},
 	divider: {
 		margin: '1vh 0'
+	},
+	actions: {
+		display: 'flex',
+		justifyContent: 'flex-end'
+	},
+	fab: {
+		margin: theme.spacing(1)
+	},
+	extendedIcon: {
+		marginRight: theme.spacing(1)
 	}
 }));
 
@@ -191,14 +203,19 @@ const EditBusiness = props => {
 
 	return (
 		<div>
-			<Button
-				type="button"
-				variant="contained"
-				color="primary"
-				onClick={handleOpen}
-			>
-				Edit
-			</Button>
+			<div className={classes.actions}>
+				<Fab
+					aria-label="edit"
+					className={classes.fab}
+					color="primary"
+					size="large"
+					variant="extended"
+					onClick={handleOpen}
+				>
+					<EditIcon className={classes.extendedIcon} /> Edit Info
+				</Fab>
+			</div>
+
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"

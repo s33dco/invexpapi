@@ -84,7 +84,7 @@ const Clients = ({ clients }) => {
 
 	return (
 		<Fragment>
-			<Toolbar className={classes.toolbar} position="static">
+			<Toolbar className={classes.toolbar} position="static" variant="dense">
 				<div className={classes.search}>
 					<div className={classes.searchIcon}>
 						<SearchIcon />
@@ -100,13 +100,13 @@ const Clients = ({ clients }) => {
 						onChange={getFiltered}
 					/>
 				</div>
+				<AddClient />
 			</Toolbar>
 			{filtered.map(client => (
 				<ClientCard key={client._id} client={client} />
 			))}
 			<EditClient />
 			<DeleteClientDialog />
-			<AddClient />
 		</Fragment>
 	);
 };

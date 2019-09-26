@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
@@ -45,6 +47,12 @@ const useStyles = makeStyles(theme => ({
 	},
 	divider: {
 		margin: '1vh 0'
+	},
+	fab: {
+		margin: theme.spacing(1)
+	},
+	extendedIcon: {
+		marginRight: theme.spacing(1)
 	}
 }));
 
@@ -181,14 +189,16 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 
 	return (
 		<div>
-			<Button
-				type="button"
-				variant="contained"
+			<Fab
+				aria-label="add"
+				className={classes.fab}
 				color="primary"
 				onClick={handleOpen}
+				size="large"
+				variant="extended"
 			>
-				Add
-			</Button>
+				<AddIcon className={classes.extendedIcon} /> Client
+			</Fab>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
