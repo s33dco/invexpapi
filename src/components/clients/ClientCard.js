@@ -17,7 +17,10 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { setCurrentClient } from '../../actions/clientsActions';
+import {
+	setCurrentClient,
+	setDeleteClient
+} from '../../actions/clientsActions';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -58,7 +61,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const ClientCard = ({ client, setCurrentClient }) => {
+const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 	const { name, email, phone, add1, add2, add3, postCode, greeting } = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = React.useState(false);
@@ -88,7 +91,10 @@ const ClientCard = ({ client, setCurrentClient }) => {
 				>
 					<EditIcon />
 				</IconButton>
-				<IconButton aria-label="delete client">
+				<IconButton
+					aria-label="delete client"
+					onClick={() => setDeleteClient(client)}
+				>
 					<DeleteIcon />
 				</IconButton>
 				<IconButton
@@ -161,5 +167,5 @@ const ClientCard = ({ client, setCurrentClient }) => {
 
 export default connect(
 	null,
-	{ setCurrentClient }
+	{ setCurrentClient, setDeleteClient }
 )(ClientCard);

@@ -6,13 +6,17 @@ import {
 	CLEAR_CLIENT_ERRORS,
 	SET_CURRENT_CLIENT,
 	CLEAR_CURRENT_CLIENT,
-	UPDATE_CLIENT
+	UPDATE_CLIENT,
+	SET_DELETE_CLIENT,
+	CLEAR_DELETE_CLIENT,
+	DELETE_CLIENT
 } from '../actions/types';
 
 const initialState = {
 	clients: [],
 	error: '',
-	current: null
+	current: null,
+	delete: null
 };
 
 export default (state = initialState, action) => {
@@ -53,6 +57,21 @@ export default (state = initialState, action) => {
 				clients: state.clients.map(client =>
 					client._id === action.payload._id ? action.payload : client
 				)
+			};
+		case SET_DELETE_CLIENT:
+			return {
+				...state,
+				delete: action.payload
+			};
+		case CLEAR_DELETE_CLIENT:
+			return {
+				...state,
+				delete: null
+			};
+		case DELETE_CLIENT:
+			return {
+				...state,
+				clients: state.clients.filter(client => client._id !== action.payload)
 			};
 		case CLEAR_CLIENTS:
 			return {

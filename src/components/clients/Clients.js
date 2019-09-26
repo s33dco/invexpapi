@@ -8,6 +8,7 @@ import sentanceCase from '../../../config/sentanceCase';
 import AddClient from './AddClient';
 import ClientCard from './ClientCard';
 import EditClient from './EditClient';
+import DeleteClientDialog from './DeleteClientDialog';
 
 const Clients = ({ clients }) => {
 	// useEffect(() => {
@@ -20,6 +21,7 @@ const Clients = ({ clients }) => {
 				<ClientCard key={client._id} client={client} />
 			))}
 			<EditClient />
+			<DeleteClientDialog />
 			<AddClient />
 		</Fragment>
 	);

@@ -9,7 +9,9 @@ import {
 	CLEAR_CLIENTS,
 	CLEAR_CLIENT_ERRORS,
 	SET_CURRENT_CLIENT,
-	CLEAR_CURRENT_CLIENT
+	CLEAR_CURRENT_CLIENT,
+	SET_DELETE_CLIENT,
+	CLEAR_DELETE_CLIENT
 } from './types';
 
 export const clearClients = () => async dispatch => {
@@ -35,6 +37,19 @@ export const setCurrentClient = client => async dispatch => {
 export const clearCurrentClient = () => async dispatch => {
 	dispatch({
 		type: CLEAR_CURRENT_CLIENT
+	});
+};
+
+export const setDeleteClient = client => async dispatch => {
+	dispatch({
+		type: SET_DELETE_CLIENT,
+		payload: client
+	});
+};
+
+export const clearDeleteClient = () => async dispatch => {
+	dispatch({
+		type: CLEAR_DELETE_CLIENT
 	});
 };
 
@@ -125,10 +140,10 @@ export const deleteClient = id => async dispatch => {
 
 		dispatch({
 			type: DELETE_CLIENT,
-			payload: res.data
+			payload: id
 		});
 
-		await dispatch(setAlert('Client Deleted !', 'info'));
+		await dispatch(setAlert(res.data.msg, 'info'));
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,

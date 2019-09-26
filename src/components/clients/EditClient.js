@@ -411,7 +411,6 @@ EditClient.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	current: state.clients.clients,
 	current: state.clients.current,
 	error: state.clients.error
 });

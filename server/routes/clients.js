@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
 const { Client, validate } = require('../models/client');
+const titleCase = require('../../config/titleCase');
 
 const router = express.Router();
 
@@ -120,7 +121,7 @@ router.delete('/:id', auth, async (req, res) => {
 		client = await Client.findByIdAndRemove(req.params.id);
 
 		res.status(200).json({
-			msg: `${client.name} deleted!`
+			msg: `${titleCase(client.name)} has been deleted!`
 		});
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
