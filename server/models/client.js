@@ -123,8 +123,8 @@ const clientSchema = new mongoose.Schema(
 	}
 );
 
-clientSchema.statics.findUsersClients = function(userId) {
-	return this.find({ userId });
+clientSchema.statics.UsersClientsAlphabetically = function(userId) {
+	return this.find({ userId }).sort({ name: 1 });
 };
 
 const validate = client => {

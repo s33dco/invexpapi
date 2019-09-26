@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const clients = await Client.findUsersClients(req.user.id);
+		const clients = await Client.UsersClientsAlphabetically(req.user.id);
 
 		if (clients.length < 1) {
 			res.status(404).json({
