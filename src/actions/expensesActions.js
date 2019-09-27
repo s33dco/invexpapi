@@ -63,7 +63,7 @@ export const getExpenses = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: { msg: error.response.data.msg }
+			payload: error.response.data.msg
 		});
 		await dispatch(setAlert(error.response.data.msg, 'warn'));
 		await dispatch(clearExpenseErrors());
@@ -86,11 +86,12 @@ export const addExpense = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_EXPENSE,
-			payload: res.data
+			payload: res.data || 'server error'
 		});
 
 		await dispatch(setAlert('Expense Created!', 'info'));
 	} catch (error) {
+		console.log(error);
 		dispatch({
 			type: EXPENSE_ERROR,
 			payload: error.response.data.msg

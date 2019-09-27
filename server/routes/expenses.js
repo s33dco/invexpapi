@@ -28,20 +28,23 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
 	const expenseDetails = { userId: req.user.id, ...req.body };
-
 	const { error } = validate(expenseDetails);
-
 	if (error) {
 		logger.warn(
 			`failed expense details from ${req.user.name} (${req.user.id}) - ${error.details[0].message}`
 		);
 		return res.status(400).json({ msg: error.details[0].message });
 	}
-
 	try {
 		const expense = new Expense(expenseDetails);
 		await expense.save();
-		res.status(200).json(expense.toObject());
+
+		const expenseJSON = {
+			...expense.toObject(),
+			amount: expense.amount.toString()
+		};
+
+		res.status(200).json(expenseJSON);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -78,7 +81,12 @@ router.put('/:id', auth, async (req, res) => {
 			{ $set: { ...req.body } },
 			{ new: true }
 		);
-		res.json(expense.toObject());
+		const expenseJSON = {
+			...expense.toObject(),
+			amount: expense.amount.toString()
+		};
+
+		res.status(200).json(expenseJSON);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

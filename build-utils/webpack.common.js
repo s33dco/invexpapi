@@ -8,6 +8,11 @@ const api_url = getValue.get('apiURL');
 
 const config = {
 	entry: appEntry,
+	node: {
+		net: 'empty',
+		tls: 'empty',
+		dns: 'empty'
+	},
 
 	// vendor: ['semantic-ui-react'], - use to chunk vendor components
 	module: {

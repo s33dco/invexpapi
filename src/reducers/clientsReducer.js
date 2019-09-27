@@ -15,8 +15,8 @@ import {
 const initialState = {
 	clients: [],
 	error: '',
-	current: null,
-	delete: null
+	current: '',
+	delete: ''
 };
 
 export default (state = initialState, action) => {
@@ -49,7 +49,7 @@ export default (state = initialState, action) => {
 		case CLEAR_CURRENT_CLIENT:
 			return {
 				...state,
-				current: null
+				current: ''
 			};
 		case UPDATE_CLIENT:
 			return {
@@ -66,7 +66,7 @@ export default (state = initialState, action) => {
 		case CLEAR_DELETE_CLIENT:
 			return {
 				...state,
-				delete: null
+				delete: ''
 			};
 		case DELETE_CLIENT:
 			return {
@@ -77,7 +77,9 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				clients: [],
-				error: ''
+				error: '',
+				current: '',
+				delete: ''
 			};
 		default:
 			return state;

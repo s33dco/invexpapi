@@ -8,6 +8,7 @@ const checkUTR = /^[0-9]{5}\s?[0-9]{5}$/;
 const objectId = /^[a-fA-F0-9]{24}$/;
 const simpleEmail = /^[^@]+@[^@]+\.[^@]+$/;
 const checkPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@£$!%*?&])[A-Za-z\d@£$!%*?&]{8,}$/;
+const checkMoney = /^[0-9]+(\.[0-9]{1,2})?$/gm;
 
 module.exports = {
 	businessName,
@@ -19,5 +20,6 @@ module.exports = {
 	checkUTR,
 	objectId,
 	simpleEmail,
-	checkPassword
+	checkPassword,
+	checkMoney
 };

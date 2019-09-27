@@ -63,7 +63,7 @@ export const getClients = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: { msg: error.response.data.msg }
+			payload: error.response.data.msg
 		});
 		await dispatch(setAlert(error.response.data.msg, 'warn'));
 		await dispatch(clearClientErrors());

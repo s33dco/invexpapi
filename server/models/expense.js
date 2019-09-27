@@ -16,6 +16,8 @@ const categories = {
 	message: 'Select a valid option'
 };
 
+const selectOptions = categories.values;
+
 const expenseSchema = new mongoose.Schema(
 	{
 		userId: {
@@ -108,4 +110,4 @@ const validate = expense => {
 
 const Expense = mongoose.model('Expense', expenseSchema);
 
-module.exports = { Expense, validate, categories };
+module.exports = { Expense, validate, selectOptions };

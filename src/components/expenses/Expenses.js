@@ -6,7 +6,8 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import ExpenseCard from './ExpenseCard';
-// import AddExpense from './AddExpense';
+import AddExpense from './AddExpense';
+import DeleteExpenseDialog from './DeleteExpenseDialog';
 
 const Expenses = ({ expenses }) => {
 	const useStyles = makeStyles(theme => ({
@@ -96,10 +97,12 @@ const Expenses = ({ expenses }) => {
 						onChange={getFiltered}
 					/>
 				</div>
+				<AddExpense />
 			</Toolbar>
 			{filtered.map(exp => (
 				<ExpenseCard key={exp._id} expense={exp} />
 			))}
+			<DeleteExpenseDialog />
 		</Fragment>
 	);
 };

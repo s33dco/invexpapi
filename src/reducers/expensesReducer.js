@@ -1,3 +1,4 @@
+import selectOptions from '../../server/models/expense';
 import {
 	GET_EXPENSES,
 	ADD_EXPENSE,
@@ -14,9 +15,10 @@ import {
 
 const initialState = {
 	expenses: [],
-	error: '',
-	current: null,
-	delete: null
+	categories: selectOptions,
+	current: '',
+	delete: '',
+	error: ''
 };
 
 export default (state = initialState, action) => {
@@ -49,7 +51,7 @@ export default (state = initialState, action) => {
 		case CLEAR_CURRENT_EXPENSE:
 			return {
 				...state,
-				current: null
+				current: ''
 			};
 		case UPDATE_EXPENSE:
 			return {
@@ -66,7 +68,7 @@ export default (state = initialState, action) => {
 		case CLEAR_DELETE_EXPENSE:
 			return {
 				...state,
-				delete: null
+				delete: ''
 			};
 		case DELETE_EXPENSE:
 			return {
@@ -77,7 +79,9 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				expenses: [],
-				error: ''
+				error: '',
+				current: '',
+				delete: ''
 			};
 		default:
 			return state;
