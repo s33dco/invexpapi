@@ -225,7 +225,7 @@ const EditClient = ({
 						<Container component="form" className={classes.form}>
 							{current && (
 								<Typography variant="h5" component="h1" align="center">
-									{titleCase(current.name)}
+									Editing {titleCase(current.name)}
 								</Typography>
 							)}
 							{dbError && (

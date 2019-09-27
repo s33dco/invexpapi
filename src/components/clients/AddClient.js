@@ -215,7 +215,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
 							<Typography variant="h5" component="h1" align="center">
-								Add A New Client
+								Add A Client
 							</Typography>
 							{dbError && (
 								<Typography

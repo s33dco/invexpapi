@@ -13,6 +13,7 @@ const config = {
 		path: devOutput,
 		publicPath: '/'
 	},
+	// target: 'node',
 	module: {
 		rules: [
 			{

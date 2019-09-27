@@ -16,56 +16,66 @@ const categories = {
 	message: 'Select a valid option'
 };
 
-const expenseSchema = new mongoose.Schema({
-	userId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'users',
-		required: true
-	},
-	date: {
-		type: Date,
-		default: moment()
-			.startOf('day')
-			.toISOString(),
-		required: [true, 'Date is required'],
-		max: [
-			moment()
+const expenseSchema = new mongoose.Schema(
+	{
+		userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'users',
+			required: true
+		},
+		date: {
+			type: Date,
+			default: moment()
 				.startOf('day')
 				.toISOString(),
-			'Date should be today or earlier'
-		]
-	},
-	category: {
-		type: String,
-		required: [true, 'Category required'],
-		enum: categories
-	},
-	amount: {
-		type: mongoose.Schema.Types.Decimal,
-		required: [true, 'Amount required'],
-		validate: {
-			validator: v => {
-				return v >= 0;
+			required: [true, 'Date is required'],
+			max: [
+				moment()
+					.startOf('day')
+					.toISOString(),
+				'Date should be today or earlier'
+			]
+		},
+		category: {
+			type: String,
+			required: [true, 'Category required'],
+			enum: categories
+		},
+		amount: {
+			type: mongoose.Schema.Types.Decimal,
+			required: [true, 'Amount required'],
+			validate: {
+				validator: v => {
+					return v >= 0;
+				},
+				message: 'Check amount - value cannot be negative'
+			}
+		},
+		desc: {
+			type: String,
+			required: [true, 'Description required'],
+			validate: {
+				validator: v => {
+					return v.match(businessName);
+				},
+				message: 'Invalid character used.'
 			},
-			message: 'Check amount - value cannot be negative'
+			lowercase: true,
+			trim: true
 		}
 	},
-	desc: {
-		type: String,
-		required: [true, 'Description required'],
-		validate: {
-			validator: v => {
-				return v.match(businessName);
-			},
-			message: 'Invalid character used.'
-		},
-		lowercase: true,
-		trim: true
+	{
+		toObject: {
+			transform: function(doc, ret) {
+				delete ret.userId;
+				delete ret.__v;
+			}
+		}
 	}
-});
+);
 
-expenseSchema.statics.findUsersExpenses = function(userId) {
-	return this.find({ userId });
+expenseSchema.statics.findUsersExpensesByDate = function(userId) {
+	return this.find({ userId }).sort({ date: -1 });
 };
 
 const validate = expense => {
@@ -98,4 +108,4 @@ const validate = expense => {
 
 const Expense = mongoose.model('Expense', expenseSchema);
 
-module.exports = { Expense, validate };
+module.exports = { Expense, validate, categories };

@@ -17,6 +17,8 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import sentanceCase from '../../../config/sentanceCase';
+import titleCase from '../../../config/titleCase';
 import {
 	setCurrentClient,
 	setDeleteClient
@@ -64,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 	const { name, email, phone, add1, add2, add3, postCode, greeting } = client;
 	const classes = useStyles();
-	const [expanded, setExpanded] = React.useState(false);
+	const [expanded, setExpanded] = useState(false);
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
@@ -73,7 +75,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 		<Card className={classes.card}>
 			<CardContent>
 				<Typography className={classes.title} variant="h5" component="h2">
-					{name}
+					{titleCase(name)}
 				</Typography>
 				<Typography className={classes.contact} variant="h6" component="h3">
 					<PhoneIcon />
@@ -116,7 +118,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 						component="p"
 						color="textSecondary"
 					>
-						{add1}
+						{titleCase(add1)}
 					</Typography>
 					{add2 && (
 						<Typography
@@ -125,7 +127,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 							component="p"
 							color="textSecondary"
 						>
-							{add2}
+							{titleCase(add2)}
 						</Typography>
 					)}
 					{add3 && (
@@ -135,7 +137,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 							component="p"
 							color="textSecondary"
 						>
-							{add3}
+							{titleCase(add3)}
 						</Typography>
 					)}
 					<Typography
@@ -152,7 +154,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 						component="p"
 						color="textSecondary"
 					>
-						{greeting}
+						{titleCase(greeting)}
 					</Typography>
 					<CardActions className={classes.invoiceLink}>
 						<Button size="small" colot="primary">

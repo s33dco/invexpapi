@@ -7,16 +7,18 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const expenses = await Expense.findUsersExpenses(req.user.id).select(
-			'-__v -userId'
-		);
+		const expenses = await Expense.findUsersExpensesByDate(req.user.id);
 
 		if (expenses.length < 1) {
 			res.status(404).json({
 				msg: 'you have no expenses so far'
 			});
 		} else {
-			res.status(200).json(expenses);
+			const expensesJSON = expenses.map(expense => {
+				const expenseJSON = expense.toObject();
+				return { ...expenseJSON, amount: expenseJSON.amount.toString() };
+			});
+			res.status(200).json(expensesJSON);
 		}
 	} catch (error) {
 		logger.error(error.message);
@@ -39,7 +41,7 @@ router.post('/', auth, async (req, res) => {
 	try {
 		const expense = new Expense(expenseDetails);
 		await expense.save();
-		res.status(200).json(expense);
+		res.status(200).json(expense.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -76,7 +78,7 @@ router.put('/:id', auth, async (req, res) => {
 			{ $set: { ...req.body } },
 			{ new: true }
 		);
-		res.json(expense);
+		res.json(expense.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -97,7 +99,7 @@ router.get('/:id', auth, async (req, res) => {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
 
-		res.json(expense);
+		res.json(expense.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

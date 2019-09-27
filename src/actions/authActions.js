@@ -3,6 +3,7 @@ import setAuthToken from '../utils/setAuthToken';
 import { setAlert } from './alertActions';
 import { clearBusiness, getBusiness } from './businessActions';
 import { clearClients, getClients } from './clientsActions';
+import { clearExpenses, getExpenses } from './expensesActions';
 import {
 	USER_LOADED,
 	REGISTER_SUCCESS,
@@ -29,6 +30,7 @@ const loadUser = () => async dispatch => {
 		});
 		await dispatch(getBusiness());
 		await dispatch(getClients());
+		await dispatch(getExpenses());
 	} catch (error) {
 		dispatch({
 			type: AUTH_ERROR,
@@ -101,6 +103,7 @@ export const logout = () => async dispatch => {
 	});
 	await dispatch(clearBusiness());
 	await dispatch(clearClients());
+	await dispatch(clearExpenses());
 	await dispatch(setAlert('See you soon!', 'info'));
 };
 

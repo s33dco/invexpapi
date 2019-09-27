@@ -5,7 +5,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import { addClient } from '../../actions/clientsActions';
 import AddClient from './AddClient';
 import ClientCard from './ClientCard';
 import EditClient from './EditClient';
@@ -58,13 +57,12 @@ const Clients = ({ clients }) => {
 
 	const [filtered, setFiltered] = useState([...clients]);
 	const [searchText, setSearchText] = useState('');
-
 	const classes = useStyles();
 	const text = useRef('');
 
 	useEffect(() => {
 		if (!searchText) {
-			setFiltered([...clients]);
+			setFiltered([...clients.sort((a, b) => a.name.localeCompare(b.name))]);
 		} else {
 			const filteredList = filtered.filter(client => {
 				const regex = new RegExp(`${searchText}`, 'gi'); // make text a global case insensitive regexp
@@ -117,7 +115,4 @@ const mapStateToProps = state => ({
 	clients: state.clients.clients
 });
 
-export default connect(
-	mapStateToProps,
-	{ addClient }
-)(Clients);
+export default connect(mapStateToProps)(Clients);

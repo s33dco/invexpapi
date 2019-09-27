@@ -14,7 +14,6 @@ import {
 
 const initialState = {
 	clients: [],
-	filtered: [],
 	error: '',
 	current: null,
 	delete: null
