@@ -7,6 +7,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import ExpenseCard from './ExpenseCard';
 import AddExpense from './AddExpense';
+import EditExpense from './EditExpense';
 import DeleteExpenseDialog from './DeleteExpenseDialog';
 
 const Expenses = ({ expenses }) => {
@@ -102,6 +103,7 @@ const Expenses = ({ expenses }) => {
 			{filtered.map(exp => (
 				<ExpenseCard key={exp._id} expense={exp} />
 			))}
+			<EditExpense />
 			<DeleteExpenseDialog />
 		</Fragment>
 	);

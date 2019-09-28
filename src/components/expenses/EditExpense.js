@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
@@ -12,10 +10,14 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { DatePicker } from '@material-ui/pickers';
-import { connect } from 'react-redux';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addExpense, clearExpenseErrors } from '../../actions/expensesActions';
+import {
+	updateExpense,
+	clearExpenseErrors,
+	clearCurrentExpense
+} from '../../actions/expensesActions';
 import { businessName, checkMoney } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
@@ -52,26 +54,24 @@ const useStyles = makeStyles(theme => ({
 	},
 	divider: {
 		margin: '1vh 0'
-	},
-	fab: {
-		margin: theme.spacing(1)
-	},
-	extendedIcon: {
-		marginRight: theme.spacing(1)
 	}
 }));
 
-const AddExpense = ({
-	addExpense,
+const EditExpense = ({
+	options,
+	updateExpense,
 	clearExpenseErrors,
+	clearCurrentExpense,
 	error,
-	expenses,
-	options
+	current
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
+	const [hasSent, setHasSent] = useState(false);
+	const [inProcess, setInProcess] = useState(false);
+	const [record, setRecord] = useState({ id: '' });
 	const [expense, setExpense] = useState({
 		date: moment(),
 		category: '',
@@ -86,18 +86,28 @@ const AddExpense = ({
 	});
 
 	useEffect(() => {
-		if (error) {
-			// if api error
-			setDbError(error); // set form level error
-			dealWithError(error); // set form level errors
-			clearExpenseErrors(); // clear api level error
+		if (current && !inProcess) {
+			setOpen(true);
+			const { _id, ...toUpdate } = current;
+			const objId = _id.toString();
+			setRecord({ ...record, id: objId });
+			setExpense({ ...expense, ...toUpdate });
+			setInProcess(true);
 		}
-		if (!error && !dbError && !disabled) {
-			// no api or form errors and form enabled
+
+		if (error) {
+			setHasSent(false);
+			setDbError(error); // set form level error
+			dealWithError(error);
+			clearExpenseErrors(); // set form level errors
+			setDisabled(true); // disable sebd button on form
+		}
+
+		if (current && hasSent && !error && !dbError && !disabled) {
 			handleClose();
 		}
 		// eslint - disable - next - line;
-	}, [error, expenses]); // check for changes from api, api error and change in record being updated
+	}, [error, current, hasSent, inProcess, dbError]);
 
 	const dealWithError = error => {
 		const desc = /desc/;
@@ -118,12 +128,13 @@ const AddExpense = ({
 				setFormErrors({ ...formErrors, amount: error });
 				break;
 			default:
-				clearForm();
+				resetForm();
 		}
 	};
-
-	const clearForm = () => {
+	const resetForm = () => {
 		setDisabled(true);
+		setHasSent(false);
+		setRecord({ ...record, id: '' });
 		setExpense({
 			date: moment(),
 			category: '',
@@ -132,29 +143,37 @@ const AddExpense = ({
 		});
 		setFormErrors({
 			date: '1',
-			category: '0',
-			amount: '0',
-			desc: '0'
+			category: '1',
+			amount: '1',
+			desc: '1'
 		});
+	};
+	const resetFormErrors = async () => {
+		await clearExpenseErrors();
+		setDbError('');
+	};
+	const handleClose = () => {
+		setOpen(false);
+		resetFormErrors();
+		resetForm();
+		clearCurrentExpense();
+		setInProcess(false);
 	};
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			// if no field level errors
-			setDisabled(false); // enable form
+			setDisabled(false); // enable send button on form
 			setDbError(''); // clear form level error
 		} else {
 			setDisabled(true); // if field errors disable form
 		}
 	};
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault();
 		const formattedAmount = parseFloat(expense.amount).toFixed(2);
-		addExpense({
-			...expense,
-			amount: formattedAmount
-		});
+		await updateExpense(record.id, { ...expense, amount: formattedAmount });
+		setHasSent(true);
 	};
-
 	const handleCategoryChange = e => {
 		setExpense({ ...expense, category: e.target.value });
 
@@ -201,26 +220,8 @@ const AddExpense = ({
 		}
 	};
 
-	const handleOpen = () => {
-		setOpen(true);
-	};
-	const handleClose = () => {
-		setOpen(false);
-		setDbError('');
-		clearForm();
-	};
 	return (
-		<div>
-			<Fab
-				aria-label="add"
-				className={classes.fab}
-				color="primary"
-				onClick={handleOpen}
-				size="large"
-				variant="extended"
-			>
-				<AddIcon className={classes.extendedIcon} /> Expense
-			</Fab>
+		<Fragment>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -236,9 +237,6 @@ const AddExpense = ({
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
-							<Typography variant="h5" component="h1" align="center">
-								Add Expense
-							</Typography>
 							{dbError && (
 								<Typography
 									variant="subtitle2"
@@ -282,6 +280,7 @@ const AddExpense = ({
 									</MenuItem>
 								))}
 							</Select>
+
 							<TextField
 								controlled="true"
 								required
@@ -322,28 +321,28 @@ const AddExpense = ({
 									variant="contained"
 									color="primary"
 									onClick={onSubmit}
-									disabled={false}
+									disabled={disabled}
 								>
-									Add Expense
+									Update
 								</Button>
 							</div>
 						</Container>
 					</div>
 				</Fade>
 			</Modal>
-		</div>
+		</Fragment>
 	);
 };
 
-AddExpense.propTypes = {};
+EditExpense.propTypes = {};
 
 const mapStateToProps = state => ({
-	expenses: state.expenses.expenses,
+	current: state.expenses.current,
 	error: state.expenses.error,
 	options: state.expenses.categories.selectOptions
 });
 
 export default connect(
 	mapStateToProps,
-	{ addExpense, clearExpenseErrors }
-)(AddExpense);
+	{ updateExpense, clearExpenseErrors, clearCurrentExpense }
+)(EditExpense);
