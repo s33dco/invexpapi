@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Joi = require('@hapi/joi');
-const { businessName, objectId } = require('../../config/regexps');
+Joi.objectId = require('joi-objectid')(Joi);
+const { businessName } = require('../../config/regexps');
 
 const categories = {
 	values: [
@@ -23,18 +24,16 @@ const expenseSchema = new mongoose.Schema(
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'users',
-			required: true
+			required: [true, 'no user id with expense']
 		},
 		date: {
 			type: Date,
-			default: moment()
-				.startOf('day')
-				.toISOString(),
+			default: moment().utc(),
 			required: [true, 'Date is required'],
 			max: [
 				moment()
-					.startOf('day')
-					.toISOString(),
+					.utc()
+					.endOf('day'),
 				'Date should be today or earlier'
 			]
 		},
@@ -82,8 +81,7 @@ expenseSchema.statics.findUsersExpensesByDate = function(userId) {
 
 const validate = expense => {
 	const schema = {
-		userId: Joi.string()
-			.regex(objectId)
+		userId: Joi.objectId()
 			.required()
 			.error(() => 'Invalid user id'),
 		date: Joi.date()

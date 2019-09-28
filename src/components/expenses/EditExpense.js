@@ -80,15 +80,16 @@ const EditExpense = ({
 	});
 	const [formErrors, setFormErrors] = useState({
 		date: '1',
-		category: '0',
-		desc: '0',
-		amount: '0'
+		category: '1',
+		desc: '1',
+		amount: '1'
 	});
 
 	useEffect(() => {
 		if (current && !inProcess) {
 			setOpen(true);
 			const { _id, ...toUpdate } = current;
+			console.log('initial state of expense ->', toUpdate);
 			const objId = _id.toString();
 			setRecord({ ...record, id: objId });
 			setExpense({ ...expense, ...toUpdate });
@@ -131,6 +132,7 @@ const EditExpense = ({
 				resetForm();
 		}
 	};
+
 	const resetForm = () => {
 		setDisabled(true);
 		setHasSent(false);
@@ -170,8 +172,11 @@ const EditExpense = ({
 	};
 	const onSubmit = async e => {
 		e.preventDefault();
-		const formattedAmount = parseFloat(expense.amount).toFixed(2);
-		await updateExpense(record.id, { ...expense, amount: formattedAmount });
+		const formattedData = {
+			...expense,
+			amount: parseFloat(expense.amount).toFixed(2)
+		};
+		await updateExpense(record.id, formattedData);
 		setHasSent(true);
 	};
 	const handleCategoryChange = e => {
@@ -190,7 +195,7 @@ const EditExpense = ({
 		}
 	};
 	const handleDateChange = e => {
-		setExpense({ ...expense, date: e });
+		setExpense({ ...expense, date: moment(e).toISOString() });
 	};
 	const handleChange = e => {
 		let regExp;

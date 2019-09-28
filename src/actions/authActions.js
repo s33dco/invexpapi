@@ -34,7 +34,7 @@ const loadUser = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: AUTH_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -63,7 +63,7 @@ export const registerUser = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: REGISTER_FAIL,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -92,7 +92,7 @@ export const loginUser = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: LOGIN_FAIL,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };

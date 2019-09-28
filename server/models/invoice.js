@@ -24,14 +24,12 @@ const InvoiceSchema = new mongoose.Schema({
 	},
 	invDate: {
 		type: Date,
-		default: moment()
-			.startOf('day')
-			.toISOString(),
+		default: moment().utc(),
 		required: [true, 'Date is required'],
 		max: [
 			moment()
-				.startOf('day')
-				.toISOString(),
+				.utc()
+				.endOf('day'),
 			'Date should be today or earlier'
 		]
 	},
@@ -67,13 +65,11 @@ const InvoiceSchema = new mongoose.Schema({
 	},
 	datePaid: {
 		type: Date,
-		default: moment()
-			.startOf('day')
-			.toISOString(),
+		default: moment().utc(),
 		max: [
 			moment()
-				.startOf('day')
-				.toISOString(),
+				.utc()
+				.endOf('day'),
 			'Date should be today or earlier'
 		]
 	},
@@ -83,13 +79,11 @@ const InvoiceSchema = new mongoose.Schema({
 			date: {
 				type: Date,
 				required: [true, 'Date is required'],
-				default: moment()
-					.startOf('day')
-					.toISOString(),
+				default: moment().utc(),
 				max: [
 					moment()
-						.startOf('day')
-						.toISOString(),
+						.utc()
+						.endOf('day'),
 					'Date should be today or earlier'
 				]
 			},
@@ -105,7 +99,7 @@ const InvoiceSchema = new mongoose.Schema({
 				lowercase: true,
 				trim: true
 			},
-			fee: {
+			amount: {
 				type: mongoose.Schema.Types.Decimal,
 				required: [true, 'Amount required'],
 				validate: {

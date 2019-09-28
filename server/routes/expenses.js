@@ -38,12 +38,10 @@ router.post('/', auth, async (req, res) => {
 	try {
 		const expense = new Expense(expenseDetails);
 		await expense.save();
-
 		const expenseJSON = {
 			...expense.toObject(),
 			amount: expense.amount.toString()
 		};
-
 		res.status(200).json(expenseJSON);
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);

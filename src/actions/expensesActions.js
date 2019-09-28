@@ -63,9 +63,11 @@ export const getExpenses = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
-		await dispatch(setAlert(error.response.data.msg, 'warn'));
+		const message =
+			error.response.data.msg || 'something went wrong - try again';
+		await dispatch(setAlert(message, 'warn'));
 		await dispatch(clearExpenseErrors());
 	}
 };
@@ -86,15 +88,14 @@ export const addExpense = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_EXPENSE,
-			payload: res.data || 'server error'
+			payload: res.data
 		});
 
 		await dispatch(setAlert('Expense Created!', 'info'));
 	} catch (error) {
-		console.log(error);
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -121,7 +122,7 @@ export const updateExpense = (id, formData) => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -148,7 +149,7 @@ export const deleteExpense = id => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };

@@ -33,9 +33,11 @@ export const getBusiness = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
-		await dispatch(setAlert(error.response.data.msg, 'warn'));
+		const message =
+			error.response.data.msg || 'something went wrong - try again';
+		await dispatch(setAlert(message, 'warn'));
 		await dispatch(clearBusinessErrors());
 	}
 };
@@ -63,7 +65,7 @@ export const addBusiness = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -90,7 +92,7 @@ export const updateBusiness = (id, formData) => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };

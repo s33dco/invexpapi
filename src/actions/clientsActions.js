@@ -93,7 +93,7 @@ export const addClient = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -120,7 +120,7 @@ export const updateClient = (id, formData) => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };
@@ -147,7 +147,7 @@ export const deleteClient = id => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
 };

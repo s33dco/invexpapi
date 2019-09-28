@@ -73,7 +73,7 @@ const AddExpense = ({
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
 	const [expense, setExpense] = useState({
-		date: moment(),
+		date: moment().utc(),
 		category: '',
 		amount: '',
 		desc: ''
@@ -146,13 +146,13 @@ const AddExpense = ({
 			setDisabled(true); // if field errors disable form
 		}
 	};
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault();
-		const formattedAmount = parseFloat(expense.amount).toFixed(2);
-		addExpense({
+		const formattedData = {
 			...expense,
-			amount: formattedAmount
-		});
+			amount: parseFloat(expense.amount).toFixed(2)
+		};
+		await addExpense(formattedData);
 	};
 
 	const handleCategoryChange = e => {
@@ -246,7 +246,7 @@ const AddExpense = ({
 									align="center"
 									color="error"
 								>
-									Please take another look
+									Please take another look, {dbError}
 								</Typography>
 							)}
 							<div className={classes.datePicker}>
