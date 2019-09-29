@@ -70,12 +70,12 @@ const useStyles = makeStyles(theme => ({
 		minHeight: '100vh'
 	},
 	header: {
-		height: '5vh'
+		height: '0'
 	},
 	main: {
 		flex: '1',
-		minHeight: '90vh',
-		paddingTop: '5vh'
+		minHeight: '95vh',
+		paddingTop: '60px'
 	},
 	footer: {
 		flex: '0',

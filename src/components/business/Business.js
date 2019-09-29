@@ -28,11 +28,13 @@ const useStyles = makeStyles(theme => ({
 		fontSize: theme.typography.pxToRem(20),
 		fontWeight: theme.typography.fontWeightRegular,
 		marginBottom: '2vh',
+		padding: theme.spacing(1),
 		textTransform: 'capitalize'
 	},
 	heading: {
 		fontSize: theme.typography.pxToRem(15),
-		fontWeight: theme.typography.fontWeightRegular
+		fontWeight: theme.typography.fontWeightRegular,
+		padding: theme.spacing(1)
 	},
 	info: {
 		display: 'block',
@@ -70,7 +72,7 @@ const Business = ({
 			<Fragment>
 				<Typography
 					className={classes.title}
-					variant="h4"
+					variant="h1"
 					component="h1"
 					align="center"
 				>

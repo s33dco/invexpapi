@@ -41,6 +41,11 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '80vw'
 	},
+	'@media (min-width: 600px)': {
+		paper: {
+			width: '50vw'
+		}
+	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
@@ -495,8 +500,7 @@ const AddBusiness = ({
 };
 
 AddBusiness.propTypes = {
-	addBusiness: PropTypes.func.isRequired,
-	clearErrors: PropTypes.func.isRequired
+	addBusiness: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

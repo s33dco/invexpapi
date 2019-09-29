@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
+import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
@@ -13,11 +14,17 @@ import DeleteClientDialog from './DeleteClientDialog';
 const Clients = ({ clients }) => {
 	const useStyles = makeStyles(theme => ({
 		toolbar: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyItems: 'space-between',
 			flexGrow: 1,
+			padding: theme.spacing(1),
 			backgroundColor: '#fff',
 			width: '100%'
 		},
 		search: {
+			flexGrow: 1,
 			position: 'relative',
 			borderRadius: theme.shape.borderRadius,
 			backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -101,9 +108,17 @@ const Clients = ({ clients }) => {
 				</div>
 				<AddClient />
 			</Toolbar>
+
+			{/* <Grid
+				container
+				direction="row"
+				justify="space-evenly"
+				alignItems="flex-start"
+			> */}
 			{filtered.map(client => (
 				<ClientCard key={client._id} client={client} />
 			))}
+			{/* </Grid> */}
 			<EditClient />
 			<DeleteClientDialog />
 		</Fragment>

@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '60vw'
+			width: '50vw'
 		}
 	},
 	textField: {

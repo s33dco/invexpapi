@@ -13,11 +13,17 @@ import DeleteExpenseDialog from './DeleteExpenseDialog';
 const Expenses = ({ expenses }) => {
 	const useStyles = makeStyles(theme => ({
 		toolbar: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyItems: 'space-between',
 			flexGrow: 1,
+			padding: theme.spacing(1),
 			backgroundColor: '#fff',
 			width: '100%'
 		},
 		search: {
+			flexGrow: 1,
 			position: 'relative',
 			borderRadius: theme.shape.borderRadius,
 			backgroundColor: fade(theme.palette.common.white, 0.15),
