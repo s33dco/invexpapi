@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { logout } from '../../actions/authActions';
 
-const drawerWidth = 130;
+const drawerWidth = 128;
 const useStyles = makeStyles(theme => ({
 	root: {
 		display: 'flex'

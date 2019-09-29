@@ -80,6 +80,11 @@ const useStyles = makeStyles(theme => ({
 	footer: {
 		flex: '0',
 		padding: '1vh 2.5vw'
+	},
+	'@media (min-width: 600px)': {
+		main: {
+			paddingLeft: 152
+		}
 	}
 }));
 

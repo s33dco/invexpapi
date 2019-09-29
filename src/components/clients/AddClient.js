@@ -36,6 +36,11 @@ const useStyles = makeStyles(theme => ({
 		maxHeight: '90vh',
 		overflowY: 'auto'
 	},
+	'@media (min-width: 600px)': {
+		paper: {
+			width: '60vw'
+		}
+	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',

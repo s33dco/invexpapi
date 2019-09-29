@@ -14,7 +14,8 @@ const Expenses = ({ expenses }) => {
 	const useStyles = makeStyles(theme => ({
 		toolbar: {
 			flexGrow: 1,
-			backgroundColor: '#fff'
+			backgroundColor: '#fff',
+			width: '100%'
 		},
 		search: {
 			position: 'relative',
@@ -47,9 +48,9 @@ const Expenses = ({ expenses }) => {
 			transition: theme.transitions.create('width'),
 			width: '100%',
 			[theme.breakpoints.up('sm')]: {
-				width: 120,
+				width: 'auto',
 				'&:focus': {
-					width: 200
+					width: 'auto'
 				}
 			}
 		}

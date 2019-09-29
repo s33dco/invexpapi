@@ -33,6 +33,11 @@ const useStyles = makeStyles(theme => ({
 		maxHeight: '90vh',
 		overflowY: 'auto'
 	},
+	'@media (min-width: 600px)': {
+		paper: {
+			width: '60vw'
+		}
+	},
 	select: {
 		margin: theme.spacing(2, 0, 0),
 		width: '100%'
