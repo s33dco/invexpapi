@@ -9,17 +9,11 @@ import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { DatePicker } from '@material-ui/pickers';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import InvoiceDetails from './InvoiceDetails';
 import InvoiceItem from './InvoiceItem';
 import uuid from 'uuid/v4'
-import titleCase from '../../../config/titleCase';
-
 import { addInvoice, clearInvoiceErrors } from '../../actions/invoicesActions';
 import { businessName, checkMoney } from '../../../config/regexps';
 
@@ -95,26 +89,28 @@ const AddInvoice = ({
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
-	const [details, setDetails] = useState({
+	const [invoice, setInvoice] = useState({
 		invNo: '1',
 		date: moment().utc(),
 		business: { ...business },
 		client: {},
+		items: [],
 		message: '',
 		mileage: 0,
 		paid: false
 	});
-	const [errorDetails, setErrorDetails] = useState({
+	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
 		date: '1',
 		business: '1',
 		client: '0',
+		items: '0',
 		message: '0',
 		mileage: '1'
 	});
-	const [items, setItems] = useState([]);
-	const [errorItems, setErrorItems] = useState([]);
-	const {useMileage} = details.business
+	// const [items, setItems] = useState([]);
+	// const [errorItems, setErrorItems] = useState([]);
+	const {useMileage} = invoice.business
 
 
 	useEffect(() => {
@@ -129,7 +125,7 @@ const AddInvoice = ({
 			handleClose();
 		}
 		// eslint - disable - next - line;
-	}, [error, invoices, details, items]); // check for changes from api, api error and change in record being updated
+	}, [error, invoices, invoice]); // check for changes from api, api error and change in record being updated
 
 	// const dealWithError = error => {
 	// 	const desc = /desc/;
@@ -187,20 +183,18 @@ const AddInvoice = ({
 	const onSubmit = async e => {
 		e.preventDefault();
 		const newInvoice = {
-			...details,
-			items: [...items]
+			...invoice
 		};
 		console.log(newInvoice)
 		await addInvoice(newInvoice);
 	};
 
 	const handleClientChange = e => {
-		console.log(e.target.value);
-		setDetails({ ...details, client: e.target.value });
+		setInvoice({ ...invoice, client: e.target.value });
 	};
 
 	const handleDateChange = e => {
-		setDetails({ ...details, date: e });
+		setInvoice({ ...invoice, date: e });
 	};
 
 	const handleChange = e => {
@@ -216,50 +210,64 @@ const AddInvoice = ({
 				message = 'no weird character please';
 		}
 
-		setDetails({ ...details, [e.target.name]: e.target.value });
+		setInvoice({ ...invoice, [e.target.name]: e.target.value });
 
 		if (e.target.value.match(regExp)) {
-			setErrorDetails({
-				...errorDetails,
+			setErrorInvoice({
+				...errorInvoice,
 				[e.target.id]: '1'
 			});
 		} else {
-			setErrorDetails({
-				...errorDetails,
+			setErrorInvoice({
+				...errorInvoice,
 				[e.target.id]: message
 			});
 		}
 	};
 
 	const updateChangedDateField = id => e => {
-		setItems(
-			items.map(item => item.id === id ? { ...item, date : e } : item ))
+		setInvoice({
+			...invoice,
+			items : [
+...invoice.items.map(item => item.id === id ? { ...item, date : e } : item )
+			]
+		}
+		)
 	};
 
 	const updateChangedTextField = id => e => {
-		setItems(
-			items.map(item => item.id === id? { ...item, [e.target.name] : e.target.value } : item ))
-	};
+		setInvoice({
+			...invoice,
+			items: [
+...invoice.items.map(item => item.id === id? { ...item, [e.target.name] : e.target.value } : item )]
+		});
+	}
 
 		const deleteItem = id => {
-		setItems(
-			items.filter(item => item.id === id ?  null : item )
-		);
+		setInvoice({
+			...invoice,
+			items: [
+...invoice.items.filter(item => item.id === id ?  null : item )]
+
+		});
 		}
 
 	const addNewItem = item => {
-		setItems([...items, item])
+		setInvoice({...invoice, items :[...invoice.items, item]})
 		setShowAddItem(false)
 	}
 
 	const addAnItem = () => {
-		setItems([...items, 
+		console.log({...invoice})
+		setInvoice({ ...invoice, items: [...invoice.items, 
 				{
 			date: moment().utc(),
 			desc: '',
 			amount: '',
 			id: uuid()
-		}])
+				}
+		]
+	})
 	}
 
 	const handleOpen = () => {
@@ -313,19 +321,18 @@ const AddInvoice = ({
 							)}
 								<InvoiceDetails
 									clients={clients}
-									details={details}
-									errorDetails={errorDetails}
+									invoice={invoice}
+									errorInvoice={errorInvoice}
 									handleChange={handleChange}
 									handleDateChange={handleDateChange}
 									handleClientChange={handleClientChange}
-									useMileage={useMileage}
+									useMileage={invoice.useMileage}
 								/>
-								{items.length > 0 && <Typography className={classes.heading}>Invoice Items</Typography>}
-								{items.map((item, index) => (
+								{invoice.items.length > 0 && <Typography className={classes.heading}>Invoice Items</Typography>}
+								{invoice.items.map(item => (
 									<InvoiceItem
 										item={item}
 										key={item.id}
-										index={index}
 										updateChangedDateField={updateChangedDateField}
 										updateChangedTextField={updateChangedTextField}
 										deleteItem={deleteItem}
@@ -333,7 +340,7 @@ const AddInvoice = ({
 								))}
 
 							<Container className={classes.buttonWrapper}>
-															<Button
+								<Button
 									type="button"
 									variant="contained"
 									color="primary"
@@ -343,7 +350,7 @@ const AddInvoice = ({
 									Add Item
 								</Button>
 
-																<Button
+								<Button
 									type="submit"
 									variant="contained"
 									color="primary"

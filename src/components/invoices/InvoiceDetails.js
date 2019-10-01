@@ -6,8 +6,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import moment from 'moment';
 import titleCase from '../../../config/titleCase';
+import moment from 'moment';
+
 
 const useStyles = makeStyles(theme => ({
 	select: {
@@ -28,9 +29,8 @@ const useStyles = makeStyles(theme => ({
 const InvoiceDetails = props => {
 	const classes = useStyles();
 	const {
-		addItem,
 		clients,
-		details,
+		invoice,
 		errorDetails,
 		handleChange,
 		handleDateChange,
@@ -48,7 +48,7 @@ const InvoiceDetails = props => {
 				id="invNo"
 				name="invNo"
 				type="text"
-				value={details.invNo}
+				value={invoice.invNo}
 				onChange={handleChange}
 				className={classes.textField}
 				margin="normal"
@@ -56,7 +56,7 @@ const InvoiceDetails = props => {
 			<div className={classes.datePicker}>
 				<DatePicker
 					disableFuture
-					value={details.date}
+					value={invoice.date}
 					onChange={handleDateChange}
 					format="Do MMMM YYYY"
 					animateYearScrolling
@@ -64,7 +64,7 @@ const InvoiceDetails = props => {
 			</div>
 			<Select
 				label="Choose Client"
-				value={details.client}
+				value={invoice.client}
 				onChange={handleClientChange}
 				className={classes.select}
 				// error={!(errorDetails.client.length === 1)}
@@ -88,13 +88,13 @@ const InvoiceDetails = props => {
 				<TextField
 				controlled="true"
 				required
-				error={!(errorDetails.mileage.length === 1)}
+				// error={!(errorDetails.mileage.length === 1)}
 				placeholder="Round number of miles driven"
 				label="Round number of miles driven"
 				id="mileage"
 				name="mileage"
 				type="number"
-				value={details.mileage}
+				value={invoice.mileage}
 				onChange={handleChange}
 				className={classes.textField}
 				margin="normal"
@@ -104,19 +104,20 @@ const InvoiceDetails = props => {
 			<TextField
 				controlled="true"
 				required
-				error={!(errorDetails.message.length === 1)}
+				// error={!(errorDetails.message.length === 1)}
 				placeholder="Message for Email"
 				label="Message for Email"
 				id="message"
 				name="message"
 				type="text"
-				value={details.message}
+				value={invoice.message}
 				onChange={handleChange}
 				className={classes.textField}
 				margin="normal"
-				helperText={errorDetails.message.length > 1 ? errorDetails.message : ''}
+				// helperText={errorDetails.message.length > 1 ? errorDetails.message : ''}
 			/>
-		</Fragment>
+		
+		 </Fragment>
 	);
 };
 

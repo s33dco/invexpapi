@@ -8,14 +8,14 @@ import IconButton from '@material-ui/core/IconButton';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import titleCase from '../../../config/titleCase';
+
 
 const useStyles = makeStyles(theme => ({
 	wrapper: {
 		margin: theme.spacing(1, 0, 3),
 		padding: theme.spacing(2, 1),
-		border: '1px solid #000',
-		borderRadius: theme.spacing(2)
+		borderRadius: theme.spacing(2),
+		boxShadow: theme.shadows[2],
 	},
 	datePicker: {
 		display: 'flex',
