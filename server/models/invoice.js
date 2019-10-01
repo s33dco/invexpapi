@@ -22,7 +22,7 @@ const InvoiceSchema = new mongoose.Schema({
 		type: Number,
 		required: [true, 'Invoice number is required']
 	},
-	invDate: {
+	date: {
 		type: Date,
 		default: moment().utc(),
 		required: [true, 'Date is required'],
@@ -33,16 +33,8 @@ const InvoiceSchema = new mongoose.Schema({
 			'Date should be today or earlier'
 		]
 	},
-	emailGreeting: {
-		type: String,
-		required: [true, 'Greeting for email required'],
-		validate: {
-			validator: v => {
-				return v.match(checkName);
-			},
-			message: 'Invalid character used.'
-		},
-		lowercase: true,
+	mileage: {
+		type: Number,
 		trim: true
 	},
 	message: {
@@ -66,6 +58,15 @@ const InvoiceSchema = new mongoose.Schema({
 	datePaid: {
 		type: Date,
 		default: moment().utc(),
+		max: [
+			moment()
+				.utc()
+				.endOf('day'),
+			'Date should be today or earlier'
+		]
+	},
+	emailSent: {
+		type: Date,
 		max: [
 			moment()
 				.utc()
@@ -108,12 +109,16 @@ const InvoiceSchema = new mongoose.Schema({
 					},
 					message: 'Check amount - value cannot be negative.'
 				}
+			},
+			id: {
+				type: String,
+				required: [true, 'id required'],
 			}
 		}
 	],
 
 	client: {
-		client_id: {
+		_id: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'clients',
 			required: true
@@ -205,7 +210,7 @@ const InvoiceSchema = new mongoose.Schema({
 	},
 
 	business: {
-		business_id: {
+		_id: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'businesses',
 			required: true

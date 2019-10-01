@@ -89,7 +89,6 @@ const AddExpense = ({
 		desc: '0',
 		amount: '0'
 	});
-
 	useEffect(() => {
 		if (error) {
 			// if api error
@@ -103,7 +102,6 @@ const AddExpense = ({
 		}
 		// eslint - disable - next - line;
 	}, [error, expenses]); // check for changes from api, api error and change in record being updated
-
 	const dealWithError = error => {
 		const desc = /desc/;
 		const amount = /amount/;
@@ -126,7 +124,6 @@ const AddExpense = ({
 				clearForm();
 		}
 	};
-
 	const clearForm = () => {
 		setDisabled(true);
 		setExpense({
@@ -159,7 +156,6 @@ const AddExpense = ({
 		};
 		await addExpense(formattedData);
 	};
-
 	const handleCategoryChange = e => {
 		setExpense({ ...expense, category: e.target.value });
 
@@ -205,7 +201,6 @@ const AddExpense = ({
 			});
 		}
 	};
-
 	const handleOpen = () => {
 		setOpen(true);
 	};
