@@ -11,11 +11,11 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import uuid from 'uuid/v4';
 import InvoiceDetails from './InvoiceDetails';
 import InvoiceItem from './InvoiceItem';
-import uuid from 'uuid/v4'
 import { addInvoice, clearInvoiceErrors } from '../../actions/invoicesActions';
-import { businessName, checkMoney } from '../../../config/regexps';
+import { businessName, checkMoney, checkNumber } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
@@ -32,8 +32,8 @@ const useStyles = makeStyles(theme => ({
 		maxHeight: '90vh',
 		overflowY: 'auto'
 	},
-		buttonWrapper: {
-					display: 'flex',
+	buttonWrapper: {
+		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		margin: theme.spacing(1, 0, 3),
@@ -89,6 +89,7 @@ const AddInvoice = ({
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [dbError, setDbError] = useState('');
+	// set next invoice number from invoiceReducer
 	const [invoice, setInvoice] = useState({
 		invNo: '1',
 		date: moment().utc(),
@@ -97,21 +98,19 @@ const AddInvoice = ({
 		items: [],
 		message: '',
 		mileage: 0,
-		paid: false
+		paid: false,
+		isSent: false
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
 		date: '1',
 		business: '1',
 		client: '0',
-		items: '0',
 		message: '0',
-		mileage: '1'
+		mileage: '1',
+		items: '0'
 	});
-	// const [items, setItems] = useState([]);
-	// const [errorItems, setErrorItems] = useState([]);
-	const {useMileage} = invoice.business
-
+	const { useMileage } = invoice.business;
 
 	useEffect(() => {
 		if (error) {
@@ -120,35 +119,36 @@ const AddInvoice = ({
 			dealWithError(error); // set form level errors
 			clearInvoiceErrors(); // clear api level error
 		}
-		if (!error && !dbError && !disabled) {
+		if (!error && !dbError && !disabled && invoice.isSent) {
 			// no api or form errors and form enabled
 			handleClose();
 		}
 		// eslint - disable - next - line;
 	}, [error, invoices, invoice]); // check for changes from api, api error and change in record being updated
 
-	// const dealWithError = error => {
-	// 	const desc = /desc/;
-	// 	const amount = /amount/;
-	// 	const category = /category/;
-	// 	const date = /date/;
-	// 	switch (true) {
-	// 		case desc.test(error):
-	// 			setFormErrors({ ...formErrors, desc: error });
-	// 			break;
-	// 		case category.test(error):
-	// 			setFormErrors({ ...formErrors, email: error });
-	// 			break;
-	// 		case amount.test(error):
-	// 			setFormErrors({ ...formErrors, amount: error });
-	// 			break;
-	// 		case date.test(error):
-	// 			setFormErrors({ ...formErrors, amount: error });
-	// 			break;
-	// 		default:
-	// 			clearForm();
-	// 	}
-	// };
+	const dealWithError = error => {
+		// const desc = /desc/;
+		// const amount = /amount/;
+		// const category = /category/;
+		// const date = /date/;
+		// switch (true) {
+		// 	case desc.test(error):
+		// 		setFormErrors({ ...formErrors, desc: error });
+		// 		break;
+		// 	case category.test(error):
+		// 		setFormErrors({ ...formErrors, email: error });
+		// 		break;
+		// 	case amount.test(error):
+		// 		setFormErrors({ ...formErrors, amount: error });
+		// 		break;
+		// 	case date.test(error):
+		// 		setFormErrors({ ...formErrors, amount: error });
+		// 		break;
+		// 	default:
+		// 		clearForm();
+		// }
+	};
+
 	const clearForm = () => {
 		// setDisabled(true);
 		// setInvoice({
@@ -171,26 +171,37 @@ const AddInvoice = ({
 		// 	items: '0'
 		// });
 	};
+
 	const canSend = () => {
-		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
+		const allOk = Object.values(errorInvoice)
+			.flat()
+			.map(i => (i instanceof Object ? Object.values(i) : i))
+			.flat();
+
+		if (Array.from(new Set(Object.values(allOk))).length === 1) {
 			// if no field level errors
 			setDisabled(false); // enable form
-			setDbError(''); // clear form level error
+			// setDbError(''); // clear form level error
 		} else {
 			setDisabled(true); // if field errors disable form
 		}
 	};
+
 	const onSubmit = async e => {
 		e.preventDefault();
 		const newInvoice = {
 			...invoice
 		};
-		console.log(newInvoice)
+		console.log(newInvoice);
 		await addInvoice(newInvoice);
 	};
 
 	const handleClientChange = e => {
 		setInvoice({ ...invoice, client: e.target.value });
+		setErrorInvoice({
+			...errorInvoice,
+			client: '1'
+		});
 	};
 
 	const handleDateChange = e => {
@@ -205,9 +216,14 @@ const AddInvoice = ({
 				regExp = checkMoney;
 				message = 'the amount looks wrong';
 				break;
+			case 'invNo':
+			case 'mileage':
+				regExp = checkNumber;
+				message = 'just digits';
+				break;
 			default:
 				regExp = businessName;
-				message = 'no weird character please';
+				message = 'no weird characters please';
 		}
 
 		setInvoice({ ...invoice, [e.target.name]: e.target.value });
@@ -228,51 +244,86 @@ const AddInvoice = ({
 	const updateChangedDateField = id => e => {
 		setInvoice({
 			...invoice,
-			items : [
-...invoice.items.map(item => item.id === id ? { ...item, date : e } : item )
+			items: [
+				...invoice.items.map(item =>
+					item.id === id ? { ...item, date: e } : item
+				)
 			]
-		}
-		)
+		});
 	};
 
 	const updateChangedTextField = id => e => {
-		setInvoice({
-			...invoice,
-			items: [
-...invoice.items.map(item => item.id === id? { ...item, [e.target.name] : e.target.value } : item )]
-		});
-	}
-
-		const deleteItem = id => {
-		setInvoice({
-			...invoice,
-			items: [
-...invoice.items.filter(item => item.id === id ?  null : item )]
-
-		});
+		let regExp;
+		let message;
+		switch (e.target.name) {
+			case 'amount':
+				regExp = checkMoney;
+				message = 'the amount looks wrong';
+				break;
+			default:
+				regExp = businessName;
+				message = 'no weird characters please';
 		}
 
-	const addNewItem = item => {
-		setInvoice({...invoice, items :[...invoice.items, item]})
-		setShowAddItem(false)
-	}
+		setInvoice({
+			...invoice,
+			items: [
+				...invoice.items.map(item =>
+					item.id === id ? { ...item, [e.target.name]: e.target.value } : item
+				)
+			]
+		});
+
+		const prevErrors = errorInvoice[id];
+
+		if (e.target.value.match(regExp)) {
+			setErrorInvoice({
+				...errorInvoice,
+				[id]: { ...prevErrors, [e.target.name]: '1' }
+			});
+		} else {
+			setErrorInvoice({
+				...errorInvoice,
+				[id]: { ...prevErrors, [e.target.name]: message }
+			});
+		}
+	};
+
+	const deleteItem = id => {
+		setInvoice({
+			...invoice,
+			items: [...invoice.items.filter(item => (item.id === id ? null : item))]
+		});
+	};
 
 	const addAnItem = () => {
-		console.log({...invoice})
-		setInvoice({ ...invoice, items: [...invoice.items, 
+		const newId = uuid();
+		setInvoice({
+			...invoice,
+			items: [
+				...invoice.items,
 				{
-			date: moment().utc(),
-			desc: '',
-			amount: '',
-			id: uuid()
+					date: moment().utc(),
+					desc: '',
+					amount: '',
+					id: newId
 				}
-		]
-	})
-	}
+			]
+		});
+		setErrorInvoice({
+			...errorInvoice,
+			items: '1',
+			[newId]: {
+				desc: '0',
+				amount: '0'
+			}
+		});
+	};
 
 	const handleOpen = () => {
 		setOpen(true);
 	};
+
 	const handleClose = () => {
 		setOpen(false);
 		setDbError('');
@@ -319,25 +370,32 @@ const AddInvoice = ({
 									Please take another look, {dbError}
 								</Typography>
 							)}
-								<InvoiceDetails
-									clients={clients}
-									invoice={invoice}
+							<InvoiceDetails
+								clients={clients}
+								invoice={invoice}
+								errorInvoice={errorInvoice}
+								handleChange={handleChange}
+								handleDateChange={handleDateChange}
+								handleClientChange={handleClientChange}
+								useMileage={business.useMileage}
+								canSend={canSend}
+							/>
+							{invoice.items.length > 0 && (
+								<Typography className={classes.heading}>
+									Invoice Items
+								</Typography>
+							)}
+							{invoice.items.map(item => (
+								<InvoiceItem
+									item={item}
+									key={item.id}
+									updateChangedDateField={updateChangedDateField}
+									updateChangedTextField={updateChangedTextField}
+									deleteItem={deleteItem}
 									errorInvoice={errorInvoice}
-									handleChange={handleChange}
-									handleDateChange={handleDateChange}
-									handleClientChange={handleClientChange}
-									useMileage={invoice.useMileage}
+									canSend={canSend}
 								/>
-								{invoice.items.length > 0 && <Typography className={classes.heading}>Invoice Items</Typography>}
-								{invoice.items.map(item => (
-									<InvoiceItem
-										item={item}
-										key={item.id}
-										updateChangedDateField={updateChangedDateField}
-										updateChangedTextField={updateChangedTextField}
-										deleteItem={deleteItem}
-									/>
-								))}
+							))}
 
 							<Container className={classes.buttonWrapper}>
 								<Button
@@ -345,7 +403,6 @@ const AddInvoice = ({
 									variant="contained"
 									color="primary"
 									onClick={addAnItem}
-									disabled={false}
 								>
 									Add Item
 								</Button>
@@ -355,12 +412,23 @@ const AddInvoice = ({
 									variant="contained"
 									color="primary"
 									onClick={onSubmit}
-									disabled={false}
+									disabled={disabled}
 								>
-									Save
+									Create
 								</Button>
 							</Container>
-							
+							<div>
+								{dbError && (
+									<Typography
+										variant="subtitle2"
+										component="h4"
+										align="center"
+										color="error"
+									>
+										Please take another look, {dbError}
+									</Typography>
+								)}
+							</div>
 						</Container>
 					</div>
 				</Fade>

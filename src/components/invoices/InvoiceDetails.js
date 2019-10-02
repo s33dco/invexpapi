@@ -1,14 +1,10 @@
-import React, { Fragment, useState } from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
+import React, { Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import titleCase from '../../../config/titleCase';
-import moment from 'moment';
-
 
 const useStyles = makeStyles(theme => ({
 	select: {
@@ -31,11 +27,12 @@ const InvoiceDetails = props => {
 	const {
 		clients,
 		invoice,
-		errorDetails,
+		errorInvoice,
 		handleChange,
 		handleDateChange,
 		handleClientChange,
-		useMileage
+		useMileage,
+		canSend
 	} = props;
 
 	return (
@@ -48,6 +45,8 @@ const InvoiceDetails = props => {
 				id="invNo"
 				name="invNo"
 				type="text"
+				error={!(errorInvoice.invNo.length === 1)}
+				helperText={errorInvoice.invNo.length > 1 ? errorInvoice.invNo : ''}
 				value={invoice.invNo}
 				onChange={handleChange}
 				className={classes.textField}
@@ -84,27 +83,30 @@ const InvoiceDetails = props => {
 					</MenuItem>
 				))}
 			</Select>
-			{useMileage && 
+			{useMileage && (
 				<TextField
-				controlled="true"
-				required
-				// error={!(errorDetails.mileage.length === 1)}
-				placeholder="Round number of miles driven"
-				label="Round number of miles driven"
-				id="mileage"
-				name="mileage"
-				type="number"
-				value={invoice.mileage}
-				onChange={handleChange}
-				className={classes.textField}
-				margin="normal"
-				helperText={errorDetails.mileage.length > 1 ? errorDetails.mileage : ''}
-			/>
-			}
+					controlled="true"
+					required
+					error={!(errorInvoice.mileage.length === 1)}
+					helperText={
+						errorInvoice.mileage.length > 1 ? errorInvoice.mileage : ''
+					}
+					placeholder="Round number of miles driven"
+					label="Round number of miles driven"
+					id="mileage"
+					name="mileage"
+					type="text"
+					value={invoice.mileage}
+					onChange={handleChange}
+					className={classes.textField}
+					margin="normal"
+					onBlur={canSend}
+				/>
+			)}
 			<TextField
 				controlled="true"
 				required
-				// error={!(errorDetails.message.length === 1)}
+				error={!(errorInvoice.message.length === 1)}
 				placeholder="Message for Email"
 				label="Message for Email"
 				id="message"
@@ -114,10 +116,10 @@ const InvoiceDetails = props => {
 				onChange={handleChange}
 				className={classes.textField}
 				margin="normal"
-				// helperText={errorDetails.message.length > 1 ? errorDetails.message : ''}
+				onBlur={canSend}
+				helperText={errorInvoice.message.length > 1 ? errorInvoice.message : ''}
 			/>
-		
-		 </Fragment>
+		</Fragment>
 	);
 };
 
