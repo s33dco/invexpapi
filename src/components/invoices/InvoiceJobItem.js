@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
 	card: {
 		minWidth: 275
 	},
+	item: {},
 	address: {
 		textTransfrom: 'capitalize'
 	},
@@ -36,7 +37,7 @@ const InvoiceJobItem = ({ item }) => {
 	const classes = useStyles();
 
 	return (
-		<CardContent>
+		<CardContent className={classes.item}>
 			<Container>
 				<div className={classes.buttonArea}>
 					<Typography

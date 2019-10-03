@@ -9,8 +9,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EmailIcon from '@material-ui/icons/Email';
+import DeleteIcon from '@material-ui/icons/Delete';
 import PrintIcon from '@material-ui/icons/Print';
 import clsx from 'clsx';
 import numeral from 'numeral';
@@ -34,7 +34,10 @@ numeral.defaultFormat('$0,0.00');
 
 const useStyles = makeStyles(theme => ({
 	card: {
-		minWidth: 275
+		minWidth: 275,
+		borderRadius: theme.spacing(1),
+		boxShadow: theme.shadows[1],
+		marginBottom: theme.spacing(1)
 	},
 	title: {
 		textTransform: 'capitalize'
@@ -110,7 +113,7 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 				</Typography>
 				{paid ? (
 					<Typography className={classes.contact} variant="p" component="h3">
-						paid on <Moment format="Do MMM YYYY">{date}</Moment>
+						paid <Moment format="Do MMM YYYY">{date}</Moment>
 					</Typography>
 				) : (
 					<Typography className={classes.contact} variant="p" component="h3">
@@ -135,11 +138,18 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 					<EditIcon />
 				</IconButton>
 				<IconButton
+					aria-label="email invoice"
+					// onClick={() => setDeleteInvoice(invoice)}
+				>
+					<EmailIcon />
+				</IconButton>
+				<IconButton
 					aria-label="print invoice"
 					// onClick={() => setDeleteInvoice(invoice)}
 				>
 					<PrintIcon />
 				</IconButton>
+
 				<IconButton
 					aria-label="delete invoice"
 					onClick={() => setDeleteInvoice(invoice)}

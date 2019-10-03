@@ -94,7 +94,6 @@ const EditExpense = ({
 		if (current && !inProcess) {
 			setOpen(true);
 			const { _id, ...toUpdate } = current;
-			console.log('initial state of expense ->', toUpdate);
 			const objId = _id.toString();
 			setRecord({ ...record, id: objId });
 			setExpense({ ...expense, ...toUpdate });

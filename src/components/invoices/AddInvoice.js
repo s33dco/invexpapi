@@ -86,6 +86,10 @@ const AddInvoice = ({
 	clients,
 	business
 }) => {
+	const usedInvNos = invoices
+		.map(i => i.invNo)
+		.sort((a, b) => (a > b ? 1 : -1));
+	const nextInvNumber = usedInvNos[usedInvNos.length - 1] + 1;
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -93,7 +97,7 @@ const AddInvoice = ({
 	const [dbError, setDbError] = useState('');
 	// set next invoice number from invoiceReducer
 	const [invoice, setInvoice] = useState({
-		invNo: '1',
+		invNo: nextInvNumber,
 		date: moment().utc(),
 		business: { ...business },
 		client: {},
@@ -129,26 +133,42 @@ const AddInvoice = ({
 	}, [error, invoices, invoice]); // check for changes from api, api error and change in record being updated
 
 	const dealWithError = error => {
-		// const desc = /desc/;
-		// const amount = /amount/;
+		const invNo = /invNo/;
+		const date = /date/;
+		const client = /client/;
+		const useMileage = /useMileage/;
+		const message = /message/;
+		const items = /items/;
+		const server = /server/;
 		// const category = /category/;
 		// const date = /date/;
-		// switch (true) {
-		// 	case desc.test(error):
-		// 		setFormErrors({ ...formErrors, desc: error });
-		// 		break;
-		// 	case category.test(error):
-		// 		setFormErrors({ ...formErrors, email: error });
-		// 		break;
-		// 	case amount.test(error):
-		// 		setFormErrors({ ...formErrors, amount: error });
-		// 		break;
-		// 	case date.test(error):
-		// 		setFormErrors({ ...formErrors, amount: error });
-		// 		break;
-		// 	default:
-		// 		clearForm();
-		// }
+		switch (true) {
+			case invNo.test(error):
+				setErrorInvoice({ ...errorInvoice, invNo: error });
+				break;
+			case date.test(error):
+				setErrorInvoice({ ...errorInvoice, date: error });
+				break;
+			case client.test(error):
+				setErrorInvoice({ ...errorInvoice, client: error });
+				break;
+			case server.test(error):
+				break;
+			case useMileage.test(error):
+				setErrorInvoice({ ...errorInvoice, useMileage: error });
+				break;
+			// 	case category.test(error):
+			// 		setFormErrors({ ...formErrors, email: error });
+			// 		break;
+			// 	case amount.test(error):
+			// 		setFormErrors({ ...formErrors, amount: error });
+			// 		break;
+			// 	case date.test(error):
+			// 		setFormErrors({ ...formErrors, amount: error });
+			// 		break;
+			default:
+				clearForm();
+		}
 	};
 
 	const clearForm = () => {
@@ -183,7 +203,7 @@ const AddInvoice = ({
 		if (Array.from(new Set(Object.values(allOk))).length === 1) {
 			// if no field level errors
 			setDisabled(false); // enable form
-			// setDbError(''); // clear form level error
+			setDbError(''); // clear form level error
 		} else {
 			setDisabled(true); // if field errors disable form
 		}
@@ -218,6 +238,20 @@ const AddInvoice = ({
 		setInvoice({ ...invoice, date: e });
 	};
 
+	const handleInvoiceNumber = e => {
+		setInvoice({ ...invoice, [e.target.name]: e.target.value });
+		let message = '';
+		if (usedInvNos.includes(parseInt(e.target.value))) {
+			message = `You already have an invoice number ${e.target.value}`;
+		}
+		if (!e.target.value.match(checkNumber)) {
+			message = 'just use digits for an invoice number';
+		}
+		message.length === 0
+			? setErrorInvoice({ ...errorInvoice, [e.target.id]: '1' })
+			: setErrorInvoice({ ...errorInvoice, [e.target.id]: message });
+	};
+
 	const handleChange = e => {
 		let regExp;
 		let message;
@@ -226,7 +260,6 @@ const AddInvoice = ({
 				regExp = checkMoney;
 				message = "this fee doesn't look right";
 				break;
-			case 'invNo':
 			case 'mileage':
 				regExp = checkNumber;
 				message = 'just digits';
@@ -264,7 +297,7 @@ const AddInvoice = ({
 
 	const updateChangedTextField = id => e => {
 		let regExp;
-		let message;
+		let message = "this can't be blank";
 		switch (e.target.name) {
 			case 'fee':
 				regExp = checkMoney;
@@ -272,7 +305,7 @@ const AddInvoice = ({
 				break;
 			default:
 				regExp = businessName;
-				message = 'no weird characters please';
+				message = 'need a description using standard characters';
 		}
 
 		setInvoice({
@@ -286,7 +319,7 @@ const AddInvoice = ({
 
 		const prevErrors = errorInvoice[id];
 
-		if (e.target.value.match(regExp)) {
+		if (e.target.value.match(regExp) && e.target.value) {
 			setErrorInvoice({
 				...errorInvoice,
 				[id]: { ...prevErrors, [e.target.name]: '1' }
@@ -385,6 +418,7 @@ const AddInvoice = ({
 								invoice={invoice}
 								errorInvoice={errorInvoice}
 								handleChange={handleChange}
+								handleInvoiceNumber={handleInvoiceNumber}
 								handleDateChange={handleDateChange}
 								handleClientChange={handleClientChange}
 								useMileage={business.useMileage}

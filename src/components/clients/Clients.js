@@ -21,7 +21,10 @@ const Clients = ({ clients }) => {
 			flexGrow: 1,
 			padding: theme.spacing(1),
 			backgroundColor: '#fff',
-			width: '100%'
+			width: '100%',
+			borderRadius: theme.spacing(2),
+			boxShadow: theme.shadows[1],
+			margin: theme.spacing(1, 0)
 		},
 		search: {
 			flexGrow: 1,

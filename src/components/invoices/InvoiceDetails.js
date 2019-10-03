@@ -31,6 +31,7 @@ const InvoiceDetails = props => {
 		handleChange,
 		handleDateChange,
 		handleClientChange,
+		handleInvoiceNumber,
 		useMileage,
 		canSend
 	} = props;
@@ -48,7 +49,7 @@ const InvoiceDetails = props => {
 				error={!(errorInvoice.invNo.length === 1)}
 				helperText={errorInvoice.invNo.length > 1 ? errorInvoice.invNo : ''}
 				value={invoice.invNo}
-				onChange={handleChange}
+				onChange={handleInvoiceNumber}
 				className={classes.textField}
 				margin="normal"
 			/>

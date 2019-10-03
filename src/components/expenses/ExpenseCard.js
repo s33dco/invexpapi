@@ -25,7 +25,10 @@ numeral.defaultFormat('$0,0.00');
 
 const useStyles = makeStyles(theme => ({
 	card: {
-		minWidth: 275
+		minWidth: 275,
+		borderRadius: theme.spacing(1),
+		boxShadow: theme.shadows[1],
+		marginBottom: theme.spacing(1)
 	},
 	title: {
 		textTransform: 'capitalize'

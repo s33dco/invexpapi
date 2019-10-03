@@ -9,7 +9,7 @@ const objectId = /^[a-fA-F0-9]{24}$/;
 const simpleEmail = /^[^@]+@[^@]+\.[^@]+$/;
 const checkPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@£$!%*?&])[A-Za-z\d@£$!%*?&]{8,}$/;
 const checkMoney = /^[0-9]+(\.[0-9]{1,2})?$/gm;
-const checkNumber = /^[0-9]*$/gm;
+const checkNumber = /.*[0-9].*/gm;
 
 module.exports = {
 	businessName,
