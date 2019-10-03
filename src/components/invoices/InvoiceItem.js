@@ -83,21 +83,19 @@ const InvoiceItem = props => {
 			<TextField
 				controlled="true"
 				required
-				error={errorInvoice[item.id].amount.length > 1}
+				error={errorInvoice[item.id].fee.length > 1}
 				placeholder="Amount"
-				label="Amount"
-				id="amount"
-				name="amount"
+				label="Fee"
+				id="fee"
+				name="fee"
 				type="text"
-				value={item.amount}
+				value={item.fee}
 				onChange={updateChangedTextField(item.id)}
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
 				helperText={
-					errorInvoice[item.id].amount.length > 1
-						? errorInvoice[item.id].amount
-						: ''
+					errorInvoice[item.id].fee.length > 1 ? errorInvoice[item.id].fee : ''
 				}
 			/>
 		</Container>

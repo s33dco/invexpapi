@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import numeral from 'numeral';
 import uuid from 'uuid/v4';
 import InvoiceDetails from './InvoiceDetails';
 import InvoiceItem from './InvoiceItem';
@@ -88,6 +89,7 @@ const AddInvoice = ({
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
+	const [isSent, setIsSent] = useState(false);
 	const [dbError, setDbError] = useState('');
 	// set next invoice number from invoiceReducer
 	const [invoice, setInvoice] = useState({
@@ -98,8 +100,7 @@ const AddInvoice = ({
 		items: [],
 		message: '',
 		mileage: 0,
-		paid: false,
-		isSent: false
+		paid: false
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -115,11 +116,12 @@ const AddInvoice = ({
 	useEffect(() => {
 		if (error) {
 			// if api error
+			setIsSent(false);
 			setDbError(error); // set form level error
 			dealWithError(error); // set form level errors
 			clearInvoiceErrors(); // clear api level error
 		}
-		if (!error && !dbError && !disabled && invoice.isSent) {
+		if (!error && !dbError && !disabled && isSent) {
 			// no api or form errors and form enabled
 			handleClose();
 		}
@@ -150,26 +152,26 @@ const AddInvoice = ({
 	};
 
 	const clearForm = () => {
-		// setDisabled(true);
-		// setInvoice({
-		// 	step: 0,
-		// 	invNo: '1',
-		// 	date: moment().utc(),
-		// 	client: {},
-		// 	business: { ...business },
-		// 	message: '',
-		// 	paid: false,
-		// 	items: []
-		// });
-		// setFormErrors({
-		// 	invNo: '1',
-		// 	date: '1',
-		// 	business: '1',
-		// 	client: '0',
-		// 	message: '0',
-		// 	paid: '1',
-		// 	items: '0'
-		// });
+		setInvoice({
+			invNo: '1',
+			date: moment().utc(),
+			business: { ...business },
+			client: {},
+			items: [],
+			message: '',
+			mileage: 0,
+			paid: false
+		});
+		setErrorInvoice({
+			invNo: '1',
+			date: '1',
+			business: '1',
+			client: '0',
+			message: '0',
+			mileage: '1',
+			items: '0'
+		});
+		setIsSent(false);
 	};
 
 	const canSend = () => {
@@ -189,11 +191,25 @@ const AddInvoice = ({
 
 	const onSubmit = async e => {
 		e.preventDefault();
-		const newInvoice = {
-			...invoice
+
+		console.log(invoice);
+		invoice.items.forEach(item => {
+			item.fee = parseFloat(item.fee).toFixed(2);
+		});
+
+		const total = invoice.items.reduce((s, v) => {
+			return s.add(v.fee);
+		}, numeral(0));
+
+		const obj = {
+			...invoice,
+			total: parseFloat(total._value).toFixed(2)
 		};
-		console.log(newInvoice);
-		await addInvoice(newInvoice);
+
+		console.log(obj);
+
+		setIsSent(true);
+		await addInvoice(obj);
 	};
 
 	const handleClientChange = e => {
@@ -212,9 +228,9 @@ const AddInvoice = ({
 		let regExp;
 		let message;
 		switch (e.target.id) {
-			case 'amount':
+			case 'fee':
 				regExp = checkMoney;
-				message = 'the amount looks wrong';
+				message = "this fee doesn't look right";
 				break;
 			case 'invNo':
 			case 'mileage':
@@ -256,7 +272,7 @@ const AddInvoice = ({
 		let regExp;
 		let message;
 		switch (e.target.name) {
-			case 'amount':
+			case 'fee':
 				regExp = checkMoney;
 				message = 'the amount looks wrong';
 				break;
@@ -305,7 +321,7 @@ const AddInvoice = ({
 				{
 					date: moment().utc(),
 					desc: '',
-					amount: '',
+					fee: '',
 					id: newId
 				}
 			]
@@ -315,7 +331,7 @@ const AddInvoice = ({
 			items: '1',
 			[newId]: {
 				desc: '0',
-				amount: '0'
+				fee: '0'
 			}
 		});
 	};

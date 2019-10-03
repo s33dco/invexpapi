@@ -14,10 +14,8 @@ router.get('/', auth, async (req, res) => {
 				msg: 'you have no expenses so far'
 			});
 		} else {
-			const expensesJSON = expenses.map(expense => {
-				const expenseJSON = expense.toObject();
-				return { ...expenseJSON, amount: expenseJSON.amount.toString() };
-			});
+			const expensesJSON = expenses.map(expense => 
+				expense.toObject());
 			res.status(200).json(expensesJSON);
 		}
 	} catch (error) {
@@ -38,11 +36,8 @@ router.post('/', auth, async (req, res) => {
 	try {
 		const expense = new Expense(expenseDetails);
 		await expense.save();
-		const expenseJSON = {
-			...expense.toObject(),
-			amount: expense.amount.toString()
-		};
-		res.status(200).json(expenseJSON);
+
+		res.status(200).json(expense.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}
@@ -79,12 +74,9 @@ router.put('/:id', auth, async (req, res) => {
 			{ $set: { ...req.body } },
 			{ new: true }
 		);
-		const expenseJSON = {
-			...expense.toObject(),
-			amount: expense.amount.toString()
-		};
 
-		res.status(200).json(expenseJSON);
+
+		res.status(200).json(expense.toObject());
 	} catch (e) {
 		res.status(500).send(`server error ${e}`);
 	}

@@ -11,6 +11,7 @@ const auth = require('../routes/auth');
 const businesses = require('../routes/businesses');
 const clients = require('../routes/clients');
 const expenses = require('../routes/expenses');
+const invoices = require('../routes/invoices');
 
 const initialize = app => {
 	const corsOptions = {
@@ -34,6 +35,7 @@ const initialize = app => {
 	app.use('/api/businesses', businesses);
 	app.use('/api/clients', clients);
 	app.use('/api/expenses', expenses);
+	app.use('/api/invoices', invoices);
 	app.use('/api', api);
 
 	// serve static assests in production

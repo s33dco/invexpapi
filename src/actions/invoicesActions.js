@@ -95,7 +95,8 @@ export const addInvoice = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || error.message || 'something went wrong'
 		});
 	}
 };

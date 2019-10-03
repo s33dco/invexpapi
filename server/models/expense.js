@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
-const { businessName } = require('../../config/regexps');
+const { businessName, checkMoney } = require('../../config/regexps');
 
 const categories = {
 	values: [
@@ -70,6 +70,14 @@ const expenseSchema = new mongoose.Schema(
 			transform: function(doc, ret) {
 				delete ret.userId;
 				delete ret.__v;
+				ret.amount = ret.amount.toString();
+			}
+		},
+		toJSON: {
+			transform: function(doc, ret) {
+				delete ret.userId;
+				delete ret.__v;
+				ret.amount = ret.amount.toString();
 			}
 		}
 	}
