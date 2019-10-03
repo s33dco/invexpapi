@@ -66,6 +66,11 @@ const useStyles = makeStyles(theme => ({
 			duration: theme.transitions.duration.shortest
 		})
 	},
+	buttonArea: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
 	expandOpen: {
 		transform: 'rotate(180deg)'
 	}
@@ -92,35 +97,33 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 	return (
 		<Card className={classes.card}>
 			<CardContent>
-				<Typography className={classes.title} variant="h5" component="h2">
-					Invoice {invNo}
-				</Typography>
+				<div className={classes.buttonArea}>
+					<Typography className={classes.title} variant="h6" component="h2">
+						Invoice {invNo}
+					</Typography>
+					<Typography className={classes.contact} variant="h6" component="h2">
+						{numeral(total).format()}
+					</Typography>
+				</div>
 				<Typography className={classes.contact} variant="h6" component="h3">
 					{titleCase(name)}
 				</Typography>
-				<Typography className={classes.contact} variant="h6" component="h3">
-					{email}
-				</Typography>
-				{/* <Typography className={classes.contact} variant="h6" component="h3">
-					{numeral(total).format()}
-				</Typography> */}
-
 				{paid ? (
-					<Typography className={classes.contact} variant="h6" component="h3">
+					<Typography className={classes.contact} variant="p" component="h3">
 						paid on <Moment format="Do MMM YYYY">{date}</Moment>
 					</Typography>
 				) : (
-					<Typography className={classes.contact} variant="h6" component="h3">
-						due for <Moment fromNow>{date}</Moment>
+					<Typography className={classes.contact} variant="p" component="h3">
+						due <Moment fromNow>{date}</Moment>
 					</Typography>
 				)}
 				{emailSent ? (
-					<Typography className={classes.contact} variant="h6" component="h3">
-						last emailed on <Moment format="Do MMM YYYY">{emailSent}</Moment>
+					<Typography className={classes.contact} variant="p" component="h3">
+						emailed : <Moment format="Do MMM YYYY">{emailSent}</Moment>
 					</Typography>
 				) : (
-					<Typography className={classes.contact} variant="h6" component="h3">
-						you have not emailed this invoice
+					<Typography className={classes.contact} variant="p" component="h3">
+						(you have not emailed this invoice)
 					</Typography>
 				)}
 			</CardContent>
@@ -160,6 +163,13 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 						<InvoiceJobItem key={item.id} item={item} />
 					))}
 				</CardContent>
+				{!paid && (
+					<CardActions className={classes.invoiceLink}>
+						<Button size="small" colot="primary">
+							mark as paid
+						</Button>
+					</CardActions>
+				)}
 			</Collapse>
 		</Card>
 	);

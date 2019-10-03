@@ -23,6 +23,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	address: {
 		textTransfrom: 'capitalize'
+	},
+	buttonArea: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between'
 	}
 }));
 
@@ -33,14 +38,24 @@ const InvoiceJobItem = ({ item }) => {
 	return (
 		<CardContent>
 			<Container>
-				<Typography
-					className={classes.address}
-					variant="subtitle1"
-					component="p"
-					color="textSecondary"
-				>
-					<Moment format="Do MMM YYYY">{date}</Moment>
-				</Typography>
+				<div className={classes.buttonArea}>
+					<Typography
+						className={classes.address}
+						variant="subtitle1"
+						component="p"
+						color="textSecondary"
+					>
+						<Moment format="Do MMM YYYY">{date}</Moment>
+					</Typography>
+					<Typography
+						className={classes.address}
+						variant="subtitle1"
+						component="p"
+						color="textSecondary"
+					>
+						{numeral(fee).format()}
+					</Typography>
+				</div>
 				<Typography
 					className={classes.address}
 					variant="subtitle1"
@@ -48,14 +63,6 @@ const InvoiceJobItem = ({ item }) => {
 					color="textSecondary"
 				>
 					{sentanceCase(desc)}
-				</Typography>
-				<Typography
-					className={classes.address}
-					variant="subtitle1"
-					component="p"
-					color="textSecondary"
-				>
-					{numeral(fee).format()}
 				</Typography>
 			</Container>
 		</CardContent>
