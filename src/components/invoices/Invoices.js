@@ -1,11 +1,15 @@
 import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AddInvoice from './AddInvoice';
+import InvoiceCard from './InvoiceCard';
+// import EditInvoice from './EditInvoice';
+// import DeleteInvoiceDialog from './DeleteInvoiceDialog';
 
 const Invoices = ({ invoices }) => {
 	const useStyles = makeStyles(theme => ({
@@ -66,11 +70,11 @@ const Invoices = ({ invoices }) => {
 
 	useEffect(() => {
 		if (!searchText) {
-			setFiltered([...invoices.sort((b, a) => a.date.localeCompare(b.date))]);
+			setFiltered([...invoices.sort((b, a) => (a.invNo > b.invNo ? 1 : -1))]);
 		} else {
-			const filteredList = filtered.filter(exp => {
-				const regex = new RegExp(`${searchText}`, 'gi'); // make text a global case insensitive regexp
-				return exp.category.match(regex) || exp.desc.match(regex); // match name or email
+			const filteredList = filtered.filter(inv => {
+				const regex = new RegExp(`${searchText}`, 'gi');
+				return inv.client.name.match(regex);
 			});
 			setFiltered([...filteredList]);
 		}
@@ -104,6 +108,11 @@ const Invoices = ({ invoices }) => {
 				</div>
 				<AddInvoice />
 			</Toolbar>
+			{filtered.map(inv => (
+				<InvoiceCard key={inv._id} invoice={inv} />
+			))}
+			{/* <EditInvoice />
+			<DeleteInvoiceDialog /> */}
 		</Fragment>
 	);
 };

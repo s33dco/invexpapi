@@ -100,7 +100,6 @@ const App = () => {
 							<NavBar />
 						</Container>
 						<Container component="main" className={classes.main}>
-							{/* <main> */}
 							<Alerts />
 							<Switch>
 								<Route exact path="/" component={Home} />

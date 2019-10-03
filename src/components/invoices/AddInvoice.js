@@ -191,8 +191,6 @@ const AddInvoice = ({
 
 	const onSubmit = async e => {
 		e.preventDefault();
-
-		console.log(invoice);
 		invoice.items.forEach(item => {
 			item.fee = parseFloat(item.fee).toFixed(2);
 		});
@@ -201,15 +199,11 @@ const AddInvoice = ({
 			return s.add(v.fee);
 		}, numeral(0));
 
-		const obj = {
+		setIsSent(true);
+		await addInvoice({
 			...invoice,
 			total: parseFloat(total._value).toFixed(2)
-		};
-
-		console.log(obj);
-
-		setIsSent(true);
-		await addInvoice(obj);
+		});
 	};
 
 	const handleClientChange = e => {

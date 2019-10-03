@@ -399,6 +399,7 @@ const invoiceSchema = new mongoose.Schema(
 			transform: function(doc, ret) {
 				delete ret.userId;
 				delete ret.__v;
+				ret.total = ret.total.toString()
 				ret.items.forEach(item => {
 					item.fee = item.fee.toString();
 					delete item._id;
@@ -413,6 +414,7 @@ const invoiceSchema = new mongoose.Schema(
 					item.fee = item.fee.toString();
 					delete item._id;
 				});
+				ret.total = ret.total.toString()
 			}
 		}
 	}
