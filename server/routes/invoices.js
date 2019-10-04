@@ -41,7 +41,7 @@ router.post('/', auth, async (req, res) => {
 
 		res.status(200).json(invoice.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -83,7 +83,7 @@ router.put('/:id', auth, async (req, res) => {
 
 		res.status(200).json(invoiceJSON);
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -104,7 +104,7 @@ router.get('/:id', auth, async (req, res) => {
 
 		res.json(invoice.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -131,7 +131,7 @@ router.delete('/:id', auth, async (req, res) => {
 			msg: `${invoice.desc} deleted!`
 		});
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 

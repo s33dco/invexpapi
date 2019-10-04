@@ -14,8 +14,7 @@ router.get('/', auth, async (req, res) => {
 				msg: 'you have no expenses so far'
 			});
 		} else {
-			const expensesJSON = expenses.map(expense => 
-				expense.toObject());
+			const expensesJSON = expenses.map(expense => expense.toObject());
 			res.status(200).json(expensesJSON);
 		}
 	} catch (error) {
@@ -39,7 +38,7 @@ router.post('/', auth, async (req, res) => {
 
 		res.status(200).json(expense.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -75,10 +74,9 @@ router.put('/:id', auth, async (req, res) => {
 			{ new: true }
 		);
 
-
 		res.status(200).json(expense.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -99,7 +97,7 @@ router.get('/:id', auth, async (req, res) => {
 
 		res.json(expense.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -126,7 +124,7 @@ router.delete('/:id', auth, async (req, res) => {
 			msg: `${expense.desc} deleted!`
 		});
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 

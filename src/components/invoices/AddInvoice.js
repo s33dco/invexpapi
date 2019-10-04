@@ -139,7 +139,7 @@ const AddInvoice = ({
 		const useMileage = /useMileage/;
 		const message = /message/;
 		const items = /items/;
-		const server = /server/;
+
 		// const category = /category/;
 		// const date = /date/;
 		switch (true) {
@@ -152,10 +152,13 @@ const AddInvoice = ({
 			case client.test(error):
 				setErrorInvoice({ ...errorInvoice, client: error });
 				break;
-			case server.test(error):
-				break;
 			case useMileage.test(error):
 				setErrorInvoice({ ...errorInvoice, useMileage: error });
+				break;
+			case message.test(error):
+				setErrorInvoice({ ...errorInvoice, message: error });
+				break;
+			case items.test(error):
 				break;
 			// 	case category.test(error):
 			// 		setFormErrors({ ...formErrors, email: error });

@@ -48,7 +48,7 @@ router.post('/', auth, async (req, res) => {
 		logger.error(
 			`failed business details from ${req.user.name} (${req.user.id}) - ${e}`
 		);
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 
@@ -85,7 +85,7 @@ router.put('/:id', auth, async (req, res) => {
 		);
 		res.json(business.toObject());
 	} catch (e) {
-		res.status(500).send(`server error ${e}`);
+		res.status(500).send(`server error ${e.message}`);
 	}
 });
 

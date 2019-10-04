@@ -399,7 +399,7 @@ const invoiceSchema = new mongoose.Schema(
 			transform: function(doc, ret) {
 				delete ret.userId;
 				delete ret.__v;
-				ret.total = ret.total.toString()
+				ret.total = ret.total.toString();
 				ret.items.forEach(item => {
 					item.fee = item.fee.toString();
 					delete item._id;
@@ -414,7 +414,7 @@ const invoiceSchema = new mongoose.Schema(
 					item.fee = item.fee.toString();
 					delete item._id;
 				});
-				ret.total = ret.total.toString()
+				ret.total = ret.total.toString();
 			}
 		}
 	}
@@ -455,7 +455,13 @@ const validate = invoice => {
 			.regex(businessName)
 			.error(() => 'enter your farewell - just regular characters'),
 		paid: Joi.boolean().required(),
-		total: Joi.number(),
+		total: Joi.number()
+			.precision(2)
+			.required()
+			.error(
+				() =>
+					'the invoice total is not being supplied, please contact your administrator'
+			),
 		datePaid: Joi.date()
 			.iso()
 			.max('now')
@@ -464,14 +470,40 @@ const validate = invoice => {
 			.iso()
 			.max('now')
 			.error(() => 'A date is required, today or earlier'),
-		items: Joi.array().required(),
-		// items.fee: Joi.number()
-		// 	.precision(2)
-		// 	.required()
-		// 	.min(0.0)
-		// 	.error(() => 'Valid fee is required'),
-		client: Joi.object().required(),
-		business: Joi.object().required()
+		items: Joi.array()
+			.items(
+				Joi.object().keys({
+					date: Joi.date()
+						.iso()
+						.max('now')
+						.required()
+						.error(
+							() => 'A date is required for the invoice item, today or earlier'
+						),
+					desc: Joi.string()
+						.required()
+						.regex(businessName)
+						.error(() => 'Description needed for invoice item'),
+					fee: Joi.number()
+						.precision(2)
+						.required()
+						.error(() => 'The fee for the invoice item looks wrong'),
+					id: Joi.string().required()
+				})
+			)
+			.required()
+			.error(() => 'Invoice items are required'),
+		client: Joi.object()
+			.required()
+			.error(
+				() => 'Check the client details, try again or contact the administrator'
+			),
+		business: Joi.object()
+			.required()
+			.error(
+				() =>
+					'There is a problem with your business details, try again or contact the administrator'
+			)
 	};
 	return Joi.validate(invoice, schema);
 };
