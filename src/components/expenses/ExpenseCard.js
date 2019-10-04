@@ -94,13 +94,13 @@ const ExpenseCard = ({ expense, setCurrentExpense, setDeleteExpense }) => {
 			</CardContent>
 			<CardActions className={classes.buttonArea}>
 				<IconButton
-					aria-label="edit client"
+					aria-label="edit expense"
 					onClick={() => setCurrentExpense(expense)}
 				>
 					<EditIcon />
 				</IconButton>
 				<IconButton
-					aria-label="delete client"
+					aria-label="delete expense"
 					onClick={() => setDeleteExpense(expense)}
 				>
 					<DeleteIcon />

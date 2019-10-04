@@ -9,7 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddInvoice from './AddInvoice';
 import InvoiceCard from './InvoiceCard';
 // import EditInvoice from './EditInvoice';
-// import DeleteInvoiceDialog from './DeleteInvoiceDialog';
+import DeleteInvoiceDialog from './DeleteInvoiceDialog';
 
 const Invoices = ({ invoices }) => {
 	const useStyles = makeStyles(theme => ({
@@ -114,8 +114,8 @@ const Invoices = ({ invoices }) => {
 			{filtered.map(inv => (
 				<InvoiceCard key={inv._id} invoice={inv} />
 			))}
-			{/* <EditInvoice />
-			<DeleteInvoiceDialog /> */}
+			{/* <EditInvoice /> */}
+			<DeleteInvoiceDialog />
 		</Fragment>
 	);
 };

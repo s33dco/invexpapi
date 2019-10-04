@@ -111,22 +111,25 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 				<Typography className={classes.contact} variant="h6" component="h3">
 					{titleCase(name)}
 				</Typography>
-				{paid ? (
-					<Typography className={classes.contact} variant="p" component="h3">
-						paid <Moment format="Do MMM YYYY">{date}</Moment>
-					</Typography>
-				) : (
-					<Typography className={classes.contact} variant="p" component="h3">
-						due <Moment fromNow>{date}</Moment>
-					</Typography>
-				)}
+				<Typography className={classes.contact} variant="p" component="h3">
+					Invoice Date <Moment format="Do MMM YYYY">{date}</Moment>
+				</Typography>
 				{emailSent ? (
 					<Typography className={classes.contact} variant="p" component="h3">
-						emailed : <Moment format="Do MMM YYYY">{emailSent}</Moment>
+						Email sent <Moment format="Do MMM YYYY">{emailSent}</Moment>
 					</Typography>
 				) : (
 					<Typography className={classes.contact} variant="p" component="h3">
 						(you have not emailed this invoice)
+					</Typography>
+				)}
+				{paid ? (
+					<Typography className={classes.contact} variant="p" component="h3">
+						Payment received <Moment format="Do MMM YYYY">{date}</Moment>
+					</Typography>
+				) : (
+					<Typography className={classes.contact} variant="p" component="h3">
+						Due <Moment fromNow>{date}</Moment>
 					</Typography>
 				)}
 			</CardContent>
