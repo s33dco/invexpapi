@@ -21,7 +21,8 @@ import sentanceCase from '../../../config/sentanceCase';
 import titleCase from '../../../config/titleCase';
 import {
 	setCurrentClient,
-	setDeleteClient
+	setDeleteClient,
+	getClientItems
 } from '../../actions/clientsActions';
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +37,10 @@ const useStyles = makeStyles(theme => ({
 	},
 	contact: {
 		marginBottom: 0,
+		verticalAlign: 'center'
+	},
+	greeting: {
+		marginBottom: theme.spacing(2, 0),
 		verticalAlign: 'center'
 	},
 	buttonArea: {
@@ -66,7 +71,13 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
+const ClientCard = ({
+	client,
+	invoices,
+	setCurrentClient,
+	setDeleteClient,
+	getClientItems
+}) => {
 	const { name, email, phone, add1, add2, add3, postCode, greeting } = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
@@ -117,7 +128,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 				<CardContent>
 					<Typography
 						className={classes.address}
-						variant="subtitle1"
+						variant="body1"
 						component="p"
 						color="textSecondary"
 					>
@@ -126,7 +137,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 					{add2 && (
 						<Typography
 							className={classes.address}
-							variant="subtitle1"
+							variant="body1"
 							component="p"
 							color="textSecondary"
 						>
@@ -136,7 +147,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 					{add3 && (
 						<Typography
 							className={classes.address}
-							variant="subtitle1"
+							variant="body1"
 							component="p"
 							color="textSecondary"
 						>
@@ -145,7 +156,7 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 					)}
 					<Typography
 						className={classes.postCode}
-						variant="subtitle1"
+						variant="body1"
 						component="p"
 						color="textSecondary"
 					>
@@ -153,14 +164,17 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 					</Typography>
 					<Typography
 						className={classes.greeting}
-						variant="subtitle2"
+						variant="subtitle1"
 						component="p"
-						color="textSecondary"
 					>
 						{titleCase(greeting)}
 					</Typography>
 					<CardActions className={classes.invoiceLink}>
-						<Button size="small" colot="primary">
+						<Button
+							size="small"
+							colot="primary"
+							onClick={() => getClientItems(client, invoices)}
+						>
 							previously invoiced items...
 						</Button>
 					</CardActions>
@@ -170,7 +184,13 @@ const ClientCard = ({ client, setCurrentClient, setDeleteClient }) => {
 	);
 };
 
+ClientCard.propTypes = {};
+
+const mapStateToProps = state => ({
+	invoices: state.invoices.invoices
+});
+
 export default connect(
-	null,
-	{ setCurrentClient, setDeleteClient }
+	mapStateToProps,
+	{ setCurrentClient, setDeleteClient, getClientItems }
 )(ClientCard);

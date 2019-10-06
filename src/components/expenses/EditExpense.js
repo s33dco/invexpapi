@@ -78,7 +78,7 @@ const EditExpense = ({
 	const [inProcess, setInProcess] = useState(false);
 	const [record, setRecord] = useState({ id: '' });
 	const [expense, setExpense] = useState({
-		date: moment(),
+		date: moment().utc(),
 		category: '',
 		amount: '',
 		desc: ''

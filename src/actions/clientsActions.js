@@ -11,8 +11,11 @@ import {
 	SET_CURRENT_CLIENT,
 	CLEAR_CURRENT_CLIENT,
 	SET_DELETE_CLIENT,
-	CLEAR_DELETE_CLIENT
+	CLEAR_DELETE_CLIENT,
+	GET_CLIENT_ITEMS,
+	CLEAR_CLIENT_ITEMS
 } from './types';
+import { clearInvoices } from './invoicesActions';
 
 export const clearClients = () => async dispatch => {
 	dispatch({
@@ -150,4 +153,34 @@ export const deleteClient = id => async dispatch => {
 			payload: error.response.data.msg || 'something went wrong - try again'
 		});
 	}
+};
+
+export const getClientItems = (client, invoices) => async dispatch => {
+	try {
+		const jobs = invoices
+			.filter(inv => (inv.client._id === client._id ? inv : null))
+			.map(i => i.items)
+			.flat(2)
+			.sort((a, b) => {
+				a.date > b.date ? 1 : -1;
+			});
+
+		dispatch({
+			type: GET_CLIENT_ITEMS,
+			payload: { name: client.name, items: jobs }
+		});
+	} catch (error) {
+		dispatch({
+			type: CLIENT_ERROR,
+			payload: 'error retrieving client jobs'
+		});
+		await dispatch(setAlert(error.response.data.msg, 'warn'));
+		await dispatch(clearClientErrors());
+	}
+};
+
+export const clearClientItems = () => async dispatch => {
+	dispatch({
+		type: CLEAR_CLIENT_ITEMS
+	});
 };

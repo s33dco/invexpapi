@@ -85,10 +85,10 @@ const ExpenseCard = ({ expense, setCurrentExpense, setDeleteExpense }) => {
 						{numeral(amount).format()}
 					</Typography>
 				</div>
-				<Typography className={classes.contact} variant="h6" component="h3">
+				<Typography className={classes.contact} variant="body1" component="h3">
 					{titleCase(category)}
 				</Typography>
-				<Typography className={classes.contact} variant="h6" component="h3">
+				<Typography className={classes.contact} variant="body1" component="h3">
 					{sentanceCase(desc)}
 				</Typography>
 			</CardContent>

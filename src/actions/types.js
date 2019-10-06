@@ -29,6 +29,11 @@ export const SET_DELETE_CLIENT = 'SET_DELETE_CLIENT';
 export const CLEAR_DELETE_CLIENT = 'CLEAR_DELETE_CLIENT';
 export const DELETE_CLIENT = 'DELETE_CLIENT';
 
+// maybe do automatically...
+
+export const GET_CLIENT_ITEMS = 'GET_CLIENT_JOBS';
+export const CLEAR_CLIENT_ITEMS = 'CLEAR_CLIENT_JOBS';
+
 export const GET_EXPENSES = 'GET_EXPENSES';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const UPDATE_EXPENSE = 'UPDATE_EXPENSE';

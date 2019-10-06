@@ -43,7 +43,8 @@ const InvoiceItem = props => {
 			<div className={classes.datePicker}>
 				<DatePicker
 					disableFuture
-					// error={!(formErrors.date.length === 1)}
+					label="Item Date"
+					// error={!(errorInvoice.date.length === 1)}
 					id="date"
 					value={item.date}
 					onChange={updateChangedDateField(item.id)}
@@ -60,7 +61,7 @@ const InvoiceItem = props => {
 			<TextField
 				controlled="true"
 				required
-				error={errorInvoice[item.id].desc.length > 1}
+				// error={errorInvoice[item.id].desc.length > 1}
 				placeholder="Description"
 				label="Description"
 				id="desc"
@@ -74,16 +75,16 @@ const InvoiceItem = props => {
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={
-					errorInvoice[item.id].desc.length > 1
-						? errorInvoice[item.id].desc
-						: ''
-				}
+				// helperText={
+				// 	errorInvoice[item.id].desc.length > 1
+				// 		? errorInvoice[item.id].desc
+				// 		: ''
+				// }
 			/>
 			<TextField
 				controlled="true"
 				required
-				error={errorInvoice[item.id].fee.length > 1}
+				// error={errorInvoice[item.id].fee.length > 1}
 				placeholder="Amount"
 				label="Fee"
 				id="fee"
@@ -94,9 +95,9 @@ const InvoiceItem = props => {
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={
-					errorInvoice[item.id].fee.length > 1 ? errorInvoice[item.id].fee : ''
-				}
+				// helperText={
+				// 	errorInvoice[item.id].fee.length > 1 ? errorInvoice[item.id].fee : ''
+				// }
 			/>
 		</Container>
 	);

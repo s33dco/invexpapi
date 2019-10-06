@@ -8,7 +8,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AddInvoice from './AddInvoice';
 import InvoiceCard from './InvoiceCard';
-// import EditInvoice from './EditInvoice';
+import EditInvoice from './EditInvoice';
 import DeleteInvoiceDialog from './DeleteInvoiceDialog';
 
 const Invoices = ({ invoices }) => {
@@ -114,7 +114,7 @@ const Invoices = ({ invoices }) => {
 			{filtered.map(inv => (
 				<InvoiceCard key={inv._id} invoice={inv} />
 			))}
-			{/* <EditInvoice /> */}
+			<EditInvoice />
 			<DeleteInvoiceDialog />
 		</Fragment>
 	);

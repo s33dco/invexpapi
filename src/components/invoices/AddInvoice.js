@@ -100,7 +100,7 @@ const AddInvoice = ({
 		invNo: nextInvNumber,
 		date: moment().utc(),
 		business: { ...business },
-		client: {},
+		client: '',
 		items: [],
 		message: '',
 		mileage: 0,
@@ -170,7 +170,7 @@ const AddInvoice = ({
 			// 		setFormErrors({ ...formErrors, amount: error });
 			// 		break;
 			default:
-				clearForm();
+				;
 		}
 	};
 
@@ -179,7 +179,7 @@ const AddInvoice = ({
 			invNo: '1',
 			date: moment().utc(),
 			business: { ...business },
-			client: {},
+			client: 'Choose Client',
 			items: [],
 			message: '',
 			mileage: 0,

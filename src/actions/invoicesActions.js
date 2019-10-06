@@ -146,7 +146,7 @@ export const deleteInvoice = id => async dispatch => {
 			payload: id
 		});
 
-		await dispatch(setAlert(res.data.msg, 'info'));
+		await dispatch(setAlert('Invoice deleted', 'info'));
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,

@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddClient from './AddClient';
 import ClientCard from './ClientCard';
 import EditClient from './EditClient';
+import PreviousItems from './PreviousItems';
 import DeleteClientDialog from './DeleteClientDialog';
 
 const Clients = ({ clients }) => {
@@ -122,6 +123,7 @@ const Clients = ({ clients }) => {
 				<ClientCard key={client._id} client={client} />
 			))}
 			{/* </Grid> */}
+			<PreviousItems />
 			<EditClient />
 			<DeleteClientDialog />
 		</Fragment>

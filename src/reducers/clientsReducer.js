@@ -9,18 +9,34 @@ import {
 	UPDATE_CLIENT,
 	SET_DELETE_CLIENT,
 	CLEAR_DELETE_CLIENT,
-	DELETE_CLIENT
+	DELETE_CLIENT,
+	GET_CLIENT_ITEMS,
+	CLEAR_CLIENT_ITEMS
 } from '../actions/types';
 
 const initialState = {
 	clients: [],
 	error: '',
 	current: '',
-	delete: ''
+	delete: '',
+	clientItems: { name: '', items: [] }
 };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case GET_CLIENT_ITEMS:
+			return {
+				...state,
+				clientItems: {
+					name: action.payload.name,
+					items: [...action.payload.items]
+				}
+			};
+		case CLEAR_CLIENT_ITEMS:
+			return {
+				...state,
+				clientItems: {}
+			};
 		case GET_CLIENTS:
 			return {
 				...state,

@@ -2,6 +2,12 @@ import React, { Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import titleCase from '../../../config/titleCase';
@@ -33,7 +39,8 @@ const InvoiceDetails = props => {
 		handleClientChange,
 		handleInvoiceNumber,
 		useMileage,
-		canSend
+		canSend,
+		onRadioToggle
 	} = props;
 
 	return (
@@ -56,6 +63,7 @@ const InvoiceDetails = props => {
 			<div className={classes.datePicker}>
 				<DatePicker
 					disableFuture
+					label="Invoice Date"
 					value={invoice.date}
 					onChange={handleDateChange}
 					format="Do MMMM YYYY"
@@ -66,9 +74,10 @@ const InvoiceDetails = props => {
 				label="Choose Client"
 				value={invoice.client}
 				onChange={handleClientChange}
+				onBlur={canSend}
 				className={classes.select}
 				// error={!(errorDetails.client.length === 1)}
-				// 				helperText={errorDetails.client.length > 1 ? errorDetails.mileage : ''}
+				// helperText={errorDetails.client.length > 1 ? errorDetails.mileage : ''}
 				displayEmpty
 				inputProps={{
 					name: 'client',
@@ -120,6 +129,42 @@ const InvoiceDetails = props => {
 				onBlur={canSend}
 				helperText={errorInvoice.message.length > 1 ? errorInvoice.message : ''}
 			/>
+			{invoice.paid && (
+				<FormControl component="fieldset" className={classes.formControl}>
+					<FormLabel component="legend">Invoice Paid ?</FormLabel>
+					<RadioGroup
+						aria-label="useMileage"
+						name="useMileage"
+						value={invoice.paid.toString()}
+						onChange={onRadioToggle}
+					>
+						<FormControlLabel
+							value="true"
+							control={<Radio color="primary" />}
+							label="yes"
+							labelPlacement="start"
+						/>
+						<FormControlLabel
+							value="false"
+							control={<Radio color="primary" />}
+							label="no"
+							labelPlacement="start"
+						/>
+					</RadioGroup>
+				</FormControl>
+			)}
+			{invoice.datePaid && (
+				<div className={classes.datePicker}>
+					<DatePicker
+						disableFuture
+						label="Date Paid"
+						value={invoice.datePaid}
+						onChange={handleDateChange}
+						format="Do MMMM YYYY"
+						animateYearScrolling
+					/>
+				</div>
+			)}
 		</Fragment>
 	);
 };

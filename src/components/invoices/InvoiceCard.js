@@ -111,24 +111,40 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 				<Typography className={classes.contact} variant="h6" component="h3">
 					{titleCase(name)}
 				</Typography>
-				<Typography className={classes.contact} variant="p" component="h3">
+				<Typography className={classes.contact} variant="body1" component="h3">
 					Invoice Date <Moment format="Do MMM YYYY">{date}</Moment>
 				</Typography>
 				{emailSent ? (
-					<Typography className={classes.contact} variant="p" component="h3">
-						Email sent <Moment format="Do MMM YYYY">{emailSent}</Moment>
+					<Typography
+						className={classes.contact}
+						variant="body1"
+						component="h3"
+					>
+						Emailed <Moment format="Do MMM YYYY">{emailSent}</Moment>
 					</Typography>
 				) : (
-					<Typography className={classes.contact} variant="p" component="h3">
+					<Typography
+						className={classes.contact}
+						variant="body1"
+						component="h3"
+					>
 						(you have not emailed this invoice)
 					</Typography>
 				)}
 				{paid ? (
-					<Typography className={classes.contact} variant="p" component="h3">
+					<Typography
+						className={classes.contact}
+						variant="body1"
+						component="h3"
+					>
 						Payment received <Moment format="Do MMM YYYY">{date}</Moment>
 					</Typography>
 				) : (
-					<Typography className={classes.contact} variant="p" component="h3">
+					<Typography
+						className={classes.contact}
+						variant="body1"
+						component="h3"
+					>
 						Due <Moment fromNow>{date}</Moment>
 					</Typography>
 				)}
@@ -142,12 +158,14 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 				</IconButton>
 				<IconButton
 					aria-label="email invoice"
+					disabled
 					// onClick={() => setDeleteInvoice(invoice)}
 				>
 					<EmailIcon />
 				</IconButton>
 				<IconButton
 					aria-label="print invoice"
+					disabled
 					// onClick={() => setDeleteInvoice(invoice)}
 				>
 					<PrintIcon />
