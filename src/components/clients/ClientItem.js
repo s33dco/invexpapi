@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import Moment from 'react-moment';
-import numeral from 'numeral';
-import 'numeral/locales';
 import { makeStyles } from '@material-ui/core/styles';
+import numeral from 'numeral';
+import Moment from 'react-moment';
 import sentanceCase from '../../../config/sentanceCase';
+import 'numeral/locales';
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');

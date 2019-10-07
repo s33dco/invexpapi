@@ -1,4 +1,3 @@
-import selectOptions from '../../server/models/expense';
 import {
 	GET_INVOICES,
 	ADD_INVOICE,
@@ -10,7 +9,9 @@ import {
 	UPDATE_INVOICE,
 	SET_DELETE_INVOICE,
 	CLEAR_DELETE_INVOICE,
-	DELETE_INVOICE
+	DELETE_INVOICE,
+	MARK_AS_PAID,
+	MARK_AS_UNPAID
 } from '../actions/types';
 
 const initialState = {
@@ -53,10 +54,12 @@ export default (state = initialState, action) => {
 				current: ''
 			};
 		case UPDATE_INVOICE:
+		case MARK_AS_PAID:
+		case MARK_AS_UNPAID:
 			return {
 				...state,
-				invoices: state.invoices.map(exp =>
-					exp._id === action.payload._id ? action.payload : exp
+				invoices: state.invoices.map(inv =>
+					inv._id === action.payload._id ? action.payload : inv
 				)
 			};
 		case SET_DELETE_INVOICE:

@@ -262,13 +262,11 @@ const EditInvoice = ({
 			return s.add(v.fee);
 		}, numeral(0));
 
-		const formattedData = {
-			...invoice,
-			total
-		};
-
-		await updateInvoice(record.id, formattedData);
 		setHasSent(true);
+		await updateInvoice(record.id, {
+			...invoice,
+			total: parseFloat(total._value).toFixed(2)
+		});
 	};
 
 	const handleClientChange = e => {

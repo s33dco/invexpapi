@@ -26,7 +26,9 @@ import titleCase from '../../../config/titleCase';
 import InvoiceJobItem from './InvoiceJobItem';
 import {
 	setCurrentInvoice,
-	setDeleteInvoice
+	setDeleteInvoice,
+	payInvoice,
+	unpayInvoice
 } from '../../actions/invoicesActions';
 
 numeral.locale('en-gb');
@@ -79,7 +81,13 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
+const InvoiceCard = ({
+	invoice,
+	setCurrentInvoice,
+	setDeleteInvoice,
+	payInvoice,
+	unpayInvoice
+}) => {
 	const {
 		invNo,
 		date,
@@ -88,9 +96,10 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 		paid,
 		items,
 		emailSent,
-		datePaid
+		datePaid,
+		_id
 	} = invoice;
-	const { name, email } = client;
+	const { name } = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -137,7 +146,7 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 						variant="body1"
 						component="h3"
 					>
-						Payment received <Moment format="Do MMM YYYY">{date}</Moment>
+						Payment received <Moment format="Do MMM YYYY">{datePaid}</Moment>
 					</Typography>
 				) : (
 					<Typography
@@ -194,10 +203,22 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 						<InvoiceJobItem key={item.id} item={item} />
 					))}
 				</CardContent>
-				{!paid && (
-					<CardActions className={classes.invoiceLink}>
+				{!paid ? (
+					<CardActions
+						className={classes.invoiceLink}
+						onClick={() => payInvoice(_id)}
+					>
 						<Button size="small" colot="primary">
 							mark as paid
+						</Button>
+					</CardActions>
+				) : (
+					<CardActions
+						className={classes.invoiceLink}
+						onClick={() => unpayInvoice(_id)}
+					>
+						<Button size="small" colot="primary">
+							mark as unpaid
 						</Button>
 					</CardActions>
 				)}
@@ -208,5 +229,5 @@ const InvoiceCard = ({ invoice, setCurrentInvoice, setDeleteInvoice }) => {
 
 export default connect(
 	null,
-	{ setCurrentInvoice, setDeleteInvoice }
+	{ setCurrentInvoice, setDeleteInvoice, payInvoice, unpayInvoice }
 )(InvoiceCard);

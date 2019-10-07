@@ -11,7 +11,9 @@ import {
 	SET_CURRENT_INVOICE,
 	CLEAR_CURRENT_INVOICE,
 	SET_DELETE_INVOICE,
-	CLEAR_DELETE_INVOICE
+	CLEAR_DELETE_INVOICE,
+	MARK_AS_PAID,
+	MARK_AS_UNPAID
 } from './types';
 
 export const clearInvoices = () => async dispatch => {
@@ -136,10 +138,7 @@ export const deleteInvoice = id => async dispatch => {
 	};
 
 	try {
-		const res = await axios.delete(
-			`${process.env.API_URL}/invoices/${id}`,
-			config
-		);
+		await axios.delete(`${process.env.API_URL}/invoices/${id}`, config);
 
 		dispatch({
 			type: DELETE_INVOICE,
@@ -148,6 +147,63 @@ export const deleteInvoice = id => async dispatch => {
 
 		await dispatch(setAlert('Invoice deleted', 'info'));
 	} catch (error) {
+		dispatch({
+			type: INVOICE_ERROR,
+			payload: error.response.data.msg || 'something went wrong - try again'
+		});
+	}
+};
+
+export const payInvoice = id => async dispatch => {
+	const config = {
+		headers: {
+			'Content-type': 'application/json'
+		}
+	};
+
+	try {
+		const res = await axios.patch(
+			`${process.env.API_URL}/invoices/paid/${id}`,
+			config
+		);
+
+		dispatch({
+			type: MARK_AS_PAID,
+			payload: res.data
+		});
+
+		await dispatch(setAlert(`Invoice ${res.data.invNo} paid 😃`, 'info'));
+	} catch (error) {
+		console.log(error);
+		dispatch({
+			type: INVOICE_ERROR,
+			payload: error.response.data.msg || 'something went wrong - try again'
+		});
+	}
+};
+
+export const unpayInvoice = id => async dispatch => {
+	const config = {
+		headers: {
+			'Content-type': 'application/json'
+		}
+	};
+
+	try {
+		const res = await axios.patch(
+			`${process.env.API_URL}/invoices/unpaid/${id}`,
+			config
+		);
+
+		dispatch({
+			type: MARK_AS_UNPAID,
+			payload: res.data
+		});
+
+		await dispatch(setAlert(`Invoice ${res.data.invNo} unpaid ☹️`, 'info'));
+	} catch (error) {
+		console.log(error);
+
 		dispatch({
 			type: INVOICE_ERROR,
 			payload: error.response.data.msg || 'something went wrong - try again'

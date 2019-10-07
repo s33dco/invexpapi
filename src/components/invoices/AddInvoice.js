@@ -170,7 +170,6 @@ const AddInvoice = ({
 			// 		setFormErrors({ ...formErrors, amount: error });
 			// 		break;
 			default:
-				;
 		}
 	};
 
