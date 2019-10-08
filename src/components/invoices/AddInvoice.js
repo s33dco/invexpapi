@@ -94,15 +94,14 @@ const AddInvoice = ({
 	const usedInvNos = invoices
 		.map(i => i.invNo)
 		.sort((a, b) => (a > b ? 1 : -1));
-	const nextInvNumber = usedInvNos[usedInvNos.length - 1] + 1;
+	const nextInvNumber = () => usedInvNos[usedInvNos.length - 1] + 1;
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [isSent, setIsSent] = useState(false);
 	const [dbError, setDbError] = useState('');
-	// set next invoice number from invoiceReducer
 	const [invoice, setInvoice] = useState({
-		invNo: nextInvNumber,
+		invNo: nextInvNumber(),
 		date: moment().utc(),
 		business: { ...business },
 		client: '',
@@ -135,10 +134,9 @@ const AddInvoice = ({
 			handleClose();
 		}
 		// eslint - disable - next - line;
-	}, [error, invoices, invoice]); // check for changes from api, api error and change in record being updated
+	}, [error, invoices, invoice]);
 
 	// errors from api
-
 	const dealWithError = error => {
 		const invNo = /invNo/;
 		const date = /date/;
@@ -167,27 +165,17 @@ const AddInvoice = ({
 				break;
 			case items.test(error):
 				break;
-			// 	case category.test(error):
-			// 		setFormErrors({ ...formErrors, email: error });
-			// 		break;
-			// 	case amount.test(error):
-			// 		setFormErrors({ ...formErrors, amount: error });
-			// 		break;
-			// 	case date.test(error):
-			// 		setFormErrors({ ...formErrors, amount: error });
-			// 		break;
 			default:
 		}
 	};
 
 	// form functions
-
 	const clearForm = () => {
 		setInvoice({
-			invNo: '1',
+			invNo: nextInvNumber(),
 			date: moment().utc(),
 			business: { ...business },
-			client: 'Choose Client',
+			client: '',
 			items: [],
 			message: '',
 			mileage: 0,
@@ -202,7 +190,6 @@ const AddInvoice = ({
 			mileage: '1',
 			items: '0'
 		});
-		setIsSent(false);
 	};
 
 	const canSend = () => {
@@ -238,7 +225,6 @@ const AddInvoice = ({
 	};
 
 	// invoice details
-
 	const handleClientChange = e => {
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
@@ -295,7 +281,6 @@ const AddInvoice = ({
 	};
 
 	// invoice items
-
 	const updateChangedDateField = id => e => {
 		setInvoice({
 			...invoice,
@@ -382,6 +367,7 @@ const AddInvoice = ({
 
 	const handleClose = () => {
 		setOpen(false);
+		setIsSent(false);
 		setDbError('');
 		clearForm();
 		clearCurrentInvoice();
@@ -447,6 +433,7 @@ const AddInvoice = ({
 								<InvoiceItem
 									item={item}
 									key={item.id}
+									selectedClient={false}
 									updateChangedDateField={updateChangedDateField}
 									updateChangedTextField={updateChangedTextField}
 									deleteItem={deleteItem}

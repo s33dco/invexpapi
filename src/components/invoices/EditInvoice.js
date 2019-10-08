@@ -92,10 +92,6 @@ const EditInvoice = ({
 	current,
 	business
 }) => {
-	const usedInvNos = invoices
-		.map(i => i.invNo)
-		.sort((a, b) => (a > b ? 1 : -1));
-	const nextInvNumber = usedInvNos[usedInvNos.length - 1] + 1;
 	const classes = useStyles();
 	const [invoice, setInvoice] = useState({
 		invNo: '',
@@ -106,7 +102,8 @@ const EditInvoice = ({
 		message: '',
 		mileage: 0,
 		paid: false,
-		datePaid: ''
+		datePaid: '',
+		items: []
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -114,8 +111,7 @@ const EditInvoice = ({
 		business: '1',
 		client: '1',
 		message: '1',
-		mileage: '1',
-		items: []
+		mileage: '1'
 	});
 	const [record, setRecord] = useState({ id: '' });
 	const [open, setOpen] = useState(false);
@@ -128,7 +124,7 @@ const EditInvoice = ({
 
 	useEffect(() => {
 		async function itemsErrors() {
-			invoice.items
+			current.items
 				.map(item => item.id)
 				.map(i => {
 					setErrorInvoice({ ...errorInvoice, [i]: { desc: '1', fee: '1' } });
@@ -138,6 +134,7 @@ const EditInvoice = ({
 		if (current && !inProcess) {
 			const { _id, ...toUpdate } = current;
 			setInvoice({ ...invoice, ...toUpdate });
+			itemsErrors(invoice);
 			setRecord({ ...record, id: _id.toString() });
 			itemsErrors();
 			setInProcess(true);
