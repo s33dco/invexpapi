@@ -57,6 +57,7 @@ router.put('/:id', auth, async (req, res) => {
 		);
 		return res.status(400).json({ msg: error.details[0].message });
 	}
+
 	// retrieve the record by id
 	try {
 		let client = await Client.findById(req.params.id);
@@ -70,6 +71,10 @@ router.put('/:id', auth, async (req, res) => {
 		if (client.userId.toString() !== req.user.id.toString()) {
 			return res.status(403).json({ msg: 'Not Authorised' });
 		}
+		const checkOptionals = ['add2', 'add3'];
+		checkOptionals.forEach(option =>
+			Object.keys(req.body).includes(option) ? null : (req.body[option] = '')
+		);
 		// save and return updated record..
 		client = await Client.findByIdAndUpdate(
 			req.params.id,

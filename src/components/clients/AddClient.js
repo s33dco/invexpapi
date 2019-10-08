@@ -171,7 +171,19 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 			...client,
 			[e.target.id]: e.target.value
 		});
-		if (e.target.value.match(regExp)) {
+		if (e.target.id === 'add2' || 'add3') {
+			if (e.target.value === '' || e.target.value.match(regExp)) {
+				setFormErrors({
+					...formErrors,
+					[e.target.id]: '1'
+				});
+			} else {
+				setFormErrors({
+					...formErrors,
+					[e.target.id]: message
+				});
+			}
+		} else if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
 				[e.target.id]: '1'
@@ -400,7 +412,8 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 
 AddClient.propTypes = {
 	addClient: PropTypes.func.isRequired,
-	clearClientErrors: PropTypes.func.isRequired
+	clearClientErrors: PropTypes.func.isRequired,
+	error: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
