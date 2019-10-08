@@ -139,7 +139,6 @@ const EditInvoice = ({
 			itemsErrors();
 			setInProcess(true);
 			setOpen(true);
-			setHasSent(false);
 		}
 
 		if (error) {
@@ -255,7 +254,6 @@ const EditInvoice = ({
 			items: '1',
 			datePaid: '1'
 		});
-		setHasSent(false);
 	};
 
 	const canSend = () => {
@@ -444,6 +442,9 @@ const EditInvoice = ({
 		setOpen(false);
 		setDbError('');
 		clearForm();
+		setInProcess(false);
+		setHasSent(false);
+		setDisabled(false)
 		clearCurrentInvoice();
 	};
 

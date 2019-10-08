@@ -2,12 +2,6 @@ import React, { Fragment } from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import titleCase from '../../../config/titleCase';
@@ -77,8 +71,6 @@ const InvoiceDetails = props => {
 				onChange={handleClientChange}
 				onBlur={canSend}
 				className={classes.select}
-				// error={!(errorDetails.client.length === 1)}
-				// helperText={errorDetails.client.length > 1 ? errorDetails.mileage : ''}
 				displayEmpty
 				inputProps={{
 					name: 'client',
