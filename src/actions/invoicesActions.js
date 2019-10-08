@@ -121,7 +121,7 @@ export const updateInvoice = (id, formData) => async dispatch => {
 			type: UPDATE_INVOICE,
 			payload: res.data
 		});
-		await dispatch(setAlert('Invoice Updated!', 'info'));
+		await dispatch(setAlert(`Invoice ${res.data.invNo} updated!`, 'info'));
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
@@ -138,14 +138,17 @@ export const deleteInvoice = id => async dispatch => {
 	};
 
 	try {
-		await axios.delete(`${process.env.API_URL}/invoices/${id}`, config);
+		const res = await axios.delete(
+			`${process.env.API_URL}/invoices/${id}`,
+			config
+		);
 
 		dispatch({
 			type: DELETE_INVOICE,
 			payload: id
 		});
 
-		await dispatch(setAlert('Invoice deleted', 'info'));
+		await dispatch(setAlert(`Invoice ${res.data.invNo} deleted`, 'info'));
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,

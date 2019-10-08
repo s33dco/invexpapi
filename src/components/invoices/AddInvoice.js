@@ -15,7 +15,11 @@ import numeral from 'numeral';
 import uuid from 'uuid/v4';
 import InvoiceDetails from './InvoiceDetails';
 import InvoiceItem from './InvoiceItem';
-import { addInvoice, clearInvoiceErrors } from '../../actions/invoicesActions';
+import {
+	addInvoice,
+	clearInvoiceErrors,
+	clearCurrentInvoice
+} from '../../actions/invoicesActions';
 import { businessName, checkMoney, checkNumber } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
@@ -81,6 +85,7 @@ const useStyles = makeStyles(theme => ({
 const AddInvoice = ({
 	addInvoice,
 	clearInvoiceErrors,
+	clearCurrentInvoice,
 	error,
 	invoices,
 	clients,
@@ -132,6 +137,8 @@ const AddInvoice = ({
 		// eslint - disable - next - line;
 	}, [error, invoices, invoice]); // check for changes from api, api error and change in record being updated
 
+	// errors from api
+
 	const dealWithError = error => {
 		const invNo = /invNo/;
 		const date = /date/;
@@ -172,6 +179,8 @@ const AddInvoice = ({
 			default:
 		}
 	};
+
+	// form functions
 
 	const clearForm = () => {
 		setInvoice({
@@ -228,6 +237,8 @@ const AddInvoice = ({
 		});
 	};
 
+	// invoice details
+
 	const handleClientChange = e => {
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
@@ -243,12 +254,13 @@ const AddInvoice = ({
 	const handleInvoiceNumber = e => {
 		setInvoice({ ...invoice, [e.target.name]: e.target.value });
 		let message = '';
-		if (usedInvNos.includes(parseInt(e.target.value))) {
-			message = `You already have an invoice number ${e.target.value}`;
-		}
 		if (!e.target.value.match(checkNumber)) {
 			message = 'just use digits for an invoice number';
 		}
+		if (usedInvNos.includes(parseInt(e.target.value))) {
+			message = `You already have an invoice number ${e.target.value}`;
+		}
+
 		message.length === 0
 			? setErrorInvoice({ ...errorInvoice, [e.target.id]: '1' })
 			: setErrorInvoice({ ...errorInvoice, [e.target.id]: message });
@@ -258,10 +270,6 @@ const AddInvoice = ({
 		let regExp;
 		let message;
 		switch (e.target.id) {
-			case 'fee':
-				regExp = checkMoney;
-				message = "this fee doesn't look right";
-				break;
 			case 'mileage':
 				regExp = checkNumber;
 				message = 'just digits';
@@ -285,6 +293,8 @@ const AddInvoice = ({
 			});
 		}
 	};
+
+	// invoice items
 
 	const updateChangedDateField = id => e => {
 		setInvoice({
@@ -365,6 +375,7 @@ const AddInvoice = ({
 		});
 	};
 
+	// open and close form
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -373,6 +384,7 @@ const AddInvoice = ({
 		setOpen(false);
 		setDbError('');
 		clearForm();
+		clearCurrentInvoice();
 	};
 
 	return (
@@ -494,5 +506,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ addInvoice, clearInvoiceErrors }
+	{ addInvoice, clearInvoiceErrors, clearCurrentInvoice }
 )(AddInvoice);

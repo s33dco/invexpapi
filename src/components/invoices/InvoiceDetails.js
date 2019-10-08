@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 const InvoiceDetails = props => {
 	const classes = useStyles();
 	const {
+		selectedClient,
 		clients,
 		invoice,
 		errorInvoice,
@@ -38,9 +39,9 @@ const InvoiceDetails = props => {
 		handleDateChange,
 		handleClientChange,
 		handleInvoiceNumber,
+		handleDatePaidChange,
 		useMileage,
-		canSend,
-		onRadioToggle
+		canSend
 	} = props;
 
 	return (
@@ -84,9 +85,20 @@ const InvoiceDetails = props => {
 					id: 'client'
 				}}
 			>
-				<MenuItem value="" disabled className={classes.textField}>
-					Choose Client
-				</MenuItem>
+				{selectedClient ? (
+					<MenuItem
+						value={selectedClient}
+						disabled
+						className={classes.textField}
+					>
+						{selectedClient.name}
+					</MenuItem>
+				) : (
+					<MenuItem value="" disabled className={classes.textField}>
+						Choose Client
+					</MenuItem>
+				)}
+
 				{clients.map(c => (
 					<MenuItem value={c} key={c._id} className={classes.textField}>
 						{titleCase(c.name)}
@@ -130,36 +142,12 @@ const InvoiceDetails = props => {
 				helperText={errorInvoice.message.length > 1 ? errorInvoice.message : ''}
 			/>
 			{invoice.paid && (
-				<FormControl component="fieldset" className={classes.formControl}>
-					<FormLabel component="legend">Invoice Paid ?</FormLabel>
-					<RadioGroup
-						aria-label="useMileage"
-						name="useMileage"
-						value={invoice.paid.toString()}
-						onChange={onRadioToggle}
-					>
-						<FormControlLabel
-							value="true"
-							control={<Radio color="primary" />}
-							label="yes"
-							labelPlacement="start"
-						/>
-						<FormControlLabel
-							value="false"
-							control={<Radio color="primary" />}
-							label="no"
-							labelPlacement="start"
-						/>
-					</RadioGroup>
-				</FormControl>
-			)}
-			{invoice.datePaid && (
 				<div className={classes.datePicker}>
 					<DatePicker
 						disableFuture
 						label="Date Paid"
 						value={invoice.datePaid}
-						onChange={handleDateChange}
+						onChange={handleDatePaidChange}
 						format="Do MMMM YYYY"
 						animateYearScrolling
 					/>

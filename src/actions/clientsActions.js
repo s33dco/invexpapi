@@ -119,7 +119,7 @@ export const updateClient = (id, formData) => async dispatch => {
 			type: UPDATE_CLIENT,
 			payload: res.data
 		});
-		await dispatch(setAlert('Client Details Updated!', 'info'));
+		await dispatch(setAlert(`${res.data.name} Updated!`, 'info'));
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,

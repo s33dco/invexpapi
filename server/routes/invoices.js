@@ -43,7 +43,7 @@ router.post('/', auth, async (req, res) => {
 		res.status(200).json(invoice.toObject());
 	} catch (e) {
 		console.log(e);
-		res.status(500).send(`server error ${e.message}`);
+		res.status(400).send(`server error ${e.errors.message}`);
 	}
 });
 

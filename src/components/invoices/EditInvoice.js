@@ -105,7 +105,8 @@ const EditInvoice = ({
 		items: [],
 		message: '',
 		mileage: 0,
-		paid: false
+		paid: false,
+		datePaid: ''
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -141,8 +142,29 @@ const EditInvoice = ({
 			itemsErrors();
 			setInProcess(true);
 			setOpen(true);
+			setHasSent(false);
 		}
-	}, [current, invoice, inProcess]);
+
+		if (error) {
+			setHasSent(false);
+			setDbError(error); // set form level error
+			dealWithError(error);
+			clearExpenseErrors(); // set form level errors
+			setDisabled(true); // disable sebd button on form
+		}
+
+		if (current && hasSent && !error && !dbError && !disabled) {
+			handleClose();
+		}
+	}, [
+		current,
+		// invoice,
+		inProcess,
+		error,
+		current,
+		hasSent,
+		dbError
+	]);
 
 	// useEffect(() => {
 	// 	if (current && !inProcess) {
@@ -223,7 +245,8 @@ const EditInvoice = ({
 			items: [],
 			message: '',
 			mileage: 0,
-			paid: false
+			paid: false,
+			datePaid: ''
 		});
 		setErrorInvoice({
 			invNo: '1',
@@ -232,7 +255,8 @@ const EditInvoice = ({
 			client: '1',
 			message: '1',
 			mileage: '1',
-			items: '1'
+			items: '1',
+			datePaid: '1'
 		});
 		setHasSent(false);
 	};
@@ -279,6 +303,11 @@ const EditInvoice = ({
 
 	const handleDateChange = e => {
 		setInvoice({ ...invoice, date: e });
+	};
+
+	const handleDatePaidChange = e => {
+		console.log(e);
+		setInvoice({ ...invoice, datePaid: e });
 	};
 
 	const handleInvoiceNumber = e => {
@@ -418,6 +447,7 @@ const EditInvoice = ({
 		setOpen(false);
 		setDbError('');
 		clearForm();
+		clearCurrentInvoice();
 	};
 
 	return (
@@ -451,6 +481,7 @@ const EditInvoice = ({
 								</Typography>
 							)}
 							<InvoiceDetails
+								selectedClient={invoice.client}
 								clients={clients}
 								invoice={invoice}
 								errorInvoice={errorInvoice}
@@ -460,6 +491,7 @@ const EditInvoice = ({
 								handleClientChange={handleClientChange}
 								useMileage={useMileage}
 								canSend={canSend}
+								handleDatePaidChange={handleDatePaidChange}
 								onRadioToggle={onRadioToggle}
 							/>
 
