@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -145,50 +145,14 @@ const EditInvoice = ({
 			setHasSent(false);
 			setDbError(error); // set form level error
 			dealWithError(error);
-			clearExpenseErrors(); // set form level errors
+			clearInvoiceErrors(); // set form level errors
 			setDisabled(true); // disable sebd button on form
 		}
 
 		if (current && hasSent && !error && !dbError && !disabled) {
 			handleClose();
 		}
-	}, [
-		current,
-		// invoice,
-		inProcess,
-		error,
-		current,
-		hasSent,
-		dbError
-	]);
-
-	// useEffect(() => {
-	// 	if (current && !inProcess) {
-	// 		setOpen(true);
-	// 		const { _id, ...toUpdate } = current;
-	// 		console.log('to Update -->', toUpdate);
-	// 		const objId = _id.toString();
-	// 		setRecord({ ...record, id: objId });
-	// 		setInvoice({ ...invoice, ...toUpdate });
-	// 		setInProcess(true);
-	// 	}
-
-	// 	if (error) {
-	// 		setHasSent(false);
-	// 		setDbError(error); // set form level error
-	// 		dealWithError(error);
-	// 		clearExpenseErrors(); // set form level errors
-	// 		setDisabled(true); // disable sebd button on form
-	// 	}
-
-	// 	if (current && hasSent && !error && !dbError && !disabled) {
-	// 		handleClose();
-	// 	}
-
-	// 	console.log('current invoice -->', invoice);
-
-	// 	// eslint - disable - next - line;
-	// }, [error, current, hasSent, inProcess, dbError]); // check for changes from api, api error and change in record being updated
+	}, [current, inProcess, error, current, hasSent, dbError]);
 
 	const dealWithError = error => {
 		const invNo = /invNo/;
@@ -444,7 +408,7 @@ const EditInvoice = ({
 		clearForm();
 		setInProcess(false);
 		setHasSent(false);
-		setDisabled(false)
+		setDisabled(false);
 		clearCurrentInvoice();
 	};
 

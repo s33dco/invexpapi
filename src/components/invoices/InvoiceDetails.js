@@ -63,6 +63,8 @@ const InvoiceDetails = props => {
 					onChange={handleDateChange}
 					format="Do MMMM YYYY"
 					animateYearScrolling
+					error={!(errorInvoice.date.length === 1)}
+					helperText={errorInvoice.date.length > 1 ? errorInvoice.date : ''}
 				/>
 			</div>
 			<Select

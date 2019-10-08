@@ -170,6 +170,24 @@ const AddInvoice = ({
 	};
 
 	// form functions
+
+	const onSubmit = async e => {
+		e.preventDefault();
+		invoice.items.forEach(item => {
+			item.fee = parseFloat(item.fee).toFixed(2);
+		});
+
+		const total = invoice.items.reduce((s, v) => {
+			return s.add(v.fee);
+		}, numeral(0));
+
+		setIsSent(true);
+		await addInvoice({
+			...invoice,
+			total: parseFloat(total._value).toFixed(2)
+		});
+	};
+
 	const clearForm = () => {
 		setInvoice({
 			invNo: nextInvNumber(),
@@ -205,23 +223,6 @@ const AddInvoice = ({
 		} else {
 			setDisabled(true); // if field errors disable form
 		}
-	};
-
-	const onSubmit = async e => {
-		e.preventDefault();
-		invoice.items.forEach(item => {
-			item.fee = parseFloat(item.fee).toFixed(2);
-		});
-
-		const total = invoice.items.reduce((s, v) => {
-			return s.add(v.fee);
-		}, numeral(0));
-
-		setIsSent(true);
-		await addInvoice({
-			...invoice,
-			total: parseFloat(total._value).toFixed(2)
-		});
 	};
 
 	// invoice details
