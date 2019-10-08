@@ -3,6 +3,7 @@ import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -35,7 +36,8 @@ const InvoiceItem = props => {
 		updateChangedTextField,
 		deleteItem,
 		errorInvoice,
-		canSend
+		canSend,
+		invDate
 	} = props;
 
 	return (
@@ -43,6 +45,8 @@ const InvoiceItem = props => {
 			<div className={classes.datePicker}>
 				<DatePicker
 					disableFuture
+					maxDate={moment(invDate).utc()}
+					maxDateMessage="Date should be on or before invoice date"
 					label="Item Date"
 					// error={!(errorInvoice.date.length === 1)}
 					id="date"

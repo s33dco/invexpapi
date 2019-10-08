@@ -463,6 +463,7 @@ const EditInvoice = ({
 								<InvoiceItem
 									item={item}
 									key={item.id}
+									invDate={invoice.date}
 									updateChangedDateField={updateChangedDateField}
 									updateChangedTextField={updateChangedTextField}
 									deleteItem={deleteItem}

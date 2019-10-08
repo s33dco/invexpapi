@@ -440,6 +440,7 @@ const AddInvoice = ({
 									deleteItem={deleteItem}
 									errorInvoice={errorInvoice}
 									canSend={canSend}
+									invDate={invoice.date}
 								/>
 							))}
 
