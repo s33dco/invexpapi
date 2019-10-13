@@ -11,7 +11,8 @@ import {
 	CLEAR_DELETE_INVOICE,
 	DELETE_INVOICE,
 	MARK_AS_PAID,
-	MARK_AS_UNPAID
+	MARK_AS_UNPAID,
+	EMAIL_INVOICE
 } from '../actions/types';
 
 const initialState = {
@@ -56,6 +57,7 @@ export default (state = initialState, action) => {
 		case UPDATE_INVOICE:
 		case MARK_AS_PAID:
 		case MARK_AS_UNPAID:
+		case EMAIL_INVOICE:
 			return {
 				...state,
 				invoices: state.invoices.map(inv =>

@@ -5,6 +5,6 @@
 	"backend_port": 5000,
 	"backend_https_port": 5001,
 	"frontend_port": 3000,
-	"sendgrid_password": "apassword",
-	"jwt_secret": "jwt_secret"
+	"jwt_secret": "jwt_secret",
+	"SENDGRID_API_PASSWORD": "sendgridapikey"
 }

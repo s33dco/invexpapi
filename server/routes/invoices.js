@@ -1,9 +1,15 @@
 const express = require('express');
+const config = require('config');
+const multer = require('multer');
 const moment = require('moment');
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
 const { Invoice, validate } = require('../models/invoice');
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
@@ -179,25 +185,85 @@ router.patch('/unpaid/:id', auth, async (req, res) => {
 	}
 });
 
-router.get('/:id', auth, async (req, res) => {
-	// retrieve the record by id
-	try {
-		const invoice = await Invoice.findById(req.params.id);
-		// throw error if not found
-		if (!invoice) {
-			return res.status(404).json({
-				msg: 'invoice details not found'
-			});
-		}
-		// throw error if logged in user not match user on invoice record
-		if (invoice.userId.toString() !== req.user.id.toString()) {
-			return res.status(403).json({ msg: 'Not Authorised' });
-		}
+router.post('/email', [auth, upload.single('file')], async (req, res) => {
+	const {
+		to,
+		greeting,
+		clientName,
+		businessName,
+		from,
+		message,
+		contact,
+		farewell,
+		invNo,
+		total,
+		fileName,
+		_id
+	} = req.body;
 
-		res.json(invoice.toObject());
-	} catch (e) {
-		res.status(500).send(`server error ${e.message}`);
-	}
+	const transporter = nodemailer.createTransport(
+		sendgridTransport({
+			auth: {
+				api_key: config.get('SENDGRID_API_PASSWORD')
+			}
+		})
+	);
+
+	const options = {
+		from: from,
+		to: to,
+		replyTo: from,
+		subject: `Invoice ${invNo} (£${total})`,
+		html: `${greeting}<br /><br />${message}<br /><br />${farewell}<br />${contact}<br />`,
+		attachments: [
+			{
+				filename: fileName,
+				content: Buffer.from(req.file.buffer, 'utf-8')
+			}
+		]
+	};
+
+	transporter.sendMail(options, (error, info) => {
+		if (error) {
+			logger.error(`send email error: ${error.message} - ${error.stack}`);
+			res.status(500).json({ msg: `email failed` });
+		} else {
+			logger.info(`${businessName} - Invoice ${invNo} mailed to ${clientName}`);
+		}
+	});
+
+	invoice = await Invoice.findOneAndUpdate(
+		{ _id: _id },
+		{ $set: { emailSent: moment().utc() } },
+		{ new: true }
+	);
+
+	const invoiceJSON = {
+		...invoice.toObject()
+	};
+
+	res.status(200).json(invoiceJSON);
 });
+
+// router.get('/:id', auth, async (req, res) => {
+// 	// retrieve the record by id
+// 	try {
+// 		const invoice = await Invoice.findById(req.params.id);
+// 		// throw error if not found
+// 		if (!invoice) {
+// 			return res.status(404).json({
+// 				msg: 'invoice details not found'
+// 			});
+// 		}
+// 		// throw error if logged in user not match user on invoice record
+// 		if (invoice.userId.toString() !== req.user.id.toString()) {
+// 			return res.status(403).json({ msg: 'Not Authorised' });
+// 		}
+
+// 		res.json(invoice.toObject());
+// 	} catch (e) {
+// 		res.status(500).send(`server error ${e.message}`);
+// 	}
+// });
 
 module.exports = router;

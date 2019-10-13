@@ -265,7 +265,6 @@ const EditInvoice = ({
 	};
 
 	const handleDatePaidChange = e => {
-		console.log(e);
 		setInvoice({ ...invoice, datePaid: e });
 	};
 

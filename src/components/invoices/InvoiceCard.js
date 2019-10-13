@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { saveAs } from 'file-saver';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,16 +12,19 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailIcon from '@material-ui/icons/Email';
 import DeleteIcon from '@material-ui/icons/Delete';
-import PrintIcon from '@material-ui/icons/Print';
+import GetApp from '@material-ui/icons/GetApp';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import clsx from 'clsx';
 import numeral from 'numeral';
 import 'numeral/locales';
 import Moment from 'react-moment';
+import { pdf, BlobProvider } from '@react-pdf/renderer';
 import CardHeader from '@material-ui/core/CardHeader';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import InvoicePDF from './InvoicePDF';
 import sentanceCase from '../../../config/sentanceCase';
 import titleCase from '../../../config/titleCase';
 import InvoiceJobItem from './InvoiceJobItem';
@@ -28,7 +32,8 @@ import {
 	setCurrentInvoice,
 	setDeleteInvoice,
 	payInvoice,
-	unpayInvoice
+	unpayInvoice,
+	emailInvoice
 } from '../../actions/invoicesActions';
 
 numeral.locale('en-gb');
@@ -86,7 +91,8 @@ const InvoiceCard = ({
 	setCurrentInvoice,
 	setDeleteInvoice,
 	payInvoice,
-	unpayInvoice
+	unpayInvoice,
+	emailInvoice
 }) => {
 	const {
 		invNo,
@@ -97,15 +103,44 @@ const InvoiceCard = ({
 		items,
 		emailSent,
 		datePaid,
+		greeting,
+		message,
 		_id
 	} = invoice;
 	const { name } = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
+	const [file, setFile] = useState(null);
+	const fileName = `Invoice${invNo}.pdf`;
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 	};
+
+	const sendInvoiceToEmail = async invoice => {
+		const info = {
+			to: invoice.client.email,
+			greeting: invoice.client.greeting,
+			clientName: invoice.client.name,
+			businessName: invoice.business.name,
+			from: invoice.business.email,
+			contact: invoice.business.contact,
+			message: invoice.message,
+			farewell: invoice.business.farewell,
+			invNo: invoice.invNo,
+			total: invoice.total,
+			fileName: fileName,
+			_id : _id
+		};
+		const blob = await pdf(<InvoicePDF data={invoice} />).toBlob();
+		emailInvoice(info, blob);
+	};
+
+	const downloadInvoice = async invoice => {
+		const doc = await pdf(<InvoicePDF data={invoice} />).toBlob();
+		saveAs(doc, `${fileName}`);
+	};
+
 	return (
 		<Card className={classes.card}>
 			<CardContent>
@@ -167,19 +202,16 @@ const InvoiceCard = ({
 				</IconButton>
 				<IconButton
 					aria-label="email invoice"
-					disabled
-					// onClick={() => setDeleteInvoice(invoice)}
+					onClick={() => sendInvoiceToEmail(invoice)}
 				>
 					<EmailIcon />
 				</IconButton>
 				<IconButton
-					aria-label="print invoice"
-					disabled
-					// onClick={() => setDeleteInvoice(invoice)}
+					aria-label="download invoice"
+					onClick={() => downloadInvoice(invoice)}
 				>
-					<PrintIcon />
+					<GetApp color="action" />
 				</IconButton>
-
 				<IconButton
 					aria-label="delete invoice"
 					onClick={() => setDeleteInvoice(invoice)}
@@ -229,5 +261,11 @@ const InvoiceCard = ({
 
 export default connect(
 	null,
-	{ setCurrentInvoice, setDeleteInvoice, payInvoice, unpayInvoice }
+	{
+		setCurrentInvoice,
+		setDeleteInvoice,
+		payInvoice,
+		unpayInvoice,
+		emailInvoice
+	}
 )(InvoiceCard);

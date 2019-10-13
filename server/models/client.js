@@ -103,6 +103,7 @@ const clientSchema = new mongoose.Schema(
 		greeting: {
 			type: String,
 			lowercase: true,
+			required: [true, 'A greeting is required for emails'],
 			validate: {
 				validator: v => {
 					return v.match(businessName);
