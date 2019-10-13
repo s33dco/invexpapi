@@ -11,6 +11,8 @@ const { Invoice, validate } = require('../models/invoice');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const router = express.Router();
+const sentanceCase = require('../../config/sentanceCase');
+const titleCase = require('../../config/titleCase');
 
 router.get('/', auth, async (req, res) => {
 	try {
@@ -33,6 +35,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
 	const invoiceDetails = { userId: req.user.id, ...req.body };
+	console.log(invoiceDetails);
 
 	const { error } = validate(invoiceDetails);
 	if (error) {
@@ -198,8 +201,11 @@ router.post('/email', [auth, upload.single('file')], async (req, res) => {
 		invNo,
 		total,
 		fileName,
-		_id
+		_id,
+		paid
 	} = req.body;
+
+	console.log('greeting from req.body', greeting);
 
 	const transporter = nodemailer.createTransport(
 		sendgridTransport({
@@ -214,7 +220,9 @@ router.post('/email', [auth, upload.single('file')], async (req, res) => {
 		to: to,
 		replyTo: from,
 		subject: `Invoice ${invNo} (£${total})`,
-		html: `${greeting}<br /><br />${message}<br /><br />${farewell}<br />${contact}<br />`,
+		html: `${titleCase(greeting)}<br /><br />${sentanceCase(
+			message
+		)}<br /><br />${farewell}<br />${titleCase(contact)}<br />`,
 		attachments: [
 			{
 				filename: fileName,

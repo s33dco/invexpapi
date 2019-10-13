@@ -176,12 +176,14 @@ const AddInvoice = ({
 		invoice.items.forEach(item => {
 			item.fee = parseFloat(item.fee).toFixed(2);
 		});
+		invoice.items.sort((a, b) => (a.date > b.date ? 1 : -1));
 
 		const total = invoice.items.reduce((s, v) => {
 			return s.add(v.fee);
 		}, numeral(0));
 
 		setIsSent(true);
+
 		await addInvoice({
 			...invoice,
 			total: parseFloat(total._value).toFixed(2)

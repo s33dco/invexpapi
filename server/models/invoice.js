@@ -217,6 +217,19 @@ const invoiceSchema = new mongoose.Schema(
 				},
 				uppercase: true,
 				trim: true
+			},
+			greeting: {
+				type: String,
+				lowercase: true,
+				required: [true, 'A greeting is required for emails'],
+				validate: {
+					validator: v => {
+						return v.match(businessName);
+					},
+					message: 'incorrect character in greeting'
+				},
+				uppercase: true,
+				trim: true
 			}
 		},
 

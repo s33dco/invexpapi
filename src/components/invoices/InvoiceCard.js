@@ -130,7 +130,8 @@ const InvoiceCard = ({
 			invNo: invoice.invNo,
 			total: invoice.total,
 			fileName: fileName,
-			_id : _id
+			paid: paid,
+			_id: _id
 		};
 		const blob = await pdf(<InvoicePDF data={invoice} />).toBlob();
 		emailInvoice(info, blob);

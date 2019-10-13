@@ -160,10 +160,9 @@ export const getClientItems = (client, invoices) => async dispatch => {
 		const jobs = invoices
 			.filter(inv => (inv.client._id === client._id ? inv : null))
 			.map(i => i.items)
-			.flat(2)
-			.sort((a, b) => {
-				a.date > b.date ? 1 : -1;
-			});
+			.flat(2);
+
+		const orderedJobs = jobs.sort((a, b) => (a.date < b.date ? 1 : -1));
 
 		dispatch({
 			type: GET_CLIENT_ITEMS,

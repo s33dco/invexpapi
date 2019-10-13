@@ -86,7 +86,7 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 						<Container>
 							{clientItems.name && (
 								<Typography variant="subtitle1" component="h1" align="center">
-									{titleCase(clientItems.name)}
+									{titleCase(clientItems.name)}'s previous items.
 								</Typography>
 							)}
 							{items.length === 0 && (
