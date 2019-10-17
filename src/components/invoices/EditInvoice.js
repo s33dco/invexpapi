@@ -136,6 +136,7 @@ const EditInvoice = ({
 			setInvoice({ ...invoice, ...toUpdate });
 			itemsErrors(invoice);
 			setRecord({ ...record, id: _id.toString() });
+			//should we have the below call?
 			itemsErrors();
 			setInProcess(true);
 			setOpen(true);

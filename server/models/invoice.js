@@ -404,6 +404,10 @@ const invoiceSchema = new mongoose.Schema(
 				},
 				lowercase: true,
 				trim: true
+			},
+			useMileage: {
+				type: Boolean,
+				required: true
 			}
 		}
 	},
