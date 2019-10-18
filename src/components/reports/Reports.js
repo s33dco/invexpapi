@@ -9,11 +9,10 @@ import {
 	MuiThemeProvider,
 	makeStyles
 } from '@material-ui/core/styles';
-// import {PieChart, Pie, Legend, Tooltip} from 'recharts' http://recharts.org/en-US/examples/TwoSimplePieChart
 import { DatePicker } from '@material-ui/pickers';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import { PieChart, Pie, Legend, Tooltip } from 'recharts';
+// import { PieChart, Pie, Legend, Tooltip } from 'recharts';
 import titleCase from '../../../config/titleCase';
 
 const useStyles = makeStyles(theme => ({
@@ -104,9 +103,6 @@ const Reports = ({ invoices, expenses }) => {
 			setDeductionsPie(breakoutFigures(outgoings));
 		}
 		if (tableData) {
-			// const inPie = breakoutFigures(incomings);
-			// const outPie = breakoutFigures(outgoings);
-
 			setShowTable(true);
 		}
 
@@ -136,28 +132,6 @@ const Reports = ({ invoices, expenses }) => {
 				return copy;
 			});
 	};
-
-	// const breakOut = data => {
-	// 	data.reduce(array, item) => {
-	// 		if (item.desc in )
-	// 	}
-	// }
-
-	// const breakoutFigures2 = data => {
-	// const sorted = data.reduce((obj, item) => {
-	// 	if (item.desc in obj) {
-	// 		obj[item.desc] = obj[item.desc].add(item.total);
-	// 	} else {
-	// 		obj[item.desc] = numeral(item.total);
-	// 	}
-	// 	return obj;
-	// }, {});
-
-	// return Object.entries(sorted)
-	// 	.map(item =>
-	// 		const obj = {}
-	// 			Object.assign(obj, name: item[0], value: parseFloat(item[1]._value).toFixed(2)))
-	// };
 
 	const breakoutFigures = data => {
 		const sorted = data.reduce((obj, item) => {
@@ -336,8 +310,8 @@ const Reports = ({ invoices, expenses }) => {
 					</MuiThemeProvider>
 				</Fragment>
 			)}
-			{showPieChart && (
-				<PieChart width={800} height={400}>
+			{/* {showPieChart && (
+				<PieChart width={300} height={300}>
 					<Pie
 						isAnimationActive
 						data={incomePie}
@@ -351,7 +325,21 @@ const Reports = ({ invoices, expenses }) => {
 					/>
 					<Tooltip />
 				</PieChart>
-			)}
+				<PieChart width={300} height={300}>
+					<Pie
+						isAnimationActive
+						data={deductionsPie}
+						cx={200}
+						cy={200}
+						dataKey="value"
+						nameKey="name"
+						outerRadius={80}
+						fill="#8884d8"
+						label
+					/>
+					<Tooltip />
+				</PieChart>
+			)} */}
 		</Fragment>
 	);
 };
