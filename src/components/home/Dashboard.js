@@ -38,12 +38,21 @@ const Dashboard = ({
 	const [loading, setLoading] = useState(true);
 
 	const totalDeductions = (expenses, mileage) => {
-		setDeductions(numeral(expenses).add(mileage));
+		console.log('expenses', expenses);
+		console.log('mileage', mileage);
+		const amount = numeral(expenses.value()).add(mileage.value());
+		console.log('total deductions', amount);
+		setDeductions(amount);
 	};
 
-	const declaredIncome = (receipts, exps, miles) => {
-		const hmrc = numeral(exps).add(miles);
-		setIncome(numeral(receipts).subtract(hmrc));
+	const declaredIncome = (receipts, expenses, mileage) => {
+		console.log('expenses', expenses);
+		console.log('mileage', mileage);
+		const amount = numeral(expenses.value()).add(mileage.value());
+		console.log('total deductions', amount);
+		const total = numeral(receipts.value()).subtract(amount.value());
+		console.log('total income less total deductions', total);
+		setIncome(total);
 	};
 
 	useEffect(() => {
@@ -59,10 +68,11 @@ const Dashboard = ({
 		if (invoicesError.error === 'notFound') {
 			setAlert(invoicesError.msg, 'warn');
 		}
-
 		if (receipts && mileage && expenses) {
 			totalDeductions(expenses, mileage);
 			declaredIncome(receipts, expenses, mileage);
+		}
+		if (income && deductions) {
 			setLoading(false);
 		}
 	}, [taxYearInvoices, taxYearExpenses]);
