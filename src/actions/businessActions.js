@@ -13,7 +13,6 @@ export const clearBusiness = () => async dispatch => {
 	dispatch({
 		type: CLEAR_BUSINESS
 	});
-	await dispatch(setAlert('business cleared', 'warn'));
 };
 
 export const clearBusinessErrors = () => async dispatch => {

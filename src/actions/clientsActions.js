@@ -21,7 +21,6 @@ export const clearClients = () => async dispatch => {
 	dispatch({
 		type: CLEAR_CLIENTS
 	});
-	await dispatch(setAlert('Clients cleared', 'warn'));
 };
 
 export const clearClientErrors = () => async dispatch => {

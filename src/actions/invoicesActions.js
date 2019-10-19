@@ -21,7 +21,6 @@ export const clearInvoices = () => async dispatch => {
 	dispatch({
 		type: CLEAR_INVOICES
 	});
-	await dispatch(setAlert('Invoices cleared', 'warn'));
 };
 export const clearInvoiceErrors = () => async dispatch => {
 	dispatch({

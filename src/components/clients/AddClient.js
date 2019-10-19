@@ -53,10 +53,11 @@ const useStyles = makeStyles(theme => ({
 		margin: '1vh 0'
 	},
 	fab: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
+		padding: theme.spacing(0.5)
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(1)
+		marginRight: theme.spacing(0.25)
 	}
 }));
 
@@ -210,10 +211,11 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 				className={classes.fab}
 				color="primary"
 				onClick={handleOpen}
-				size="large"
+				size="small"
 				variant="extended"
 			>
-				<AddIcon className={classes.extendedIcon} /> Client
+				<AddIcon className={classes.extendedIcon} />
+				Client
 			</Fab>
 			<Modal
 				aria-labelledby="modal-title"

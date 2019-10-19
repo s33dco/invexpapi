@@ -59,10 +59,11 @@ const useStyles = makeStyles(theme => ({
 		margin: '1vh 0'
 	},
 	fab: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
+		padding: theme.spacing(0.5)
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(1)
+		marginRight: theme.spacing(0.25)
 	}
 }));
 
@@ -216,10 +217,11 @@ const AddExpense = ({
 				className={classes.fab}
 				color="primary"
 				onClick={handleOpen}
-				size="large"
+				size="small"
 				variant="extended"
 			>
-				<AddIcon className={classes.extendedIcon} /> Expense
+				<AddIcon className={classes.extendedIcon} />
+				Expense
 			</Fab>
 			<Modal
 				aria-labelledby="modal-title"

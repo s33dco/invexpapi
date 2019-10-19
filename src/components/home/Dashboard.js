@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import numeral from 'numeral';
-import { AST_False } from 'terser';
 import { getBusiness } from '../../actions/businessActions';
 import { getClients } from '../../actions/clientsActions';
 import { getExpenses } from '../../actions/expensesActions';
@@ -13,10 +13,34 @@ import { getInvoices } from '../../actions/invoicesActions';
 import { setAlert } from '../../actions/alertActions';
 import InvoiceCard from '../invoices/InvoiceCard';
 import EditInvoice from '../invoices/EditInvoice';
+import AddInvoice from '../invoices/AddInvoice';
+import AddExpense from '../expenses/AddExpense';
+import AddClient from '../clients/AddClient';
 import DeleteInvoiceDialog from '../invoices/DeleteInvoiceDialog';
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');
+
+const useStyles = makeStyles(theme => ({
+	summary: {
+		margin: '0',
+		padding: '0'
+	},
+	summary: {
+		borderRadius: theme.spacing(1),
+		boxShadow: theme.shadows[1],
+		paddingTop: theme.spacing(2),
+		paddingBottom: theme.spacing(2),
+		marginBottom: theme.spacing(2)
+	},
+	buttonArea: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		marginTop: theme.spacing(2),
+		marginBottom: theme.spacing(2)
+	}
+}));
 
 const Dashboard = ({
 	setAlert,
@@ -33,25 +57,19 @@ const Dashboard = ({
 	invoicesProduced,
 	overdueInvoices
 }) => {
+	const classes = useStyles();
 	const [deductions, setDeductions] = useState(false);
 	const [income, setIncome] = useState(false);
 	const [loading, setLoading] = useState(true);
 
 	const totalDeductions = (expenses, mileage) => {
-		console.log('expenses', expenses);
-		console.log('mileage', mileage);
 		const amount = numeral(expenses.value()).add(mileage.value());
-		console.log('total deductions', amount);
 		setDeductions(amount);
 	};
 
 	const declaredIncome = (receipts, expenses, mileage) => {
-		console.log('expenses', expenses);
-		console.log('mileage', mileage);
 		const amount = numeral(expenses.value()).add(mileage.value());
-		console.log('total deductions', amount);
 		const total = numeral(receipts.value()).subtract(amount.value());
-		console.log('total income less total deductions', total);
 		setIncome(total);
 	};
 
@@ -72,36 +90,58 @@ const Dashboard = ({
 			totalDeductions(expenses, mileage);
 			declaredIncome(receipts, expenses, mileage);
 		}
-		if (income && deductions) {
-			setLoading(false);
-		}
-	}, [taxYearInvoices, taxYearExpenses]);
+		setLoading(false);
+	}, [taxYearInvoices, taxYearExpenses, receipts, mileage, expenses]);
 
 	if (loading) {
 		return <Typography> Loading DashBoard!</Typography>;
 	}
 	return (
-		<Container>
-			<Container>
-				<Typography>Income to declare : {numeral(income).format()}</Typography>
-				<Typography>Working with {clients} clients.</Typography>
-				<Typography>producing {invoicesProduced} invoices.</Typography>
-
-				<Typography>
-					Receipts so far this tax year : {numeral(receipts).format()}
-				</Typography>
-				<Typography>
-					Deductions so far this tax year : {numeral(deductions).format()}
-				</Typography>
+		<Fragment>
+			<Container className={classes.buttonArea}>
+				<AddInvoice />
+				<AddClient />
+				<AddExpense />
 			</Container>
-			{overdueInvoices.length > 0 && <Typography>Invoices due: </Typography>}
-			{overdueInvoices &&
-				overdueInvoices.map(invoice => (
-					<InvoiceCard key={invoice._id} invoice={invoice} />
-				))}
-			<EditInvoice />
-			<DeleteInvoiceDialog />
-		</Container>
+			<Container className={classes.page}>
+				<Container className={classes.summary}>
+					<Container>
+						<Typography variant="h6" component="h2" align="center">
+							Current Tax Year Summary
+						</Typography>
+					</Container>
+					<Container>
+						<Typography variant="h6" component="h2" align="center">
+							Income : {numeral(income).format()}
+						</Typography>
+						<Typography align="center">
+							{invoicesProduced} invoices / {clients} clients.
+						</Typography>
+
+						<Typography variant="body2" component="h3" align="center">
+							Receipts {numeral(receipts).format()}
+						</Typography>
+						<Typography variant="body2" component="h3" align="center">
+							Deductions {numeral(deductions).format()}
+						</Typography>
+					</Container>
+				</Container>
+
+				{overdueInvoices.length > 0 && (
+					<Container className={classes.summary}>
+						<Typography variant="h6" component="h2">
+							Invoices due:{' '}
+						</Typography>
+						{overdueInvoices &&
+							overdueInvoices.map(invoice => (
+								<InvoiceCard key={invoice._id} invoice={invoice} />
+							))}
+						<EditInvoice />
+						<DeleteInvoiceDialog />
+					</Container>
+				)}
+			</Container>
+		</Fragment>
 	);
 };
 Dashboard.propTypes = {};
@@ -137,6 +177,7 @@ const filterByTaxYear = data => {
 const earnedSoFar = data => {
 	const { from, to } = getTaxYearDates();
 	return data
+		.filter(d => (d.paid === true ? d : null))
 		.filter(d =>
 			moment(d.datePaid).utc() > from && moment(d.datePaid).utc() < to
 				? d
@@ -166,7 +207,6 @@ const mileageExpensesByTaxYear = data => {
 const numberOfClients = data => {
 	return Array.from(new Set(data.map(inv => inv.client.name))).length;
 };
-
 const unPaidByTaxYear = data => {
 	const { from, to } = getTaxYearDates();
 	return data
@@ -176,7 +216,6 @@ const unPaidByTaxYear = data => {
 		.filter(inv => (!inv.paid ? inv : null))
 		.sort((a, b) => (a.date > b.date ? 1 : -1));
 };
-
 const mapStateToProps = state => ({
 	businessError: state.business.error,
 	clientError: state.clients.error,

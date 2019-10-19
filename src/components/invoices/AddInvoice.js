@@ -75,10 +75,11 @@ const useStyles = makeStyles(theme => ({
 		margin: '1vh 0'
 	},
 	fab: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
+		padding: theme.spacing(0.5)
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(1)
+		marginRight: theme.spacing(0.25)
 	}
 }));
 
@@ -383,10 +384,12 @@ const AddInvoice = ({
 				className={classes.fab}
 				color="primary"
 				onClick={handleOpen}
-				size="large"
+				size="small"
 				variant="extended"
+				disabled={!(business.name && clients.length > 0)}
 			>
-				<AddIcon className={classes.extendedIcon} /> Invoice
+				<AddIcon className={classes.extendedIcon} />
+				Invoice
 			</Fab>
 			<Modal
 				aria-labelledby="modal-title"

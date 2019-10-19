@@ -18,7 +18,6 @@ export const clearExpenses = () => async dispatch => {
 	dispatch({
 		type: CLEAR_EXPENSES
 	});
-	await dispatch(setAlert('Expenses cleared', 'warn'));
 };
 
 export const clearExpenseErrors = () => async dispatch => {

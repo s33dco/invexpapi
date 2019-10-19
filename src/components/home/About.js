@@ -9,14 +9,20 @@ import LoginModal from './LoginModal';
 const useStyles = makeStyles(theme => ({
 	container: {
 		display: 'flex',
-		flexDirection: 'column'
+		flexDirection: 'column',
+		marginTop: theme.spacing(2)
 	},
 	root: {
 		flexGrow: '1',
 		width: '100%',
+		margin: 'theme.spacing(4),auto',
+		maxWidth: '600px',
 		marginBottom: '2.5vh'
 	},
 	buttons: {
+		display: 'flex',
+		flexDirection: 'right',
+		justifyContent: 'space-evenly',
 		width: '100%',
 		margin: '10vh 0'
 	}
