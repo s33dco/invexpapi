@@ -173,7 +173,7 @@ const InvoiceCard = ({
 						variant="body1"
 						component="h3"
 					>
-						(you have not emailed this invoice)
+						(not emailed)
 					</Typography>
 				)}
 				{paid ? (

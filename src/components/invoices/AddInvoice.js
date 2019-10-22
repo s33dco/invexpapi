@@ -90,12 +90,10 @@ const AddInvoice = ({
 	error,
 	invoices,
 	clients,
-	business
+	business,
+	lastInv
 }) => {
-	const usedInvNos = invoices
-		.map(i => i.invNo)
-		.sort((a, b) => (a > b ? 1 : -1));
-	const nextInvNumber = () => usedInvNos[usedInvNos.length - 1] + 1;
+	const nextInvNumber = () => (!lastInv ? 1 : lastInv + 1);
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -495,7 +493,11 @@ const mapStateToProps = state => ({
 	invoices: state.invoices.invoices,
 	error: state.invoices.error,
 	clients: state.clients.clients,
-	business: state.business.business
+	business: state.business.business,
+	lastInv: state.invoices.invoices
+		.map(i => i.invNo)
+		.sort((a, b) => (a > b ? 1 : -1))
+		.pop()
 });
 
 export default connect(

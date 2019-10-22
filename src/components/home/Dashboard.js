@@ -58,19 +58,39 @@ const Dashboard = ({
 	overdueInvoices
 }) => {
 	const classes = useStyles();
-	const [deductions, setDeductions] = useState(false);
-	const [income, setIncome] = useState(false);
-	const [loading, setLoading] = useState(true);
+	const [dashBoard, setDashBoard] = useState({
+		numberOfInvoices: undefined,
+		numberOfClients: undefined,
+		receipts: undefined,
+		deductions: undefined,
+		income: undefined
+	});
 
 	const totalDeductions = (expenses, mileage) => {
-		const amount = numeral(expenses.value()).add(mileage.value());
-		setDeductions(amount);
+		return numeral(expenses.value()).add(mileage.value());
 	};
 
 	const declaredIncome = (receipts, expenses, mileage) => {
 		const amount = numeral(expenses.value()).add(mileage.value());
 		const total = numeral(receipts.value()).subtract(amount.value());
-		setIncome(total);
+		return total;
+	};
+
+	const generateDashboard = () => {
+		const moneyOut = totalDeductions(expenses, mileage);
+		console.log('moneyOut', moneyOut);
+		const income = declaredIncome(receipts, expenses, mileage);
+		console.log('income', income);
+		setTimeout(() => {
+			const dashData = {
+				numberOfInvoices: invoicesProduced,
+				numberOfClients: clients,
+				receipts,
+				deductions: moneyOut,
+				income
+			};
+			setDashBoard(dashData);
+		}, 3000);
 	};
 
 	useEffect(() => {
@@ -87,15 +107,19 @@ const Dashboard = ({
 			setAlert(invoicesError.msg, 'warn');
 		}
 		if (receipts && mileage && expenses) {
-			totalDeductions(expenses, mileage);
-			declaredIncome(receipts, expenses, mileage);
+			generateDashboard();
 		}
-		setLoading(false);
-	}, [taxYearInvoices, taxYearExpenses, receipts, mileage, expenses]);
+	}, [
+		taxYearInvoices,
+		taxYearExpenses,
+		receipts,
+		expenses,
+		mileage,
+		clients,
+		invoicesProduced,
+		overdueInvoices
+	]);
 
-	if (loading) {
-		return <Typography> Loading DashBoard!</Typography>;
-	}
 	return (
 		<Fragment>
 			<Container className={classes.buttonArea}>
@@ -112,17 +136,18 @@ const Dashboard = ({
 					</Container>
 					<Container>
 						<Typography variant="h6" component="h2" align="center">
-							Income : {numeral(income).format()}
+							Income : {numeral(dashBoard.income).format()}
 						</Typography>
 						<Typography align="center">
-							{invoicesProduced} invoices / {clients} clients.
+							{dashBoard.numberOfInvoices} invoices /{' '}
+							{dashBoard.numberOfClients} clients.
 						</Typography>
 
 						<Typography variant="body2" component="h3" align="center">
-							Receipts {numeral(receipts).format()}
+							Receipts {numeral(dashBoard.receipts).format()}
 						</Typography>
 						<Typography variant="body2" component="h3" align="center">
-							Deductions {numeral(deductions).format()}
+							Deductions {numeral(dashBoard.deductions).format()}
 						</Typography>
 					</Container>
 				</Container>
@@ -184,7 +209,7 @@ const earnedSoFar = data => {
 				: null
 		)
 		.map(inv => inv.total)
-		.reduce((a, b) => numeral(a).add(b), 0);
+		.reduce((a, b) => numeral(a).add(b), numeral(0));
 };
 const expensesTotalPerTaxYear = data => {
 	const { from, to } = getTaxYearDates();
@@ -193,16 +218,20 @@ const expensesTotalPerTaxYear = data => {
 			moment(d.date).utc() > from && moment(d.date).utc() < to ? d : null
 		)
 		.map(inv => inv.amount)
-		.reduce((a, b) => numeral(a).add(b), 0);
+		.reduce((a, b) => numeral(a).add(b), numeral(0));
 };
 const mileageExpensesByTaxYear = data => {
 	const { from, to } = getTaxYearDates();
 	return data
 		.filter(d =>
-			moment(d.date).utc() > from && moment(d.date).utc() < to ? d : null
+			d.business.useMileage === true &&
+			moment(d.date).utc() > from &&
+			moment(d.date).utc() < to
+				? d
+				: null
 		)
 		.map(invoice => parseFloat(invoice.mileage * 0.45).toFixed(2))
-		.reduce((a, b) => numeral(a).add(b), 0);
+		.reduce((a, b) => numeral(a).add(b), numeral(0));
 };
 const numberOfClients = data => {
 	return Array.from(new Set(data.map(inv => inv.client.name))).length;
