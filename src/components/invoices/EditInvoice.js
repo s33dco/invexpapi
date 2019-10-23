@@ -152,7 +152,10 @@ const EditInvoice = ({
 		if (current && hasSent && !error && !dbError && !disabled) {
 			handleClose();
 		}
-	}, [current, inProcess, error, current, hasSent, dbError]);
+		if (!current) {
+			handleClose()
+		}
+	}, [current, inProcess, error, current, hasSent, dbError, open]);
 
 	const dealWithError = error => {
 		const invNo = /invNo/;
@@ -403,13 +406,13 @@ const EditInvoice = ({
 	};
 
 	const handleClose = () => {
+		clearCurrentInvoice();
 		setOpen(false);
 		setDbError('');
 		clearForm();
 		setInProcess(false);
 		setHasSent(false);
 		setDisabled(false);
-		clearCurrentInvoice();
 	};
 
 	return (

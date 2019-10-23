@@ -52,7 +52,9 @@ const Dashboard = ({
 	mileage,
 	clients,
 	invoicesProduced,
-	overdueInvoices
+	overdueInvoices,
+	invoices,
+	current
 }) => {
 	const classes = useStyles();
 	const [dashBoard, setDashBoard] = useState({
@@ -62,17 +64,14 @@ const Dashboard = ({
 		deductions: undefined,
 		income: undefined
 	});
-
 	const totalDeductions = (expenses, mileage) => {
 		return numeral(expenses.value()).add(mileage.value());
 	};
-
 	const declaredIncome = (receipts, expenses, mileage) => {
 		const amount = numeral(expenses.value()).add(mileage.value());
 		const total = numeral(receipts.value()).subtract(amount.value());
 		return total;
 	};
-
 	const generateDashboard = () => {
 		const moneyOut = totalDeductions(expenses, mileage);
 		console.log('moneyOut', moneyOut);
@@ -112,7 +111,8 @@ const Dashboard = ({
 		mileage,
 		clients,
 		invoicesProduced,
-		overdueInvoices
+		overdueInvoices,
+		invoices
 	]);
 
 	return (
@@ -221,6 +221,7 @@ const mapStateToProps = state => ({
 	clientError: state.clients.error,
 	expensesError: state.expenses.error,
 	invoicesError: state.invoices.error,
+	invoices: state.invoices.invoices,
 	taxYearInvoices: filterByTaxYear(state.invoices.invoices),
 	taxYearExpenses: filterByTaxYear(state.expenses.expenses),
 	receipts: earnedSoFar(state.invoices.invoices),

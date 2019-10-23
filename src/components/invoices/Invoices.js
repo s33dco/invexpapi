@@ -65,7 +65,6 @@ const Invoices = ({ invoices }) => {
 			}
 		}
 	}));
-
 	const [filtered, setFiltered] = useState([...invoices]);
 	const [searchText, setSearchText] = useState('');
 	const classes = useStyles();

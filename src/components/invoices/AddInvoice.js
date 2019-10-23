@@ -103,7 +103,6 @@ const AddInvoice = ({
 	const [invoice, setInvoice] = useState({
 		invNo: nextInvNumber(),
 		date: moment().utc(),
-		business: { ...business },
 		client: '',
 		items: [],
 		message: '',
@@ -113,13 +112,12 @@ const AddInvoice = ({
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
 		date: '1',
-		business: '1',
 		client: '0',
 		message: '0',
 		mileage: '1',
 		items: '0'
 	});
-	const { useMileage } = invoice.business;
+	const { useMileage } = business;
 
 	useEffect(() => {
 		if (error) {
@@ -144,7 +142,6 @@ const AddInvoice = ({
 		const useMileage = /useMileage/;
 		const message = /message/;
 		const items = /items/;
-
 		// const category = /category/;
 		// const date = /date/;
 		switch (true) {
@@ -169,8 +166,6 @@ const AddInvoice = ({
 		}
 	};
 
-	// form functions
-
 	const onSubmit = async e => {
 		e.preventDefault();
 		invoice.items.forEach(item => {
@@ -184,17 +179,21 @@ const AddInvoice = ({
 
 		setIsSent(true);
 
-		await addInvoice({
+		const newInvoice = {
 			...invoice,
-			total: parseFloat(total._value).toFixed(2)
-		});
+			total: parseFloat(total._value).toFixed(2),
+			business: { ...business },
+		}
+
+		console.log(newInvoice)
+
+		await addInvoice(newInvoice);
 	};
 
 	const clearForm = () => {
 		setInvoice({
 			invNo: nextInvNumber(),
 			date: moment().utc(),
-			business: { ...business },
 			client: '',
 			items: [],
 			message: '',
@@ -204,7 +203,6 @@ const AddInvoice = ({
 		setErrorInvoice({
 			invNo: '1',
 			date: '1',
-			business: '1',
 			client: '0',
 			message: '0',
 			mileage: '1',

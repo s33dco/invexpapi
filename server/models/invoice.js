@@ -127,7 +127,6 @@ const invoiceSchema = new mongoose.Schema(
 				}
 			}
 		],
-
 		client: {
 			_id: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -232,7 +231,6 @@ const invoiceSchema = new mongoose.Schema(
 				trim: true
 			}
 		},
-
 		business: {
 			_id: {
 				type: mongoose.Schema.Types.ObjectId,
@@ -447,12 +445,12 @@ invoiceSchema.path('items').validate(v => {
 	}
 });
 
-invoiceSchema.path('invNo').validate(async v => {
-	const dupe = await Invoice.findOne({ invNo: v });
-	if (dupe) {
-		throw new Error('Invoice number already used');
-	}
-});
+// invoiceSchema.path('invNo').validate(async v => {
+// 	const dupe = await Invoice.find({ invNo: v });
+// 	if (dupe) {
+// 		throw new Error('Invoice number already used');
+// 	}
+// });
 
 const validate = invoice => {
 	const schema = {
