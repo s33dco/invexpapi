@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DatePicker } from '@material-ui/pickers';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import titleCase from '../../../config/titleCase';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
@@ -21,6 +20,11 @@ const useStyles = makeStyles(theme => ({
 		width: '90vw',
 		maxHeight: '90vh',
 		overflowY: 'auto'
+  },
+  	text: {
+		margin: theme.spacing(1, 0, 3),
+		padding: theme.spacing(2, 1)
+
 	},
 	dates: {
 		display: 'flex',
@@ -67,13 +71,13 @@ const Selector = ({
 			<Typography variant="body1" component="h3" align="center">
 				Select the date ranges for a financial summary.
 			</Typography>
-			<Typography variant="body1" component="h3" align="center">
+			<Typography className={classes.text} variant="body1" component="h3" align="center">
 				The figures are broken down via the HMRC categories and available to
 				print of download. Your end of year tax return is just a few clicks
 				away!
 			</Typography>
 			{invoices.length === 0 && expenses.length === 0 && (
-				<Typography variant="body1" component="h3" align="center">
+				<Typography className={classes.text} variant="body1" component="h3" align="center">
 					You will be able to run reports after some data has been created.
 				</Typography>
 			)}

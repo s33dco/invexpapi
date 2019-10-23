@@ -17,22 +17,12 @@ import AddInvoice from '../invoices/AddInvoice';
 import AddExpense from '../expenses/AddExpense';
 import AddClient from '../clients/AddClient';
 import DeleteInvoiceDialog from '../invoices/DeleteInvoiceDialog';
+import DashSummary from './DashSummary'
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');
 
 const useStyles = makeStyles(theme => ({
-	summary: {
-		margin: '0',
-		padding: '0'
-	},
-	summary: {
-		borderRadius: theme.spacing(1),
-		boxShadow: theme.shadows[1],
-		paddingTop: theme.spacing(2),
-		paddingBottom: theme.spacing(2),
-		marginBottom: theme.spacing(2)
-	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
@@ -81,7 +71,7 @@ const Dashboard = ({
 		console.log('moneyOut', moneyOut);
 		const income = declaredIncome(receipts, expenses, mileage);
 		console.log('income', income);
-		setTimeout(() => {
+		// setTimeout(() => {
 			const dashData = {
 				numberOfInvoices: invoicesProduced,
 				numberOfClients: clients,
@@ -90,7 +80,7 @@ const Dashboard = ({
 				income
 			};
 			setDashBoard(dashData);
-		}, 3000);
+		// }, 3000);
 	};
 
 	useEffect(() => {
@@ -127,45 +117,21 @@ const Dashboard = ({
 				<AddClient />
 				<AddExpense />
 			</Container>
-			<Container className={classes.page}>
+			<DashSummary dashBoard={dashBoard} />
+
+			{overdueInvoices.length > 0 && (
 				<Container className={classes.summary}>
-					<Container>
-						<Typography variant="h6" component="h2" align="center">
-							Current Tax Year Summary
-						</Typography>
-					</Container>
-					<Container>
-						<Typography variant="h6" component="h2" align="center">
-							Income : {numeral(dashBoard.income).format()}
-						</Typography>
-						<Typography align="center">
-							{dashBoard.numberOfInvoices} invoices /{' '}
-							{dashBoard.numberOfClients} clients.
-						</Typography>
-
-						<Typography variant="body2" component="h3" align="center">
-							Receipts {numeral(dashBoard.receipts).format()}
-						</Typography>
-						<Typography variant="body2" component="h3" align="center">
-							Deductions {numeral(dashBoard.deductions).format()}
-						</Typography>
-					</Container>
+					<Typography variant="h6" component="h2">
+						Invoices due:{' '}
+					</Typography>
+					{overdueInvoices &&
+						overdueInvoices.map(invoice => (
+							<InvoiceCard key={invoice._id} invoice={invoice} />
+						))}
+					<EditInvoice />
+					<DeleteInvoiceDialog />
 				</Container>
-
-				{overdueInvoices.length > 0 && (
-					<Container className={classes.summary}>
-						<Typography variant="h6" component="h2">
-							Invoices due:{' '}
-						</Typography>
-						{overdueInvoices &&
-							overdueInvoices.map(invoice => (
-								<InvoiceCard key={invoice._id} invoice={invoice} />
-							))}
-						<EditInvoice />
-						<DeleteInvoiceDialog />
-					</Container>
-				)}
-			</Container>
+			)}
 		</Fragment>
 	);
 };
