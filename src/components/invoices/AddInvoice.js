@@ -93,7 +93,8 @@ const AddInvoice = ({
 	business,
 	lastInv
 }) => {
-	const nextInvNumber = () => (!lastInv ? 1 : lastInv + 1);
+	const usedInvNos = invoices.map(i => i.invNo);
+	const nextInvNumber = () => (invoices.length > 1 ? lastInv + 1 : 1);
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);

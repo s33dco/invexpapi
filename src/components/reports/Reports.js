@@ -194,7 +194,7 @@ const Reports = ({ invoices, expenses }) => {
 			if (item.desc in obj) {
 				obj[item.desc] = obj[item.desc].add(item.total);
 			} else {
-				obj[item.desc] = numeral(item.total).multiply(-1);
+				obj[item.desc] = numeral(item.total);
 			}
 			return obj;
 		}, {});
@@ -205,12 +205,13 @@ const Reports = ({ invoices, expenses }) => {
 		console.log('pieformat', pieFormat);
 		delete pieFormat.date;
 		delete pieFormat.category;
+		console.log('pieformat no dates or cats', pieFormat);
 
 		const pieSlices = Object.entries(pieFormat).map(item => {
 			const obj = {
 				id: item[0],
 				label: item[0],
-				value: parseFloat(item[1].value()).toFixed(2)
+				value: parseFloat(item[1].value() * -1).toFixed(2)
 			};
 			return obj;
 		});
@@ -260,7 +261,7 @@ const Reports = ({ invoices, expenses }) => {
 					date: moment(exp.date).utc(),
 					category: titleCase(exp.desc),
 					desc: titleCase(exp.category),
-					total: exp.amount * -1
+					total: parseFloat(exp.amount * -1).toFixed(2)
 				};
 				return data;
 			});
@@ -268,9 +269,7 @@ const Reports = ({ invoices, expenses }) => {
 	const mileageExpenses = () =>
 		invoices
 			.filter(invoice =>
-				invoice.business.useMileage === true ? invoice : null
-			)
-			.filter(invoice =>
+				invoice.business.useMileage === true &&
 				invoice.date > startDate.toISOString() &&
 				invoice.date < endDate.toISOString()
 					? invoice
@@ -388,8 +387,7 @@ const Reports = ({ invoices, expenses }) => {
 									data={[...reportData.incomePie]}
 									margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
 									sortByValue
-									pieLegends={0}
-									innerRadius={0.5}
+									innerRadius={0.75}
 									padAngle={2}
 									cornerRadius={5}
 									fit={false}
@@ -434,7 +432,7 @@ const Reports = ({ invoices, expenses }) => {
 									data={[...reportData.deductionsPie]}
 									margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
 									sortByValue
-									innerRadius={0.5}
+									innerRadius={0.75}
 									padAngle={2}
 									cornerRadius={5}
 									fit={false}

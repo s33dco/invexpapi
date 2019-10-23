@@ -116,7 +116,7 @@ const Table = ({ tableData, startDate, endDate }) => {
 										{
 											name: 'Reference',
 											options: {
-												filter: false,
+												filter: true,
 												sort: false
 											}
 										},
