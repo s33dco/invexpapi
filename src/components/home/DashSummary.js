@@ -20,13 +20,6 @@ const useStyles = makeStyles(theme => ({
 		paddingTop: theme.spacing(2),
 		paddingBottom: theme.spacing(2),
 		marginBottom: theme.spacing(2)
-	},
-	buttonArea: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-evenly',
-		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2)
 	}
 }));
 

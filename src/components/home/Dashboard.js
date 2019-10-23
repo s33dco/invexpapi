@@ -29,7 +29,14 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: 'space-evenly',
 		marginTop: theme.spacing(2),
 		marginBottom: theme.spacing(2)
-	}
+	},
+	summary: {
+		borderRadius: theme.spacing(1),
+		boxShadow: theme.shadows[1],
+		paddingTop: theme.spacing(2),
+		paddingBottom: theme.spacing(2),
+		marginBottom: theme.spacing(2)
+	},
 }));
 
 const Dashboard = ({
@@ -71,7 +78,6 @@ const Dashboard = ({
 		console.log('moneyOut', moneyOut);
 		const income = declaredIncome(receipts, expenses, mileage);
 		console.log('income', income);
-		// setTimeout(() => {
 			const dashData = {
 				numberOfInvoices: invoicesProduced,
 				numberOfClients: clients,
@@ -80,7 +86,6 @@ const Dashboard = ({
 				income
 			};
 			setDashBoard(dashData);
-		// }, 3000);
 	};
 
 	useEffect(() => {

@@ -37,20 +37,18 @@ const Reports = ({ invoices, expenses }) => {
 		const incomePie = breakoutFigures([...moneyIn]);
 		const deductionsPie = breakoutFiguresPositive([...moneyOut]);
 		const tableData = toSortedArray(data);
-		setTimeout(() => {
-			const newReport = {
-				start: startDate,
-				end: endDate,
-				declaredIncome: takeHome,
-				totalOutgoings,
-				totalIncomings,
-				incomePie,
-				deductionsPie,
-				tableData
-			};
-			setReportData(newReport);
-			setShowReport(true);
-		}, 3000);
+		const newReport = {
+			start: startDate,
+			end: endDate,
+			declaredIncome: takeHome,
+			totalOutgoings,
+			totalIncomings,
+			incomePie,
+			deductionsPie,
+			tableData
+		};
+		setReportData(newReport);
+		setShowReport(true);
 	};
 
 	useEffect(() => {
