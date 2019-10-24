@@ -19,24 +19,28 @@ const styles = StyleSheet.create({
 		marginBottom: '5mm'
 	},
 	report: {
-		fontSize: '5mm',
-		display: 'flex',
-		flex: '1'
+		fontSize: '5mm'
 	},
 	detail: {
 		margin: '10px 0'
 	},
-	// detailTitle: {
-	// 	fontSize: '7mm'
-	// },
-	// detailItem: {
-	// 	display: 'flex',
-	// 	flexDirection: 'column'
-	// },
-	listItem: {
-		fontSize: '5mm',
-		textAlign: 'right'
+	detailTitle: {
+		fontSize: '6mm',
+		marginBottom: '4mm'
 	},
+	detailItem: {
+		fontSize: '5mm',
+		margin: '1mm 10mm',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'flex-end'
+	},
+	// listItem: {
+	// 	alignItems: 'flex-end'
+	// },
+	// listValue: {
+	// 	textAlign: 'right'
+	// },
 	footer: {
 		fontSize: '3mm',
 		textAlign: 'right'
@@ -76,7 +80,7 @@ const SummaryPDF = props => {
 									.map(slice => (
 										<View key={slice.id} style={styles.detailItem}>
 											<Text style={styles.listItem}>
-												{slice.label} : {numeral(slice.value).format()}
+												{slice.label} - {numeral(slice.value).format()}
 											</Text>
 										</View>
 									))}
@@ -90,7 +94,7 @@ const SummaryPDF = props => {
 									.map(slice => (
 										<View key={slice.id} style={styles.detailItem}>
 											<Text style={styles.listItem}>
-												{slice.label} : {numeral(slice.value).format()}
+												{slice.label} - {numeral(slice.value).format()}
 											</Text>
 										</View>
 									))}
@@ -102,7 +106,7 @@ const SummaryPDF = props => {
 							</View>
 						</View>
 						<View style={styles.footer}>
-							<Text>generated {moment().format('h:mm a Do MMMM YYYY')}</Text>
+							<Text>printed {moment().format('h:mma Do MMMM YYYY')}</Text>
 						</View>
 					</Fragment>
 				) : null}
