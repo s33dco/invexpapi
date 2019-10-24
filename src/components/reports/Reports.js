@@ -4,13 +4,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import numeral from 'numeral';
 import titleCase from '../../../config/titleCase';
-import Selector from './Selector'
+import Selector from './Selector';
 import Charts from './Charts';
 
-
-
 const Reports = ({ invoices, expenses }) => {
-
 	const [startDate, setStartDate] = useState(moment().utc());
 	const [endDate, setEndDate] = useState(moment().utc());
 	const [formError, setFormError] = useState({ start: '0', end: '0' });
@@ -230,22 +227,19 @@ const Reports = ({ invoices, expenses }) => {
 
 	return (
 		<Fragment>
-			{!showReport ? 
-			  <Selector 
-			    invoices={invoices.length} 
-			    expenses={expenses.length} 
-			    startDate={startDate} 
-			    endDate={endDate} 
-			    handleStartDate={handleStartDate} 
-			    handleEndDate={handleEndDate} 
-			    formError={formError} 
-			  /> 
-			:
-				<Charts 
-				  clearReport={clearReport} 
-					reportData={reportData} 
+			{!showReport ? (
+				<Selector
+					invoices={invoices.length}
+					expenses={expenses.length}
+					startDate={startDate}
+					endDate={endDate}
+					handleStartDate={handleStartDate}
+					handleEndDate={handleEndDate}
+					formError={formError}
 				/>
-			}
+			) : (
+				<Charts clearReport={clearReport} reportData={reportData} />
+			)}
 		</Fragment>
 	);
 };

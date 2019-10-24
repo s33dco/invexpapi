@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'space-around'
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -20,23 +20,20 @@ const useStyles = makeStyles(theme => ({
 		width: '90vw',
 		maxHeight: '90vh',
 		overflowY: 'auto'
-  },
-  	text: {
+	},
+	text: {
 		margin: theme.spacing(1, 0, 3),
 		padding: theme.spacing(2, 1)
-
 	},
 	dates: {
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'space-evenly',
-		margin: theme.spacing(1, 0, 3),
+		margin: theme.spacing(3),
 		padding: theme.spacing(2, 1),
 		borderRadius: theme.spacing(2)
 	},
 	datePicker: {
 		margin: theme.spacing(3, 3, 3, 3),
-		padding: theme.spacing(2, 2, 2, 2)
+		padding: theme.spacing(2, 2, 2, 2),
+		width: '15em'
 	},
 	'@media (min-width: 600px)': {
 		paper: {
@@ -44,12 +41,12 @@ const useStyles = makeStyles(theme => ({
 		}
 	},
 	datePicker: {
-		margin: theme.spacing(2, 0),
-		width: '100%'
+		margin: theme.spacing(2, 0)
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
+		minWidth: '15em',
 		width: '100%'
 	}
 }));
@@ -71,13 +68,23 @@ const Selector = ({
 			<Typography variant="body1" component="h3" align="center">
 				Select the date ranges for a financial summary.
 			</Typography>
-			<Typography className={classes.text} variant="body1" component="h3" align="center">
+			<Typography
+				className={classes.text}
+				variant="body1"
+				component="h3"
+				align="center"
+			>
 				The figures are broken down via the HMRC categories and available to
 				print of download. Your end of year tax return is just a few clicks
 				away!
 			</Typography>
 			{invoices.length === 0 && expenses.length === 0 && (
-				<Typography className={classes.text} variant="body1" component="h3" align="center">
+				<Typography
+					className={classes.text}
+					variant="body1"
+					component="h3"
+					align="center"
+				>
 					You will be able to run reports after some data has been created.
 				</Typography>
 			)}
@@ -96,7 +103,7 @@ const Selector = ({
 						animateYearScrolling
 					/>
 				</Container>
-				<Container className={classes.dates}>
+				<Container className={classes.datePicker}>
 					<DatePicker
 						label="End Date"
 						minDate={moment(startDate).utc()}
