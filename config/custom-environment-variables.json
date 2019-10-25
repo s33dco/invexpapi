@@ -3,5 +3,5 @@
 	"apiURL": "API_URI",
 	"backend_port": "PORT",
 	"jwt_secret": "jwt_secret",
-  "SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD",
+  "SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD"
 }
