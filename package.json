@@ -17,7 +17,7 @@
 		"dev:prebuild": "rimraf dev",
 		"dev:build": "cross-env NODE_ENV=development $npm_package_config_webpack_args",
 		"prebuild": "rimraf build",
-		"build": "cross-env NODE_ENV=production $npm_package_config_webpack_args --env=prod",
+		"build": "$npm_package_config_webpack_args --env=prod",
 		"start": "node server/server.js",
 		"dev:start": "nodemon server/server.js",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production yarn build\" \" cross-env NODE_ENV=production yarn start\"",

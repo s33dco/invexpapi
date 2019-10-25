@@ -2,7 +2,7 @@
 	"mongodbURI": "MONGODB_URI",
 	"apiURL": "API_URI",
 	// "frontendURL": "http://localhost:3000",
-	"backend_port": PORT,
+	"backend_port": "PORT",
 	// "frontend_port": 3000,
 	"jwt_secret": "jwt_secret",
   "SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD",
