@@ -107,7 +107,7 @@ const Selector = ({
 					<DatePicker
 						label="End Date"
 						minDate={moment(startDate).utc()}
-						disabled={invoices.length === 0 && expenses.length === 0}
+						disabled={invoices === 0 && expenses === 0}
 						value={endDate}
 						onChange={handleEndDate}
 						error={!(formError.end.length === 1)}

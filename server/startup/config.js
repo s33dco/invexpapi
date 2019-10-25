@@ -11,9 +11,6 @@ const checkConfig = () => {
 		if (!config.get('backend_port')) {
 			throw new Error('FATAL ERROR: PORT is not defined.');
 		}
-		if (!config.get('sendgrid_password')) {
-			throw new Error('FATAL ERROR: sendgrid_password is not defined.');
-		}
 		logger.info(`** successfully read...`);
 		logger.info(`** starting in ${config.util.getEnv('NODE_ENV')}...`);
 	} catch (e) {

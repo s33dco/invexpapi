@@ -2,7 +2,7 @@
 	"name": "webpack-for-react",
 	"version": "1.0.0",
 	"main": "index.js",
-	"repository": "https://github.com/s33dco/mern-stack.git",
+	"repository": "https://github.com/s33dco/invexpapi.git",
 	"author": "s33dco <code@s33d.co>",
 	"license": "MIT",
 	"private": true,
@@ -19,7 +19,8 @@
 		"dev:start": "nodemon server/server.js",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production yarn build\" \" cross-env NODE_ENV=production yarn start\"",
 		"runindev": "concurrently \"cross-env NODE_ENV=development yarn dev:build\" \" cross-env NODE_ENV=development yarn dev:start\"",
-		"test": "jest --watchAll --runInBand"
+		"test": "jest --watchAll --runInBand",
+		"heroku-postbuild": "yarn run build"
 	},
 	"browserslist": {
 		"production": [
