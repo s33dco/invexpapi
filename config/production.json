@@ -1,7 +1,7 @@
 {
-	"mongodbURI": "mongodb://localhost:27017/invexpapidev",
-	"apiURL": "http://localhost:5000/api",
-	"backend_port": 5000,
-	"sendgrid_password": "apassword",
+	"mongodbURI": "MONGODB_URI",
+	"apiURL": "https://s33daccounts.herokuapp.com/api",
+	"backend_port": "PORT",
+	"SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD",
 	"jwt_secret": "secret"
 }
