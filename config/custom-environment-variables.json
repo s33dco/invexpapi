@@ -1,6 +1,6 @@
 {
 	"mongodbURI": "MONGODB_URI",
-	"apiURL": "API_URI",
+	"apiURL": `${API_URL}:${PORT}/api`,
 	"backend_port": "PORT",
 	"jwt_secret": "jwt_secret",
   "SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD"
