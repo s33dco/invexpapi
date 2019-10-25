@@ -6,6 +6,9 @@
 	"author": "s33dco <code@s33d.co>",
 	"license": "MIT",
 	"private": true,
+	"engines": {
+    "node": "12.4.0"
+  }
 	"config": {
 		"webpack_args": "webpack --config webpack.config.js --display-error-details"
 	},
