@@ -19,7 +19,6 @@ const config = {
 				test: /\.s?css$/,
 				use: [
 					{
-						// We configure 'MiniCssExtractPlugin'
 						loader: MiniCssExtractPlugin.loader
 					},
 					{

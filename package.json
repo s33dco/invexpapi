@@ -7,8 +7,8 @@
 	"license": "MIT",
 	"private": true,
 	"engines": {
-    "node": "12.4.0"
-  },
+		"node": "12.4.0"
+	},
 	"config": {
 		"webpack_args": "webpack --config webpack.config.js --display-error-details"
 	},
@@ -18,7 +18,7 @@
 		"dev:build": "cross-env NODE_ENV=development $npm_package_config_webpack_args",
 		"prebuild": "rimraf build",
 		"build": "cross-env NODE_ENV=production $npm_package_config_webpack_args --env=prod",
-		"start": "node server/server.js",
+		"start": "NODE_ENV=production node server/server.js",
 		"dev:start": "nodemon server/server.js",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production yarn build\" \" cross-env NODE_ENV=production yarn start\"",
 		"runindev": "concurrently \"cross-env NODE_ENV=development yarn dev:build\" \" cross-env NODE_ENV=development yarn dev:start\"",

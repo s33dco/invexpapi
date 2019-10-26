@@ -8,21 +8,22 @@ const logger = require('./startup/logger');
 
 const environment = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || config.get('backend_port');
-const httpsPort = process.env.PORT || config.get('backend_https_port');
+// const httpsPort = process.env.PORT || config.get('backend_https_port');
 
-if (environment === 'development') {
-	const certOptions = {
-		key: fs.readFileSync(path.resolve(__dirname, '../config', 'server.key')),
-		cert: fs.readFileSync(path.resolve(__dirname, '../config', 'server.crt'))
-	};
-	https.createServer(certOptions, app).listen(httpsPort, () => {
-		logger.info(
-			`** https server running in ${environment} listening on port ${httpsPort}...`
-		);
-	});
-}
-http.createServer(app).listen(port, () => {
+// if (environment === 'development') {
+const certOptions = {
+	key: fs.readFileSync(path.resolve(__dirname, '../config', 'server.key')),
+	cert: fs.readFileSync(path.resolve(__dirname, '../config', 'server.crt'))
+};
+
+https.createServer(certOptions, app).listen(port, () => {
 	logger.info(
-		`** server running in ${environment} listening on port ${port}...`
+		`** https server running in ${environment} listening on port ${port}...`
 	);
 });
+// }
+// http.createServer(app).listen(port, () => {
+// 	logger.info(
+// 		`** server running in ${environment} listening on port ${port}...`
+// 	);
+// });
