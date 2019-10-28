@@ -1,4 +1,4 @@
-import selectOptions from '../../server/models/expense';
+import { selectOptions } from '../../server/models/expense';
 import {
 	GET_EXPENSES,
 	ADD_EXPENSE,

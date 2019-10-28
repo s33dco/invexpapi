@@ -1,19 +1,17 @@
 const webpack = require('webpack');
+const Merge = require('webpack-merge');
 const portConfig = require('config');
-const { appEntry, devOutput } = require('./common-paths');
+const CommonConfig = require('./webpack.common.config.js');
+const { devOutput } = require('./common-paths');
 
 const frontendPort = portConfig.get('frontend_port');
 
-const config = {
+module.exports = Merge(CommonConfig, {
 	mode: 'none',
-	entry: {
-		app: appEntry
-	},
 	output: {
 		path: devOutput,
 		publicPath: '/'
 	},
-	// target: 'node',
 	module: {
 		rules: [
 			{
@@ -56,5 +54,4 @@ const config = {
 		hot: true,
 		open: 'Google Chrome'
 	}
-};
-module.exports = config;
+});

@@ -4,43 +4,24 @@ const getValue = require('config');
 const webpack = require('webpack');
 const { appEntry } = require('./common-paths');
 
-const api_url = getValue.get('apiURL');
+const apiURL = getValue.get('apiURL');
 
-const config = {
+module.exports = {
 	entry: appEntry,
 	node: {
 		net: 'empty',
 		tls: 'empty',
 		dns: 'empty'
 	},
-
-	// vendor: ['semantic-ui-react'], - use to chunk vendor components
+	mode: 'none',
 	module: {
 		rules: [
 			{
 				test: /\.(js)$/,
 				exclude: /node_modules/,
-				use: ['babel-loader']
+				use: 'babel-loader'
 			}
 		]
-	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				styles: {
-					name: 'styles',
-					test: /\.css$/,
-					chunks: 'all',
-					enforce: true
-				},
-				vendor: {
-					chunks: 'initial',
-					test: 'vendor',
-					name: 'vendor',
-					enforce: true
-				}
-			}
-		}
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
@@ -52,8 +33,7 @@ const config = {
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
 		}),
 		new webpack.DefinePlugin({
-			'process.env.API_URL': JSON.stringify(api_url)
+			'process.env.API_URL': JSON.stringify(apiURL)
 		})
 	]
 };
-module.exports = config;

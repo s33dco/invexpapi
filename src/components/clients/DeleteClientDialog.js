@@ -71,9 +71,7 @@ const DeleteClientDialog = ({
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">
-					{'Are you sure?'}
-				</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">Are you sure?</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
 						{titleCase(name)} will be permanently deleted, there is no way back!

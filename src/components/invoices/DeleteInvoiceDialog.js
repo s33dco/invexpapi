@@ -8,7 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import sentanceCase from '../../../config/sentanceCase';
+import { sentanceCase } from '../../../config/sentanceCase';
 import {
 	deleteInvoice,
 	clearDeleteInvoice,
@@ -71,9 +71,7 @@ const DeleteInvoiceDialog = ({
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">
-					{'Are you sure?'}
-				</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">Are you sure?</DialogTitle>
 				<DialogContent>
 					{paid ? (
 						<DialogContentText id="alert-dialog-slide-description">
