@@ -3,8 +3,7 @@ import React, { Fragment } from 'react';
 import Icon from '@material-ui/core/Icon';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import moment from 'moment';
-import sentanceCase from '../../../config/sentanceCase';
-import titleCase from '../../../config/titleCase';
+import { sentanceCase, titleCase } from '../../../config/textFormat';
 
 const styles = StyleSheet.create({
 	page: {

@@ -13,45 +13,45 @@ import {
 	SET_DELETE_CLIENT,
 	CLEAR_DELETE_CLIENT,
 	GET_CLIENT_ITEMS,
-	CLEAR_CLIENT_ITEMS
+	CLEAR_CLIENT_ITEMS,
 } from './types';
 import { clearInvoices } from './invoicesActions';
 
 export const clearClients = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CLIENTS
+		type: CLEAR_CLIENTS,
 	});
 };
 
 export const clearClientErrors = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CLIENT_ERRORS
+		type: CLEAR_CLIENT_ERRORS,
 	});
 };
 
 export const setCurrentClient = client => async dispatch => {
 	dispatch({
 		type: SET_CURRENT_CLIENT,
-		payload: client
+		payload: client,
 	});
 };
 
 export const clearCurrentClient = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CURRENT_CLIENT
+		type: CLEAR_CURRENT_CLIENT,
 	});
 };
 
 export const setDeleteClient = client => async dispatch => {
 	dispatch({
 		type: SET_DELETE_CLIENT,
-		payload: client
+		payload: client,
 	});
 };
 
 export const clearDeleteClient = () => async dispatch => {
 	dispatch({
-		type: CLEAR_DELETE_CLIENT
+		type: CLEAR_DELETE_CLIENT,
 	});
 };
 
@@ -60,12 +60,12 @@ export const getClients = () => async dispatch => {
 		const res = await axios.get(`${process.env.API_URL}/clients`);
 		dispatch({
 			type: GET_CLIENTS,
-			payload: res.data
+			payload: res.data,
 		});
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg
+			payload: error.response.data.msg,
 		});
 		await dispatch(setAlert(error.response.data.msg, 'warn'));
 		await dispatch(clearClientErrors());
@@ -75,8 +75,8 @@ export const getClients = () => async dispatch => {
 export const addClient = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -88,14 +88,15 @@ export const addClient = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_CLIENT,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(setAlert('Client Created!', 'info'));
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -103,8 +104,8 @@ export const addClient = formData => async dispatch => {
 export const updateClient = (id, formData) => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -116,13 +117,14 @@ export const updateClient = (id, formData) => async dispatch => {
 
 		dispatch({
 			type: UPDATE_CLIENT,
-			payload: res.data
+			payload: res.data,
 		});
 		await dispatch(setAlert(`${res.data.name} Updated!`, 'info'));
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -130,8 +132,8 @@ export const updateClient = (id, formData) => async dispatch => {
 export const deleteClient = id => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -142,35 +144,41 @@ export const deleteClient = id => async dispatch => {
 
 		dispatch({
 			type: DELETE_CLIENT,
-			payload: id
+			payload: id,
 		});
 
 		await dispatch(setAlert(res.data.msg, 'info'));
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 
-export const getClientItems = (client, invoices) => async dispatch => {
+export const getClientItems = (
+	client,
+	invoices
+) => async dispatch => {
 	try {
 		const jobs = invoices
 			.filter(inv => (inv.client._id === client._id ? inv : null))
 			.map(i => i.items)
 			.flat(2);
 
-		const orderedJobs = jobs.sort((a, b) => (a.date < b.date ? 1 : -1));
+		const orderedJobs = jobs.sort((a, b) =>
+			a.date < b.date ? 1 : -1
+		);
 
 		dispatch({
 			type: GET_CLIENT_ITEMS,
-			payload: { name: client.name, items: jobs }
+			payload: { name: client.name, items: jobs },
 		});
 	} catch (error) {
 		dispatch({
 			type: CLIENT_ERROR,
-			payload: 'error retrieving client jobs'
+			payload: 'error retrieving client jobs',
 		});
 		await dispatch(setAlert(error.response.data.msg, 'warn'));
 		await dispatch(clearClientErrors());
@@ -179,6 +187,6 @@ export const getClientItems = (client, invoices) => async dispatch => {
 
 export const clearClientItems = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CLIENT_ITEMS
+		type: CLEAR_CLIENT_ITEMS,
 	});
 };

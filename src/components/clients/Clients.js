@@ -25,7 +25,7 @@ const Clients = ({ clients }) => {
 			width: '100%',
 			borderRadius: theme.spacing(2),
 			boxShadow: theme.shadows[1],
-			margin: theme.spacing(1, 0)
+			margin: theme.spacing(1, 0),
 		},
 		search: {
 			flexGrow: 1,
@@ -33,14 +33,14 @@ const Clients = ({ clients }) => {
 			borderRadius: theme.shape.borderRadius,
 			backgroundColor: fade(theme.palette.common.white, 0.15),
 			'&:hover': {
-				backgroundColor: fade(theme.palette.common.white, 0.25)
+				backgroundColor: fade(theme.palette.common.white, 0.25),
 			},
 			marginLeft: 0,
 			width: '100%',
 			[theme.breakpoints.up('sm')]: {
 				marginLeft: theme.spacing(1),
-				width: 'auto'
-			}
+				width: 'auto',
+			},
 		},
 		searchIcon: {
 			width: theme.spacing(7),
@@ -49,10 +49,10 @@ const Clients = ({ clients }) => {
 			pointerEvents: 'none',
 			display: 'flex',
 			alignItems: 'center',
-			justifyContent: 'center'
+			justifyContent: 'center',
 		},
 		inputRoot: {
-			color: 'inherit'
+			color: 'inherit',
 		},
 		inputInput: {
 			padding: theme.spacing(1, 1, 1, 7),
@@ -61,10 +61,10 @@ const Clients = ({ clients }) => {
 			[theme.breakpoints.up('sm')]: {
 				width: 'auto',
 				'&:focus': {
-					width: 'auto'
-				}
-			}
-		}
+					width: 'auto',
+				},
+			},
+		},
 	}));
 
 	const [filtered, setFiltered] = useState([...clients]);
@@ -74,7 +74,9 @@ const Clients = ({ clients }) => {
 
 	useEffect(() => {
 		if (!searchText) {
-			setFiltered([...clients.sort((a, b) => a.name.localeCompare(b.name))]);
+			setFiltered([
+				...clients.sort((a, b) => a.name.localeCompare(b.name)),
+			]);
 		} else {
 			const filteredList = filtered.filter(client => {
 				const regex = new RegExp(`${searchText}`, 'gi'); // make text a global case insensitive regexp
@@ -93,8 +95,12 @@ const Clients = ({ clients }) => {
 	};
 
 	return (
-		<Fragment>
-			<Toolbar className={classes.toolbar} position="static" variant="dense">
+		<>
+			<Toolbar
+				className={classes.toolbar}
+				position="static"
+				variant="dense"
+			>
 				<div className={classes.search}>
 					<div className={classes.searchIcon}>
 						<SearchIcon />
@@ -104,7 +110,7 @@ const Clients = ({ clients }) => {
 						placeholder="Search…"
 						classes={{
 							root: classes.inputRoot,
-							input: classes.inputInput
+							input: classes.inputInput,
 						}}
 						inputProps={{ 'aria-label': 'search' }}
 						onChange={getFiltered}
@@ -126,14 +132,14 @@ const Clients = ({ clients }) => {
 			<PreviousItems />
 			<EditClient />
 			<DeleteClientDialog />
-		</Fragment>
+		</>
 	);
 };
 
 Clients.propTypes = {};
 
 const mapStateToProps = state => ({
-	clients: state.clients.clients
+	clients: state.clients.clients,
 });
 
 export default connect(mapStateToProps)(Clients);

@@ -10,22 +10,22 @@ const useStyles = makeStyles(theme => ({
 	container: {
 		display: 'flex',
 		flexDirection: 'column',
-		marginTop: theme.spacing(2)
+		marginTop: theme.spacing(2),
 	},
 	root: {
 		flexGrow: '1',
 		width: '100%',
 		margin: 'theme.spacing(4),auto',
 		maxWidth: '600px',
-		marginBottom: '2.5vh'
+		marginBottom: '2.5vh',
 	},
 	buttons: {
 		display: 'flex',
 		flexDirection: 'right',
 		justifyContent: 'space-evenly',
 		width: '100%',
-		margin: '10vh 0'
-	}
+		margin: '10vh 0',
+	},
 }));
 
 const About = () => {
@@ -43,18 +43,18 @@ const About = () => {
 			<Container className={classes.root}>
 				<Grid>
 					<Typography align="center">
-						You can manage you're business from your phone, track expenses,
-						produce invoices and easily handle your self assesment HMRC tax
-						return.
+						You can manage you're business from your phone, track
+						expenses, produce invoices and easily handle your self
+						assesment HMRC tax return.
 					</Typography>
 				</Grid>
 			</Container>
 			<Container className={classes.root}>
 				<Grid>
 					<Typography align="center">
-						We know you don't have time for this admin so we're here to help.
-						You don't even have to capitalize the sentances you type - we'll do
-						it for you!
+						We know you don't have time for this admin so we're here
+						to help. You don't even have to capitalize the sentances
+						you type - we'll do it for you!
 					</Typography>
 				</Grid>
 			</Container>

@@ -16,34 +16,40 @@ const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
 		padding: theme.spacing(2, 4, 3),
-		width: '80vw'
+		width: '80vw',
 	},
 
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
-	}
+		width: '100%',
+	},
 }));
 
 const LoginModal = props => {
-	const { loginUser, clearErrors, error, user, isAuthenticated } = props;
+	const {
+		loginUser,
+		clearErrors,
+		error,
+		user,
+		isAuthenticated,
+	} = props;
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -53,7 +59,7 @@ const LoginModal = props => {
 	const [dbError, setDbError] = useState('');
 	const [formErrors, setFormErrors] = useState({
 		email: '',
-		password: ''
+		password: '',
 	});
 
 	const onEmailChange = e => {
@@ -61,7 +67,10 @@ const LoginModal = props => {
 		if (e.target.value.match(simpleEmail)) {
 			setFormErrors({ ...formErrors, email: 'ok' });
 		} else {
-			setFormErrors({ ...formErrors, email: 'Please check email address!' });
+			setFormErrors({
+				...formErrors,
+				email: 'Please check email address!',
+			});
 		}
 	};
 
@@ -73,7 +82,7 @@ const LoginModal = props => {
 			setFormErrors({
 				...formErrors,
 				password:
-					'Password requires capital and lowercase letter, a number and a symbol, minimum 8 characters.'
+					'Password requires capital and lowercase letter, a number and a symbol, minimum 8 characters.',
 			});
 		}
 	};
@@ -88,7 +97,7 @@ const LoginModal = props => {
 		setDbError('');
 		setFormErrors({
 			email: '',
-			password: ''
+			password: '',
 		});
 		setOpen(false);
 	};
@@ -105,7 +114,7 @@ const LoginModal = props => {
 		e.preventDefault();
 		const newUser = {
 			email,
-			password
+			password,
 		};
 		loginUser(newUser);
 	};
@@ -147,7 +156,7 @@ const LoginModal = props => {
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -169,7 +178,9 @@ const LoginModal = props => {
 							<TextField
 								required
 								controlled="true"
-								error={!!(formErrors.email && formErrors.email !== 'ok')}
+								error={
+									!!(formErrors.email && formErrors.email !== 'ok')
+								}
 								placeholder="Email"
 								label="Email"
 								id="email"
@@ -188,7 +199,12 @@ const LoginModal = props => {
 							<TextField
 								required
 								controlled="true"
-								error={!!(formErrors.password && formErrors.password !== 'ok')}
+								error={
+									!!(
+										formErrors.password &&
+										formErrors.password !== 'ok'
+									)
+								}
 								placeholder="Password"
 								label="Password"
 								id="password"
@@ -227,13 +243,13 @@ LoginModal.propTypes = {
 	loginUser: PropTypes.func.isRequired,
 	clearErrors: PropTypes.func.isRequired,
 	error: PropTypes.string,
-	isAuthenticated: PropTypes.bool.isRequired
+	isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
 	error: state.auth.error,
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(

@@ -1,49 +1,45 @@
+const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
-const webpack = require('webpack');
-const Merge = require('webpack-merge');
-const CommonConfig = require('./webpack.common.config.js');
-const { prodOutput } = require('./common-paths');
 
-module.exports = Merge(CommonConfig, {
+module.exports = {
 	mode: 'none',
-	output: {
-		path: prodOutput,
-		// publicPath: '/'
-		filename: '[name].[contenthash].js'
-	},
-	stats: 'verbose',
 	devtool: 'source-map',
+	output: {
+		path: path.resolve(__dirname, '../', 'build'),
+		filename: '[name].[contenthash].js',
+	},
 	module: {
 		rules: [
 			{
 				test: /\.s?css$/,
 				use: [
 					{
-						loader: MiniCssExtractPlugin.loader
+						loader: MiniCssExtractPlugin.loader,
 					},
 					{
 						loader: 'css-loader',
 						options: {
 							modules: true,
 							localsConvention: 'camelCase',
-							sourceMap: true
-						}
+							sourceMap: true,
+						},
 					},
 					{
 						loader: 'sass-loader',
-						options: { sourceMap: true }
-					}
-				]
-			}
-		]
+						options: { sourceMap: true },
+					},
+				],
+			},
+		],
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: 'styles/styles.[contenthash].css'
+			filename: 'styles/styles.[contenthash].css',
 		}),
-		new webpack.HashedModuleIdsPlugin() // so that file hashes don't change unexpectedly
+		new webpack.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
 	],
 	optimization: {
 		minimize: true,
@@ -52,10 +48,10 @@ module.exports = Merge(CommonConfig, {
 			new OptimizeCSSAssetsPlugin({
 				cssProcessorOptions: {
 					map: {
-						inline: false
-					}
-				}
-			})
+						inline: false,
+					},
+				},
+			}),
 		],
 		runtimeChunk: 'single',
 		splitChunks: {
@@ -74,10 +70,10 @@ module.exports = Merge(CommonConfig, {
 
 						// npm package names are URL-safe, but some servers don't like @ symbols
 						return `npm.${packageName.replace('@', '')}`;
-					}
-				}
-			}
-		}
+					},
+				},
+			},
+		},
 
 		// splitChunks: {
 		// 	cacheGroups: {
@@ -85,15 +81,15 @@ module.exports = Merge(CommonConfig, {
 		// 			name: 'styles',
 		// 			test: /\.css$/,
 		// 			chunks: 'all',
-		// 			enforce: true
+		// 			enforce: true,
 		// 		},
 		// 		vendor: {
 		// 			chunks: 'initial',
 		// 			test: 'vendor',
 		// 			name: 'vendor',
-		// 			enforce: true
-		// 		}
-		// 	}
-		// }
-	}
-});
+		// 			enforce: true,
+		// 		},
+		// 	},
+		// },
+	},
+};

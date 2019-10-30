@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import titleCase from '../../../config/titleCase';
+import { titleCase } from '../../../config/textFormat';
 import { clearClientItems } from '../../actions/clientsActions';
 import ClientItem from './ClientItem';
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -26,25 +26,25 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
-	}
+		margin: '1vh 0',
+	},
 }));
 
 const PreviousItems = ({ clientItems, clearClientItems }) => {
@@ -68,7 +68,7 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 	};
 
 	return (
-		<Fragment>
+		<>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -78,19 +78,27 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container>
 							{clientItems.name && (
-								<Typography variant="subtitle1" component="h1" align="center">
+								<Typography
+									variant="subtitle1"
+									component="h1"
+									align="center"
+								>
 									{titleCase(clientItems.name)}'s previous items.
 								</Typography>
 							)}
 							{items.length === 0 && (
-								<Typography variant="subtitle1" component="h1" align="center">
+								<Typography
+									variant="subtitle1"
+									component="h1"
+									align="center"
+								>
 									No items invoiced so far...
 								</Typography>
 							)}
@@ -101,14 +109,14 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 					</div>
 				</Fade>
 			</Modal>
-		</Fragment>
+		</>
 	);
 };
 
 PreviousItems.propTypes = {};
 
 const mapStateToProps = state => ({
-	clientItems: state.clients.clientItems
+	clientItems: state.clients.clientItems,
 });
 
 export default connect(

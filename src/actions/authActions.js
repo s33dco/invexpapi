@@ -13,7 +13,7 @@ import {
 	LOGIN_SUCCESS,
 	LOGIN_FAIL,
 	LOGOUT,
-	CLEAR_AUTH_ERRORS
+	CLEAR_AUTH_ERRORS,
 } from './types';
 
 const loadUser = () => async dispatch => {
@@ -27,7 +27,7 @@ const loadUser = () => async dispatch => {
 
 		dispatch({
 			type: USER_LOADED,
-			payload: res.data
+			payload: res.data,
 		});
 		await dispatch(getBusiness());
 		await dispatch(getClients());
@@ -36,7 +36,8 @@ const loadUser = () => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: AUTH_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -44,8 +45,8 @@ const loadUser = () => async dispatch => {
 export const registerUser = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -57,7 +58,7 @@ export const registerUser = formData => async dispatch => {
 
 		dispatch({
 			type: REGISTER_SUCCESS,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(loadUser());
@@ -65,7 +66,8 @@ export const registerUser = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: REGISTER_FAIL,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -73,8 +75,8 @@ export const registerUser = formData => async dispatch => {
 export const loginUser = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -86,7 +88,7 @@ export const loginUser = formData => async dispatch => {
 
 		dispatch({
 			type: LOGIN_SUCCESS,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(loadUser());
@@ -94,14 +96,15 @@ export const loginUser = formData => async dispatch => {
 	} catch (error) {
 		dispatch({
 			type: LOGIN_FAIL,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 
 export const logout = () => async dispatch => {
 	dispatch({
-		type: LOGOUT
+		type: LOGOUT,
 	});
 	await dispatch(clearBusiness());
 	await dispatch(clearClients());
@@ -112,6 +115,6 @@ export const logout = () => async dispatch => {
 
 export const clearErrors = () => async dispatch => {
 	dispatch({
-		type: CLEAR_AUTH_ERRORS
+		type: CLEAR_AUTH_ERRORS,
 	});
 };

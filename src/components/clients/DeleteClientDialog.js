@@ -8,11 +8,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import titleCase from '../../../config/titleCase';
+import { titleCase } from '../../../config/textFormat';
 import {
 	deleteClient,
 	clearDeleteClient,
-	clearClientErrors
+	clearClientErrors,
 } from '../../actions/clientsActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -23,7 +23,7 @@ const DeleteClientDialog = ({
 	deleteClient,
 	clearClientErrors,
 	clearDeleteClient,
-	toDelete
+	toDelete,
 }) => {
 	const [open, setOpen] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
@@ -71,10 +71,13 @@ const DeleteClientDialog = ({
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">Are you sure?</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">
+					Are you sure?
+				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						{titleCase(name)} will be permanently deleted, there is no way back!
+						{titleCase(name)} will be permanently deleted, there is no
+						way back!
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
@@ -95,7 +98,7 @@ const DeleteClientDialog = ({
 DeleteClientDialog.propTypes = {};
 
 const mapStateToProps = state => ({
-	toDelete: state.clients.delete
+	toDelete: state.clients.delete,
 });
 
 export default connect(

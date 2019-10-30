@@ -11,20 +11,23 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addClient, clearClientErrors } from '../../actions/clientsActions';
+import {
+	addClient,
+	clearClientErrors,
+} from '../../actions/clientsActions';
 import {
 	businessName,
 	checkName,
 	checkPhoneNumber,
 	checkPostcode,
-	simpleEmail
+	simpleEmail,
 } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -33,35 +36,40 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
+		margin: '1vh 0',
 	},
 	fab: {
 		margin: theme.spacing(1),
-		padding: theme.spacing(0.5)
+		padding: theme.spacing(0.5),
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(0.25)
-	}
+		marginRight: theme.spacing(0.25),
+	},
 }));
 
-const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
+const AddClient = ({
+	addClient,
+	clearClientErrors,
+	error,
+	clients,
+}) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -74,7 +82,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 		add2: '',
 		add3: '',
 		postCode: '',
-		greeting: ''
+		greeting: '',
 	});
 	const [formErrors, setFormErrors] = useState({
 		name: '0',
@@ -84,7 +92,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 		add2: '1',
 		add3: '1',
 		postCode: '0',
-		greeting: '0'
+		greeting: '0',
 	});
 
 	useEffect(() => {
@@ -112,7 +120,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 			add2: '',
 			add3: '',
 			postCode: '',
-			greeting: ''
+			greeting: '',
 		});
 		setFormErrors({
 			name: '0',
@@ -122,7 +130,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 			add2: '1',
 			add3: '1',
 			postCode: '0',
-			greeting: '0'
+			greeting: '0',
 		});
 	};
 
@@ -169,29 +177,29 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 		}
 		setClient({
 			...client,
-			[e.target.id]: e.target.value
+			[e.target.id]: e.target.value,
 		});
 		if (e.target.id === 'add2' || 'add3') {
 			if (e.target.value === '' || e.target.value.match(regExp)) {
 				setFormErrors({
 					...formErrors,
-					[e.target.id]: '1'
+					[e.target.id]: '1',
 				});
 			} else {
 				setFormErrors({
 					...formErrors,
-					[e.target.id]: message
+					[e.target.id]: message,
 				});
 			}
 		} else if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -226,7 +234,7 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -258,7 +266,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.name.length > 1 ? formErrors.name : ''}
+								helperText={
+									formErrors.name.length > 1 ? formErrors.name : ''
+								}
 							/>
 
 							<TextField
@@ -275,7 +285,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.email.length > 1 ? formErrors.email : ''}
+								helperText={
+									formErrors.email.length > 1 ? formErrors.email : ''
+								}
 							/>
 
 							<TextField
@@ -292,7 +304,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.phone.length > 1 ? formErrors.phone : ''}
+								helperText={
+									formErrors.phone.length > 1 ? formErrors.phone : ''
+								}
 							/>
 
 							<TextField
@@ -309,7 +323,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add1.length > 1 ? formErrors.add1 : ''}
+								helperText={
+									formErrors.add1.length > 1 ? formErrors.add1 : ''
+								}
 							/>
 
 							<TextField
@@ -325,7 +341,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add2.length > 1 ? formErrors.add2 : ''}
+								helperText={
+									formErrors.add2.length > 1 ? formErrors.add2 : ''
+								}
 							/>
 
 							<TextField
@@ -341,7 +359,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add3.length > 1 ? formErrors.add3 : ''}
+								helperText={
+									formErrors.add3.length > 1 ? formErrors.add3 : ''
+								}
 							/>
 
 							<TextField
@@ -359,7 +379,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.postCode.length > 1 ? formErrors.postCode : ''
+									formErrors.postCode.length > 1
+										? formErrors.postCode
+										: ''
 								}
 							/>
 
@@ -378,7 +400,9 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.greeting.length > 1 ? formErrors.greeting : ''
+									formErrors.greeting.length > 1
+										? formErrors.greeting
+										: ''
 								}
 							/>
 
@@ -414,12 +438,12 @@ const AddClient = ({ addClient, clearClientErrors, error, clients }) => {
 AddClient.propTypes = {
 	addClient: PropTypes.func.isRequired,
 	clearClientErrors: PropTypes.func.isRequired,
-	error: PropTypes.string.isRequired
+	error: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
 	clients: state.clients.clients,
-	error: state.clients.error
+	error: state.clients.error,
 });
 
 export default connect(

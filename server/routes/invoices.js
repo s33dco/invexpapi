@@ -11,8 +11,7 @@ const { Invoice, validate } = require('../models/invoice');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const router = express.Router();
-const sentanceCase = require('../../config/sentanceCase');
-const titleCase = require('../../config/titleCase');
+const { sentanceCase, titleCase } = require('../../config/textFormat');
 
 router.get('/', auth, async (req, res) => {
 	try {

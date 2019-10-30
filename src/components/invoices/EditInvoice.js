@@ -18,15 +18,19 @@ import InvoiceItem from './InvoiceItem';
 import {
 	updateInvoice,
 	clearCurrentInvoice,
-	clearInvoiceErrors
+	clearInvoiceErrors,
 } from '../../actions/invoicesActions';
-import { businessName, checkMoney, checkNumber } from '../../../config/regexps';
+import {
+	businessName,
+	checkMoney,
+	checkNumber,
+} from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -35,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	buttonWrapper: {
 		display: 'flex',
@@ -43,43 +47,43 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: 'space-between',
 		margin: theme.spacing(1, 0, 3),
 		padding: theme.spacing(2, 1),
-		borderRadius: theme.spacing(2)
+		borderRadius: theme.spacing(2),
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	heading: {
 		margin: theme.spacing(4, 0, 2),
-		width: '100%'
+		width: '100%',
 	},
 	select: {
 		margin: theme.spacing(2, 0, 0),
-		width: '100%'
+		width: '100%',
 	},
 	datePicker: {
 		margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
+		margin: '1vh 0',
 	},
 	fab: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(1)
-	}
+		marginRight: theme.spacing(1),
+	},
 }));
 
 const EditInvoice = ({
@@ -90,7 +94,7 @@ const EditInvoice = ({
 	clients,
 	invoices,
 	current,
-	business
+	business,
 }) => {
 	const classes = useStyles();
 	const [invoice, setInvoice] = useState({
@@ -103,7 +107,7 @@ const EditInvoice = ({
 		mileage: 0,
 		paid: false,
 		datePaid: '',
-		items: []
+		items: [],
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -111,7 +115,7 @@ const EditInvoice = ({
 		business: '1',
 		client: '1',
 		message: '1',
-		mileage: '1'
+		mileage: '1',
 	});
 	const [record, setRecord] = useState({ id: '' });
 	const [open, setOpen] = useState(false);
@@ -127,7 +131,10 @@ const EditInvoice = ({
 			current.items
 				.map(item => item.id)
 				.map(i => {
-					setErrorInvoice({ ...errorInvoice, [i]: { desc: '1', fee: '1' } });
+					setErrorInvoice({
+						...errorInvoice,
+						[i]: { desc: '1', fee: '1' },
+					});
 				});
 		}
 
@@ -153,7 +160,7 @@ const EditInvoice = ({
 			handleClose();
 		}
 		if (!current) {
-			handleClose()
+			handleClose();
 		}
 	}, [current, inProcess, error, current, hasSent, dbError, open]);
 
@@ -209,7 +216,7 @@ const EditInvoice = ({
 			message: '',
 			mileage: 0,
 			paid: false,
-			datePaid: ''
+			datePaid: '',
 		});
 		setErrorInvoice({
 			invNo: '1',
@@ -219,7 +226,7 @@ const EditInvoice = ({
 			message: '1',
 			mileage: '1',
 			items: '1',
-			datePaid: '1'
+			datePaid: '1',
 		});
 	};
 
@@ -252,7 +259,7 @@ const EditInvoice = ({
 		setHasSent(true);
 		await updateInvoice(record.id, {
 			...invoice,
-			total: parseFloat(total._value).toFixed(2)
+			total: parseFloat(total._value).toFixed(2),
 		});
 	};
 
@@ -260,7 +267,7 @@ const EditInvoice = ({
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
 			...errorInvoice,
-			client: '1'
+			client: '1',
 		});
 	};
 
@@ -308,12 +315,12 @@ const EditInvoice = ({
 		if (e.target.value.match(regExp)) {
 			setErrorInvoice({
 				...errorInvoice,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setErrorInvoice({
 				...errorInvoice,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -324,8 +331,8 @@ const EditInvoice = ({
 			items: [
 				...invoice.items.map(item =>
 					item.id === id ? { ...item, date: e } : item
-				)
-			]
+				),
+			],
 		});
 	};
 
@@ -346,9 +353,11 @@ const EditInvoice = ({
 			...invoice,
 			items: [
 				...invoice.items.map(item =>
-					item.id === id ? { ...item, [e.target.name]: e.target.value } : item
-				)
-			]
+					item.id === id
+						? { ...item, [e.target.name]: e.target.value }
+						: item
+				),
+			],
 		});
 
 		const prevErrors = errorInvoice[id];
@@ -356,12 +365,12 @@ const EditInvoice = ({
 		if (e.target.value.match(regExp) && e.target.value) {
 			setErrorInvoice({
 				...errorInvoice,
-				[id]: { ...prevErrors, [e.target.name]: '1' }
+				[id]: { ...prevErrors, [e.target.name]: '1' },
 			});
 		} else {
 			setErrorInvoice({
 				...errorInvoice,
-				[id]: { ...prevErrors, [e.target.name]: message }
+				[id]: { ...prevErrors, [e.target.name]: message },
 			});
 		}
 	};
@@ -369,7 +378,11 @@ const EditInvoice = ({
 	const deleteItem = id => {
 		setInvoice({
 			...invoice,
-			items: [...invoice.items.filter(item => (item.id === id ? null : item))]
+			items: [
+				...invoice.items.filter(item =>
+					item.id === id ? null : item
+				),
+			],
 		});
 	};
 
@@ -383,17 +396,17 @@ const EditInvoice = ({
 					date: moment().utc(),
 					desc: '',
 					fee: '',
-					id: newId
-				}
-			]
+					id: newId,
+				},
+			],
 		});
 		setErrorInvoice({
 			...errorInvoice,
 			items: '1',
 			[newId]: {
 				desc: '0',
-				fee: '0'
-			}
+				fee: '0',
+			},
 		});
 	};
 
@@ -426,7 +439,7 @@ const EditInvoice = ({
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -460,7 +473,9 @@ const EditInvoice = ({
 								onRadioToggle={onRadioToggle}
 							/>
 
-							<Typography className={classes.heading}>Invoice Items</Typography>
+							<Typography className={classes.heading}>
+								Invoice Items
+							</Typography>
 
 							{invoice.items.map(item => (
 								<InvoiceItem
@@ -522,7 +537,7 @@ const mapStateToProps = state => ({
 	error: state.invoices.error,
 	clients: state.clients.clients,
 	invoices: state.invoices.invoices,
-	business: state.business.business
+	business: state.business.business,
 });
 
 export default connect(

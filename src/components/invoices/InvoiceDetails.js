@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { DatePicker } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import titleCase from '../../../config/titleCase';
+import { titleCase } from '../../../config/textFormat';
 
 const useStyles = makeStyles(theme => ({
 	select: {

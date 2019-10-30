@@ -10,39 +10,49 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { registerUser, clearErrors } from '../../actions/authActions';
-import { checkName, simpleEmail, checkPassword } from '../../../config/regexps';
+import {
+	checkName,
+	simpleEmail,
+	checkPassword,
+} from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
 		padding: theme.spacing(2, 4, 3),
-		width: '80vw'
+		width: '80vw',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
-	}
+		width: '100%',
+	},
 }));
 
 const RegisterModal = props => {
-	const { registerUser, clearErrors, error, user, isAuthenticated } = props;
+	const {
+		registerUser,
+		clearErrors,
+		error,
+		user,
+		isAuthenticated,
+	} = props;
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -56,7 +66,7 @@ const RegisterModal = props => {
 		name: '',
 		email: '',
 		password: '',
-		password2: ''
+		password2: '',
 	});
 
 	const onNameChange = e => {
@@ -64,7 +74,10 @@ const RegisterModal = props => {
 		if (e.target.value.match(checkName)) {
 			setFormErrors({ ...formErrors, name: 'ok' });
 		} else {
-			setFormErrors({ ...formErrors, name: "Your name doesn't look right!" });
+			setFormErrors({
+				...formErrors,
+				name: "Your name doesn't look right!",
+			});
 		}
 	};
 
@@ -73,7 +86,10 @@ const RegisterModal = props => {
 		if (e.target.value.match(simpleEmail)) {
 			setFormErrors({ ...formErrors, email: 'ok' });
 		} else {
-			setFormErrors({ ...formErrors, email: 'Please check email address!' });
+			setFormErrors({
+				...formErrors,
+				email: 'Please check email address!',
+			});
 		}
 	};
 
@@ -85,7 +101,7 @@ const RegisterModal = props => {
 			setFormErrors({
 				...formErrors,
 				password:
-					'Password requires capital and lowercase letter, a number and a symbol, minimum 8 characters.'
+					'Password requires capital and lowercase letter, a number and a symbol, minimum 8 characters.',
 			});
 		}
 	};
@@ -95,7 +111,10 @@ const RegisterModal = props => {
 		if (e.target.value === password) {
 			setFormErrors({ ...formErrors, password2: 'ok' });
 		} else {
-			setFormErrors({ ...formErrors, password2: 'Passwords need to match.' });
+			setFormErrors({
+				...formErrors,
+				password2: 'Passwords need to match.',
+			});
 		}
 	};
 
@@ -111,7 +130,7 @@ const RegisterModal = props => {
 		setDbError('');
 		setFormErrors({
 			email: '',
-			password: ''
+			password: '',
 		});
 		setOpen(false);
 	};
@@ -134,7 +153,7 @@ const RegisterModal = props => {
 		const newUser = {
 			name,
 			email,
-			password
+			password,
 		};
 		registerUser(newUser);
 	};
@@ -175,7 +194,7 @@ const RegisterModal = props => {
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -198,7 +217,9 @@ const RegisterModal = props => {
 							<TextField
 								required
 								controlled="true"
-								error={!!(formErrors.name && formErrors.name !== 'ok')}
+								error={
+									!!(formErrors.name && formErrors.name !== 'ok')
+								}
 								placeholder="Your Name"
 								label="Your Name"
 								id="name"
@@ -217,7 +238,9 @@ const RegisterModal = props => {
 							<TextField
 								required
 								controlled="true"
-								error={!!(formErrors.email && formErrors.email !== 'ok')}
+								error={
+									!!(formErrors.email && formErrors.email !== 'ok')
+								}
 								placeholder="Email Address"
 								label="Email Address"
 								id="email"
@@ -236,7 +259,12 @@ const RegisterModal = props => {
 							<TextField
 								required
 								controlled="true"
-								error={!!(formErrors.password && formErrors.password !== 'ok')}
+								error={
+									!!(
+										formErrors.password &&
+										formErrors.password !== 'ok'
+									)
+								}
 								placeholder="Password"
 								label="Password"
 								id="password"
@@ -256,7 +284,10 @@ const RegisterModal = props => {
 								required
 								controlled="true"
 								error={
-									!!(formErrors.password2 && formErrors.password2 !== 'ok')
+									!!(
+										formErrors.password2 &&
+										formErrors.password2 !== 'ok'
+									)
 								}
 								placeholder="Confirm Password"
 								label="Confirm Password"
@@ -268,7 +299,8 @@ const RegisterModal = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.password2 && formErrors.password2 !== 'ok'
+									formErrors.password2 &&
+									formErrors.password2 !== 'ok'
 										? formErrors.password2
 										: ''
 								}
@@ -296,13 +328,13 @@ RegisterModal.propTypes = {
 	registerUser: PropTypes.func.isRequired,
 	clearErrors: PropTypes.func.isRequired,
 	error: PropTypes.string,
-	isAuthenticated: PropTypes.bool.isRequired
+	isAuthenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
 	error: state.auth.error,
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(

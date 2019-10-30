@@ -12,20 +12,20 @@ const useStyles = makeStyles(theme => ({
 		margin: theme.spacing(1, 0, 3),
 		padding: theme.spacing(2, 1),
 		borderRadius: theme.spacing(2),
-		boxShadow: theme.shadows[2]
+		boxShadow: theme.shadows[2],
 	},
 	datePicker: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		// margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
-	}
+		width: '100%',
+	},
 }));
 
 const InvoiceItem = props => {
@@ -37,7 +37,7 @@ const InvoiceItem = props => {
 		deleteItem,
 		errorInvoice,
 		canSend,
-		invDate
+		invDate,
 	} = props;
 
 	return (
@@ -65,7 +65,10 @@ const InvoiceItem = props => {
 			<TextField
 				controlled="true"
 				required
-				error={errorInvoice[item.id] && errorInvoice[item.id].desc.length > 1}
+				error={
+					errorInvoice[item.id] &&
+					errorInvoice[item.id].desc.length > 1
+				}
 				placeholder="Description"
 				label="Description"
 				id="desc"
@@ -80,7 +83,8 @@ const InvoiceItem = props => {
 				className={classes.textField}
 				margin="normal"
 				helperText={
-					errorInvoice[item.id] && errorInvoice[item.id].desc.length > 1
+					errorInvoice[item.id] &&
+					errorInvoice[item.id].desc.length > 1
 						? errorInvoice[item.id].desc
 						: ''
 				}
@@ -88,7 +92,10 @@ const InvoiceItem = props => {
 			<TextField
 				controlled="true"
 				required
-				error={errorInvoice[item.id] && errorInvoice[item.id].fee.length > 1}
+				error={
+					errorInvoice[item.id] &&
+					errorInvoice[item.id].fee.length > 1
+				}
 				placeholder="Amount"
 				label="Fee"
 				id="fee"
@@ -100,7 +107,8 @@ const InvoiceItem = props => {
 				className={classes.textField}
 				margin="normal"
 				helperText={
-					errorInvoice[item.id] && errorInvoice[item.id].fee.length > 1
+					errorInvoice[item.id] &&
+					errorInvoice[item.id].fee.length > 1
 						? errorInvoice[item.id].fee
 						: ''
 				}

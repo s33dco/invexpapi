@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import numeral from 'numeral';
-import titleCase from '../../../config/titleCase';
+import { titleCase } from '../../../config/textFormat';
 import Selector from './Selector';
 import Charts from './Charts';
 

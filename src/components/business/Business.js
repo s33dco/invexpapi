@@ -15,35 +15,35 @@ import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { updateBusiness } from '../../actions/businessActions';
-import sentanceCase from '../../../config/sentanceCase';
+import { sentanceCase } from '../../../config/textFormat';
 import EditBusiness from './EditBusiness';
 import AddBusiness from './AddBusiness';
 
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%',
-		marginBottom: '2.5vh'
+		marginBottom: '2.5vh',
 	},
 	title: {
 		fontSize: theme.typography.pxToRem(20),
 		fontWeight: theme.typography.fontWeightRegular,
 		marginBottom: '2vh',
 		padding: theme.spacing(1),
-		textTransform: 'capitalize'
+		textTransform: 'capitalize',
 	},
 	heading: {
 		fontSize: theme.typography.pxToRem(15),
 		fontWeight: theme.typography.fontWeightRegular,
-		padding: theme.spacing(1)
+		padding: theme.spacing(1),
 	},
 	info: {
 		display: 'block',
 		fontSize: theme.typography.pxToRem(10),
-		fontWeight: theme.typography.fontWeightRegular
+		fontWeight: theme.typography.fontWeightRegular,
 	},
 	text: {
-		textTransform: 'capitalize'
-	}
+		textTransform: 'capitalize',
+	},
 }));
 
 const Business = ({
@@ -61,15 +61,15 @@ const Business = ({
 		utr,
 		terms,
 		farewell,
-		contact
+		contact,
 	},
-	updateBusiness
+	updateBusiness,
 }) => {
 	const classes = useStyles();
 
 	if (name) {
 		return (
-			<Fragment>
+			<>
 				<Typography
 					className={classes.title}
 					variant="h1"
@@ -95,7 +95,9 @@ const Business = ({
 									<ListItemIcon>
 										<BusinessCenterIcon />
 									</ListItemIcon>
-									<ListItemText className={classes.text}>{name}</ListItemText>
+									<ListItemText className={classes.text}>
+										{name}
+									</ListItemText>
 								</ListItem>
 								<ListItem>
 									<ListItemIcon>
@@ -125,16 +127,22 @@ const Business = ({
 						<ExpansionPanelDetails>
 							<List>
 								<ListItem>
-									<ListItemText className={classes.text}>{add1}</ListItemText>
+									<ListItemText className={classes.text}>
+										{add1}
+									</ListItemText>
 								</ListItem>
 								{add2 && (
 									<ListItem>
-										<ListItemText className={classes.text}>{add2}</ListItemText>
+										<ListItemText className={classes.text}>
+											{add2}
+										</ListItemText>
 									</ListItem>
 								)}
 								{add3 && (
 									<ListItem>
-										<ListItemText className={classes.text}>{add3}</ListItemText>
+										<ListItemText className={classes.text}>
+											{add3}
+										</ListItemText>
 									</ListItem>
 								)}
 								<ListItem>
@@ -186,7 +194,9 @@ const Business = ({
 									</ListItemText>
 								</ListItem>
 								<ListItem>
-									<ListItemText>account number : {accountNo}</ListItemText>
+									<ListItemText>
+										account number : {accountNo}
+									</ListItemText>
 								</ListItem>
 								<ListItem>
 									<ListItemText>sort code : {sortCode}</ListItemText>
@@ -200,7 +210,9 @@ const Business = ({
 							aria-controls="panel5a-content"
 							id="panel5a-header"
 						>
-							<Typography className={classes.heading}>Invoice Terms</Typography>
+							<Typography className={classes.heading}>
+								Invoice Terms
+							</Typography>
 						</ExpansionPanelSummary>
 						<ExpansionPanelDetails>
 							<List>
@@ -216,7 +228,9 @@ const Business = ({
 							aria-controls="panel6a-content"
 							id="panel6a-header"
 						>
-							<Typography className={classes.heading}>Tax Reference</Typography>
+							<Typography className={classes.heading}>
+								Tax Reference
+							</Typography>
 						</ExpansionPanelSummary>
 						<ExpansionPanelDetails>
 							<List>
@@ -228,7 +242,7 @@ const Business = ({
 					</ExpansionPanel>
 				</div>
 				<EditBusiness />
-			</Fragment>
+			</>
 		);
 	}
 	return <AddBusiness />;
@@ -237,7 +251,7 @@ const Business = ({
 Business.propTypes = {};
 
 const mapStateToProps = state => ({
-	business: state.business.business
+	business: state.business.business,
 });
 
 export default connect(

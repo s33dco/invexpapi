@@ -7,8 +7,7 @@ import numeral from 'numeral';
 import 'numeral/locales';
 import Moment from 'react-moment';
 import Typography from '@material-ui/core/Typography';
-import sentanceCase from '../../../config/sentanceCase';
-import titleCase from '../../../config/titleCase';
+import { sentanceCase } from '../../../config/textFormat';
 import {
 	setCurrentInvoice,
 	setDeleteInvoice

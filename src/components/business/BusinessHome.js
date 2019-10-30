@@ -9,7 +9,7 @@ const BusinessHome = ({ business }) => {
 Business.propTypes = {};
 
 const mapStateToProps = state => ({
-	business: state.business.business
+	business: state.business.business,
 });
 
 export default connect(mapStateToProps)(BusinessHome);

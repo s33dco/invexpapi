@@ -25,8 +25,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InvoicePDF from './InvoicePDF';
-import sentanceCase from '../../../config/sentanceCase';
-import titleCase from '../../../config/titleCase';
+import { sentanceCase, titleCase } from '../../../config/textFormat';
 import InvoiceJobItem from './InvoiceJobItem';
 import {
 	setCurrentInvoice,

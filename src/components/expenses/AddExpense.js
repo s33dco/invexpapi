@@ -15,14 +15,17 @@ import { DatePicker } from '@material-ui/pickers';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { addExpense, clearExpenseErrors } from '../../actions/expensesActions';
+import {
+	addExpense,
+	clearExpenseErrors,
+} from '../../actions/expensesActions';
 import { businessName, checkMoney } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -31,40 +34,40 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	select: {
 		margin: theme.spacing(2, 0, 0),
-		width: '100%'
+		width: '100%',
 	},
 	datePicker: {
 		margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
+		margin: '1vh 0',
 	},
 	fab: {
 		margin: theme.spacing(1),
-		padding: theme.spacing(0.5)
+		padding: theme.spacing(0.5),
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(0.25)
-	}
+		marginRight: theme.spacing(0.25),
+	},
 }));
 
 const AddExpense = ({
@@ -72,7 +75,7 @@ const AddExpense = ({
 	clearExpenseErrors,
 	error,
 	expenses,
-	options
+	options,
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -82,13 +85,13 @@ const AddExpense = ({
 		date: moment().utc(),
 		category: '',
 		amount: '',
-		desc: ''
+		desc: '',
 	});
 	const [formErrors, setFormErrors] = useState({
 		date: '1',
 		category: '0',
 		desc: '0',
-		amount: '0'
+		amount: '0',
 	});
 	useEffect(() => {
 		if (error) {
@@ -131,13 +134,13 @@ const AddExpense = ({
 			date: moment(),
 			category: '',
 			amount: '',
-			desc: ''
+			desc: '',
 		});
 		setFormErrors({
 			date: '1',
 			category: '0',
 			amount: '0',
-			desc: '0'
+			desc: '0',
 		});
 	};
 	const canSend = () => {
@@ -153,7 +156,7 @@ const AddExpense = ({
 		e.preventDefault();
 		const formattedData = {
 			...expense,
-			amount: parseFloat(expense.amount).toFixed(2)
+			amount: parseFloat(expense.amount).toFixed(2),
 		};
 		await addExpense(formattedData);
 	};
@@ -163,12 +166,12 @@ const AddExpense = ({
 		if (options.includes(e.target.value)) {
 			setFormErrors({
 				...formErrors,
-				category: '1'
+				category: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				category: 'select an option from list'
+				category: 'select an option from list',
 			});
 		}
 	};
@@ -193,12 +196,12 @@ const AddExpense = ({
 		if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -232,7 +235,7 @@ const AddExpense = ({
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -272,14 +275,22 @@ const AddExpense = ({
 								displayEmpty
 								inputProps={{
 									name: 'category',
-									id: 'category'
+									id: 'category',
 								}}
 							>
-								<MenuItem value="" disabled className={classes.textField}>
+								<MenuItem
+									value=""
+									disabled
+									className={classes.textField}
+								>
 									Choose Category
 								</MenuItem>
 								{options.map(cat => (
-									<MenuItem value={cat} key={cat} className={classes.textField}>
+									<MenuItem
+										value={cat}
+										key={cat}
+										className={classes.textField}
+									>
 										{cat}
 									</MenuItem>
 								))}
@@ -298,7 +309,9 @@ const AddExpense = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.desc.length > 1 ? formErrors.desc : ''}
+								helperText={
+									formErrors.desc.length > 1 ? formErrors.desc : ''
+								}
 							/>
 							<TextField
 								controlled="true"
@@ -315,7 +328,9 @@ const AddExpense = ({
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.amount.length > 1 ? formErrors.amount : ''
+									formErrors.amount.length > 1
+										? formErrors.amount
+										: ''
 								}
 							/>
 							<div>
@@ -342,7 +357,7 @@ AddExpense.propTypes = {};
 const mapStateToProps = state => ({
 	expenses: state.expenses.expenses,
 	error: state.expenses.error,
-	options: state.expenses.categories.selectOptions
+	options: state.expenses.categories,
 });
 
 export default connect(

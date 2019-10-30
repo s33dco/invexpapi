@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
 	updateBusiness,
-	clearBusinessErrors
+	clearBusinessErrors,
 } from '../../actions/businessActions';
 import {
 	businessName,
@@ -30,14 +30,14 @@ import {
 	checkSortcode,
 	checkAccountno,
 	checkUTR,
-	simpleEmail
+	simpleEmail,
 } from '../../../config/regexps'; // regExp's to check fields input against
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -46,35 +46,35 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
+		margin: '1vh 0',
 	},
 	actions: {
 		display: 'flex',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	fab: {
-		margin: theme.spacing(1)
+		margin: theme.spacing(1),
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(1)
-	}
+		marginRight: theme.spacing(1),
+	},
 }));
 
 const EditBusiness = props => {
@@ -88,7 +88,7 @@ const EditBusiness = props => {
 	const [dbError, setDbError] = useState(''); // set form level error
 	const [business, setBusiness] = useState({
 		// set component fields
-		...details
+		...details,
 	});
 	const [formErrors, setFormErrors] = useState({
 		name: '1',
@@ -105,7 +105,7 @@ const EditBusiness = props => {
 		utr: '1',
 		terms: '1',
 		farewell: '1',
-		useMileage: '1'
+		useMileage: '1',
 	});
 
 	useEffect(() => {
@@ -179,17 +179,17 @@ const EditBusiness = props => {
 		}
 		setBusiness({
 			...business,
-			[e.target.id]: e.target.value
+			[e.target.id]: e.target.value,
 		});
 		if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -230,7 +230,7 @@ const EditBusiness = props => {
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -263,7 +263,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.name.length > 1 ? formErrors.name : ''}
+								helperText={
+									formErrors.name.length > 1 ? formErrors.name : ''
+								}
 							/>
 
 							<TextField
@@ -281,7 +283,9 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.contact.length > 1 ? formErrors.contact : ''
+									formErrors.contact.length > 1
+										? formErrors.contact
+										: ''
 								}
 							/>
 
@@ -299,7 +303,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.email.length > 1 ? formErrors.email : ''}
+								helperText={
+									formErrors.email.length > 1 ? formErrors.email : ''
+								}
 							/>
 
 							<TextField
@@ -316,7 +322,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.phone.length > 1 ? formErrors.phone : ''}
+								helperText={
+									formErrors.phone.length > 1 ? formErrors.phone : ''
+								}
 							/>
 
 							<TextField
@@ -333,7 +341,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add1.length > 1 ? formErrors.add1 : ''}
+								helperText={
+									formErrors.add1.length > 1 ? formErrors.add1 : ''
+								}
 							/>
 
 							<TextField
@@ -349,7 +359,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add2.length > 1 ? formErrors.add2 : ''}
+								helperText={
+									formErrors.add2.length > 1 ? formErrors.add2 : ''
+								}
 							/>
 
 							<TextField
@@ -365,7 +377,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add3.length > 1 ? formErrors.add3 : ''}
+								helperText={
+									formErrors.add3.length > 1 ? formErrors.add3 : ''
+								}
 							/>
 
 							<TextField
@@ -383,7 +397,9 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.postCode.length > 1 ? formErrors.postCode : ''
+									formErrors.postCode.length > 1
+										? formErrors.postCode
+										: ''
 								}
 							/>
 
@@ -402,7 +418,9 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.bankName.length > 1 ? formErrors.bankName : ''
+									formErrors.bankName.length > 1
+										? formErrors.bankName
+										: ''
 								}
 							/>
 
@@ -421,7 +439,9 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.accountNo.length > 1 ? formErrors.accountNo : ''
+									formErrors.accountNo.length > 1
+										? formErrors.accountNo
+										: ''
 								}
 							/>
 
@@ -440,7 +460,9 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.sortCode.length > 1 ? formErrors.sortCode : ''
+									formErrors.sortCode.length > 1
+										? formErrors.sortCode
+										: ''
 								}
 							/>
 
@@ -458,7 +480,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.utr.length > 1 ? formErrors.utr : ''}
+								helperText={
+									formErrors.utr.length > 1 ? formErrors.utr : ''
+								}
 							/>
 
 							<TextField
@@ -478,7 +502,9 @@ const EditBusiness = props => {
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.terms.length > 1 ? formErrors.terms : ''}
+								helperText={
+									formErrors.terms.length > 1 ? formErrors.terms : ''
+								}
 							/>
 
 							<TextField
@@ -496,11 +522,16 @@ const EditBusiness = props => {
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.farewell.length > 1 ? formErrors.farewell : ''
+									formErrors.farewell.length > 1
+										? formErrors.farewell
+										: ''
 								}
 							/>
 
-							<FormControl component="fieldset" className={classes.formControl}>
+							<FormControl
+								component="fieldset"
+								className={classes.formControl}
+							>
 								<FormLabel component="legend">
 									Use HMRC simplified mileage ?
 								</FormLabel>
@@ -524,9 +555,10 @@ const EditBusiness = props => {
 									/>
 								</RadioGroup>
 								<FormHelperText>
-									Choosing yes enables miles travelled on a per invoice basis to
-									be tracked, making it easy to work out deductions under the
-									HMRC simplified mileage scheme.{' '}
+									Choosing yes enables miles travelled on a per
+									invoice basis to be tracked, making it easy to work
+									out deductions under the HMRC simplified mileage
+									scheme.{' '}
 								</FormHelperText>
 							</FormControl>
 							<div>
@@ -563,12 +595,12 @@ const EditBusiness = props => {
 
 EditBusiness.propTypes = {
 	updateBusiness: PropTypes.func.isRequired,
-	clearBusinessErrors: PropTypes.func.isRequired
+	clearBusinessErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
 	error: state.business.error,
-	upBus: state.business.business
+	upBus: state.business.business,
 });
 
 export default connect(

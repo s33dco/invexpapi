@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import {
 	updateExpense,
 	clearExpenseErrors,
-	clearCurrentExpense
+	clearCurrentExpense,
 } from '../../actions/expensesActions';
 import { businessName, checkMoney } from '../../../config/regexps';
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -33,33 +33,33 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	select: {
 		margin: theme.spacing(2, 0, 0),
-		width: '100%'
+		width: '100%',
 	},
 	datePicker: {
 		margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
-	}
+		margin: '1vh 0',
+	},
 }));
 
 const EditExpense = ({
@@ -68,7 +68,7 @@ const EditExpense = ({
 	clearExpenseErrors,
 	clearCurrentExpense,
 	error,
-	current
+	current,
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -81,13 +81,13 @@ const EditExpense = ({
 		date: moment().utc(),
 		category: '',
 		amount: '',
-		desc: ''
+		desc: '',
 	});
 	const [formErrors, setFormErrors] = useState({
 		date: '1',
 		category: '1',
 		desc: '1',
-		amount: '1'
+		amount: '1',
 	});
 
 	useEffect(() => {
@@ -145,13 +145,13 @@ const EditExpense = ({
 			date: moment(),
 			category: '',
 			amount: '',
-			desc: ''
+			desc: '',
 		});
 		setFormErrors({
 			date: '1',
 			category: '1',
 			amount: '1',
-			desc: '1'
+			desc: '1',
 		});
 	};
 	const resetFormErrors = async () => {
@@ -178,7 +178,7 @@ const EditExpense = ({
 		e.preventDefault();
 		const formattedData = {
 			...expense,
-			amount: parseFloat(expense.amount).toFixed(2)
+			amount: parseFloat(expense.amount).toFixed(2),
 		};
 		await updateExpense(record.id, formattedData);
 		setHasSent(true);
@@ -189,12 +189,12 @@ const EditExpense = ({
 		if (options.includes(e.target.value)) {
 			setFormErrors({
 				...formErrors,
-				category: '1'
+				category: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				category: 'select an option from list'
+				category: 'select an option from list',
 			});
 		}
 	};
@@ -219,18 +219,18 @@ const EditExpense = ({
 		if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
 
 	return (
-		<Fragment>
+		<>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -240,7 +240,7 @@ const EditExpense = ({
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -277,14 +277,22 @@ const EditExpense = ({
 								displayEmpty
 								inputProps={{
 									name: 'category',
-									id: 'category'
+									id: 'category',
 								}}
 							>
-								<MenuItem value="" disabled className={classes.textField}>
+								<MenuItem
+									value=""
+									disabled
+									className={classes.textField}
+								>
 									Choose Category
 								</MenuItem>
 								{options.map(cat => (
-									<MenuItem value={cat} key={cat} className={classes.textField}>
+									<MenuItem
+										value={cat}
+										key={cat}
+										className={classes.textField}
+									>
 										{cat}
 									</MenuItem>
 								))}
@@ -304,7 +312,9 @@ const EditExpense = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.desc.length > 1 ? formErrors.desc : ''}
+								helperText={
+									formErrors.desc.length > 1 ? formErrors.desc : ''
+								}
 							/>
 							<TextField
 								controlled="true"
@@ -321,7 +331,9 @@ const EditExpense = ({
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.amount.length > 1 ? formErrors.amount : ''
+									formErrors.amount.length > 1
+										? formErrors.amount
+										: ''
 								}
 							/>
 							<div>
@@ -339,7 +351,7 @@ const EditExpense = ({
 					</div>
 				</Fade>
 			</Modal>
-		</Fragment>
+		</>
 	);
 };
 
@@ -348,7 +360,7 @@ EditExpense.propTypes = {};
 const mapStateToProps = state => ({
 	current: state.expenses.current,
 	error: state.expenses.error,
-	options: state.expenses.categories.selectOptions
+	options: state.expenses.categories.selectOptions,
 });
 
 export default connect(

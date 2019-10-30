@@ -6,18 +6,18 @@ import {
 	UPDATE_BUSINESS,
 	BUSINESS_ERROR,
 	CLEAR_BUSINESS,
-	CLEAR_BUSINESS_ERROR
+	CLEAR_BUSINESS_ERROR,
 } from './types';
 
 export const clearBusiness = () => async dispatch => {
 	dispatch({
-		type: CLEAR_BUSINESS
+		type: CLEAR_BUSINESS,
 	});
 };
 
 export const clearBusinessErrors = () => async dispatch => {
 	dispatch({
-		type: CLEAR_BUSINESS_ERROR
+		type: CLEAR_BUSINESS_ERROR,
 	});
 };
 
@@ -26,13 +26,14 @@ export const getBusiness = () => async dispatch => {
 		const res = await axios.get(`${process.env.API_URL}/businesses`);
 		dispatch({
 			type: GET_BUSINESS,
-			payload: res.data
+			payload: res.data,
 		});
 		// }
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 		const message =
 			error.response.data.msg || 'something went wrong - try again';
@@ -44,8 +45,8 @@ export const getBusiness = () => async dispatch => {
 export const addBusiness = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -57,14 +58,15 @@ export const addBusiness = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_BUSINESS,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(setAlert('Business Details Added!', 'info'));
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -72,8 +74,8 @@ export const addBusiness = formData => async dispatch => {
 export const updateBusiness = (id, formData) => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -85,13 +87,14 @@ export const updateBusiness = (id, formData) => async dispatch => {
 
 		dispatch({
 			type: UPDATE_BUSINESS,
-			payload: res.data
+			payload: res.data,
 		});
 		await dispatch(setAlert('Business Details Updated!', 'info'));
 	} catch (error) {
 		dispatch({
 			type: BUSINESS_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };

@@ -14,39 +14,39 @@ import {
 	CLEAR_DELETE_INVOICE,
 	MARK_AS_PAID,
 	MARK_AS_UNPAID,
-	EMAIL_INVOICE
+	EMAIL_INVOICE,
 } from './types';
 
 export const clearInvoices = () => async dispatch => {
 	dispatch({
-		type: CLEAR_INVOICES
+		type: CLEAR_INVOICES,
 	});
 };
 export const clearInvoiceErrors = () => async dispatch => {
 	dispatch({
-		type: CLEAR_INVOICE_ERRORS
+		type: CLEAR_INVOICE_ERRORS,
 	});
 };
 export const setCurrentInvoice = invoice => async dispatch => {
 	dispatch({
 		type: SET_CURRENT_INVOICE,
-		payload: invoice
+		payload: invoice,
 	});
 };
 export const clearCurrentInvoice = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CURRENT_INVOICE
+		type: CLEAR_CURRENT_INVOICE,
 	});
 };
 export const setDeleteInvoice = invoice => async dispatch => {
 	dispatch({
 		type: SET_DELETE_INVOICE,
-		payload: invoice
+		payload: invoice,
 	});
 };
 export const clearDeleteInvoice = () => async dispatch => {
 	dispatch({
-		type: CLEAR_DELETE_INVOICE
+		type: CLEAR_DELETE_INVOICE,
 	});
 };
 export const getInvoices = () => async dispatch => {
@@ -54,12 +54,13 @@ export const getInvoices = () => async dispatch => {
 		const res = await axios.get(`${process.env.API_URL}/invoices`);
 		dispatch({
 			type: GET_INVOICES,
-			payload: res.data
+			payload: res.data,
 		});
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 		const message =
 			error.response.data.msg || 'something went wrong - try again';
@@ -70,8 +71,8 @@ export const getInvoices = () => async dispatch => {
 export const addInvoice = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -83,7 +84,7 @@ export const addInvoice = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_INVOICE,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(setAlert('Invoice Created!', 'info'));
@@ -91,15 +92,17 @@ export const addInvoice = formData => async dispatch => {
 		dispatch({
 			type: INVOICE_ERROR,
 			payload:
-				error.response.data.msg || error.message || 'something went wrong'
+				error.response.data.msg ||
+				error.message ||
+				'something went wrong',
 		});
 	}
 };
 export const updateInvoice = (id, formData) => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -111,21 +114,24 @@ export const updateInvoice = (id, formData) => async dispatch => {
 
 		dispatch({
 			type: UPDATE_INVOICE,
-			payload: res.data
+			payload: res.data,
 		});
-		await dispatch(setAlert(`Invoice ${res.data.invNo} updated!`, 'info'));
+		await dispatch(
+			setAlert(`Invoice ${res.data.invNo} updated!`, 'info')
+		);
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 export const deleteInvoice = id => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -136,22 +142,25 @@ export const deleteInvoice = id => async dispatch => {
 
 		dispatch({
 			type: DELETE_INVOICE,
-			payload: id
+			payload: id,
 		});
 
-		await dispatch(setAlert(`Invoice ${res.data.invNo} deleted`, 'info'));
+		await dispatch(
+			setAlert(`Invoice ${res.data.invNo} deleted`, 'info')
+		);
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 export const payInvoice = id => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -162,23 +171,26 @@ export const payInvoice = id => async dispatch => {
 
 		dispatch({
 			type: MARK_AS_PAID,
-			payload: res.data
+			payload: res.data,
 		});
 
-		await dispatch(setAlert(`Invoice ${res.data.invNo} paid 😃`, 'info'));
+		await dispatch(
+			setAlert(`Invoice ${res.data.invNo} paid 😃`, 'info')
+		);
 	} catch (error) {
 		console.log(error);
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 export const unpayInvoice = id => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -189,24 +201,27 @@ export const unpayInvoice = id => async dispatch => {
 
 		dispatch({
 			type: MARK_AS_UNPAID,
-			payload: res.data
+			payload: res.data,
 		});
 
-		await dispatch(setAlert(`Invoice ${res.data.invNo} unpaid ☹️`, 'info'));
+		await dispatch(
+			setAlert(`Invoice ${res.data.invNo} unpaid ☹️`, 'info')
+		);
 	} catch (error) {
 		console.log(error);
 
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
 export const emailInvoice = (info, file) => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'multipart/form-data'
-		}
+			'Content-type': 'multipart/form-data',
+		},
 	};
 
 	const data = new FormData();
@@ -227,14 +242,17 @@ export const emailInvoice = (info, file) => async dispatch => {
 
 		dispatch({
 			type: EMAIL_INVOICE,
-			payload: res.data
+			payload: res.data,
 		});
 
-		await dispatch(setAlert(`Invoice emailed to ${info.clientName}`, 'info'));
+		await dispatch(
+			setAlert(`Invoice emailed to ${info.clientName}`, 'info')
+		);
 	} catch (error) {
 		dispatch({
 			type: INVOICE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };

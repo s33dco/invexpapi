@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import numeral from 'numeral';
 import Moment from 'react-moment';
-import sentanceCase from '../../../config/sentanceCase';
+import { sentanceCase } from '../../../config/textFormat';
 import 'numeral/locales';
 
 numeral.locale('en-gb');
@@ -13,13 +13,13 @@ numeral.defaultFormat('$0,0.00');
 const useStyles = makeStyles(theme => ({
 	wrapper: {
 		margin: theme.spacing(2, 0),
-		padding: theme.spacing(1)
+		padding: theme.spacing(1),
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
-	}
+		justifyContent: 'space-between',
+	},
 }));
 
 const ClientItem = ({ item }) => {

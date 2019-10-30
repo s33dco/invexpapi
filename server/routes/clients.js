@@ -2,7 +2,7 @@ const express = require('express');
 const logger = require('../startup/logger');
 const auth = require('../middleware/auth');
 const { Client, validate } = require('../models/client');
-const titleCase = require('../../config/titleCase');
+const { titleCase } = require('../../config/textFormat');
 
 const router = express.Router();
 

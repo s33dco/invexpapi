@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
 	addBusiness,
-	clearBusinessErrors
+	clearBusinessErrors,
 } from '../../actions/businessActions';
 import {
 	businessName,
@@ -25,46 +25,46 @@ import {
 	checkSortcode,
 	checkAccountno,
 	checkUTR,
-	simpleEmail
+	simpleEmail,
 } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
 		boxShadow: theme.shadows[5],
 		padding: theme.spacing(2, 4, 3),
-		width: '80vw'
+		width: '80vw',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
-	}
+		margin: '1vh 0',
+	},
 }));
 
 const AddBusiness = ({
 	addBusiness,
 	clearBusinessErrors,
 	error,
-	businessAppState
+	businessAppState,
 }) => {
 	const classes = useStyles();
 	const [disabled, setDisabled] = useState(true);
@@ -83,7 +83,7 @@ const AddBusiness = ({
 		utr: '',
 		terms: '',
 		farewell: '',
-		useMileage: 'false'
+		useMileage: 'false',
 	});
 	const [formErrors, setFormErrors] = useState({
 		name: '0',
@@ -99,7 +99,7 @@ const AddBusiness = ({
 		sortCode: '0',
 		utr: '0',
 		terms: '0',
-		farewell: '0'
+		farewell: '0',
 	});
 
 	useEffect(() => {
@@ -170,17 +170,17 @@ const AddBusiness = ({
 		}
 		setBusiness({
 			...business,
-			[e.target.id]: e.target.value
+			[e.target.id]: e.target.value,
 		});
 		if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -192,8 +192,8 @@ const AddBusiness = ({
 	return (
 		<Container component="form" className={classes.form}>
 			<Typography variant="h5" component="h1" align="center">
-				Add Your Business Details, these will appear on the Invoices and Emails
-				you produce.
+				Add Your Business Details, these will appear on the Invoices
+				and Emails you produce.
 			</Typography>
 			{dbError && (
 				<Typography
@@ -235,7 +235,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.contact.length > 1 ? formErrors.contact : ''}
+				helperText={
+					formErrors.contact.length > 1 ? formErrors.contact : ''
+				}
 			/>
 
 			<TextField
@@ -252,7 +254,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.email.length > 1 ? formErrors.email : ''}
+				helperText={
+					formErrors.email.length > 1 ? formErrors.email : ''
+				}
 			/>
 
 			<TextField
@@ -269,7 +273,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.phone.length > 1 ? formErrors.phone : ''}
+				helperText={
+					formErrors.phone.length > 1 ? formErrors.phone : ''
+				}
 			/>
 
 			<TextField
@@ -335,7 +341,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.postCode.length > 1 ? formErrors.postCode : ''}
+				helperText={
+					formErrors.postCode.length > 1 ? formErrors.postCode : ''
+				}
 			/>
 
 			<TextField
@@ -352,7 +360,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.bankName.length > 1 ? formErrors.bankName : ''}
+				helperText={
+					formErrors.bankName.length > 1 ? formErrors.bankName : ''
+				}
 			/>
 
 			<TextField
@@ -369,7 +379,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.accountNo.length > 1 ? formErrors.accountNo : ''}
+				helperText={
+					formErrors.accountNo.length > 1 ? formErrors.accountNo : ''
+				}
 			/>
 
 			<TextField
@@ -386,7 +398,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.sortCode.length > 1 ? formErrors.sortCode : ''}
+				helperText={
+					formErrors.sortCode.length > 1 ? formErrors.sortCode : ''
+				}
 			/>
 
 			<TextField
@@ -423,7 +437,9 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.terms.length > 1 ? formErrors.terms : ''}
+				helperText={
+					formErrors.terms.length > 1 ? formErrors.terms : ''
+				}
 			/>
 
 			<TextField
@@ -440,11 +456,18 @@ const AddBusiness = ({
 				onBlur={canSend}
 				className={classes.textField}
 				margin="normal"
-				helperText={formErrors.farewell.length > 1 ? formErrors.farewell : ''}
+				helperText={
+					formErrors.farewell.length > 1 ? formErrors.farewell : ''
+				}
 			/>
 
-			<FormControl component="fieldset" className={classes.formControl}>
-				<FormLabel component="legend">Use HMRC simplified mileage ?</FormLabel>
+			<FormControl
+				component="fieldset"
+				className={classes.formControl}
+			>
+				<FormLabel component="legend">
+					Use HMRC simplified mileage ?
+				</FormLabel>
 				<RadioGroup
 					aria-label="useMileage"
 					name="useMileage"
@@ -465,9 +488,9 @@ const AddBusiness = ({
 					/>
 				</RadioGroup>
 				<FormHelperText>
-					Choosing yes enables miles travelled on a per invoice basis to be
-					tracked, making it easy to work out deductions under the HMRC
-					simplified mileage scheme.{' '}
+					Choosing yes enables miles travelled on a per invoice basis
+					to be tracked, making it easy to work out deductions under
+					the HMRC simplified mileage scheme.{' '}
 				</FormHelperText>
 			</FormControl>
 
@@ -500,12 +523,12 @@ const AddBusiness = ({
 };
 
 AddBusiness.propTypes = {
-	addBusiness: PropTypes.func.isRequired
+	addBusiness: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
 	error: state.business.error,
-	businessAppState: state.business.business
+	businessAppState: state.business.business,
 });
 
 export default connect(

@@ -17,7 +17,7 @@ import AddInvoice from '../invoices/AddInvoice';
 import AddExpense from '../expenses/AddExpense';
 import AddClient from '../clients/AddClient';
 import DeleteInvoiceDialog from '../invoices/DeleteInvoiceDialog';
-import DashSummary from './DashSummary'
+import DashSummary from './DashSummary';
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');
@@ -28,14 +28,14 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: 'row',
 		justifyContent: 'space-evenly',
 		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2)
+		marginBottom: theme.spacing(2),
 	},
 	summary: {
 		borderRadius: theme.spacing(1),
 		boxShadow: theme.shadows[1],
 		paddingTop: theme.spacing(2),
 		paddingBottom: theme.spacing(2),
-		marginBottom: theme.spacing(2)
+		marginBottom: theme.spacing(2),
 	},
 }));
 
@@ -54,7 +54,7 @@ const Dashboard = ({
 	invoicesProduced,
 	overdueInvoices,
 	invoices,
-	current
+	current,
 }) => {
 	const classes = useStyles();
 	const [dashBoard, setDashBoard] = useState({
@@ -62,7 +62,7 @@ const Dashboard = ({
 		numberOfClients: undefined,
 		receipts: undefined,
 		deductions: undefined,
-		income: undefined
+		income: undefined,
 	});
 	const totalDeductions = (expenses, mileage) => {
 		return numeral(expenses.value()).add(mileage.value());
@@ -77,14 +77,14 @@ const Dashboard = ({
 		console.log('moneyOut', moneyOut);
 		const income = declaredIncome(receipts, expenses, mileage);
 		console.log('income', income);
-			const dashData = {
-				numberOfInvoices: invoicesProduced,
-				numberOfClients: clients,
-				receipts,
-				deductions: moneyOut,
-				income
-			};
-			setDashBoard(dashData);
+		const dashData = {
+			numberOfInvoices: invoicesProduced,
+			numberOfClients: clients,
+			receipts,
+			deductions: moneyOut,
+			income,
+		};
+		setDashBoard(dashData);
 	};
 
 	useEffect(() => {
@@ -112,11 +112,11 @@ const Dashboard = ({
 		clients,
 		invoicesProduced,
 		overdueInvoices,
-		invoices
+		invoices,
 	]);
 
 	return (
-		<Fragment>
+		<>
 			<Container className={classes.buttonArea}>
 				<AddInvoice />
 				<AddClient />
@@ -137,7 +137,7 @@ const Dashboard = ({
 					<DeleteInvoiceDialog />
 				</Container>
 			)}
-		</Fragment>
+		</>
 	);
 };
 Dashboard.propTypes = {};
@@ -145,7 +145,9 @@ Dashboard.propTypes = {};
 const getTaxYearDates = () => {
 	let taxYearStart;
 	let taxYearEnd;
-	if (moment().utc() < moment(`${moment().year()}-04-05`).endOf('day')) {
+	if (
+		moment().utc() < moment(`${moment().year()}-04-05`).endOf('day')
+	) {
 		const year = moment().year() - 1;
 		taxYearStart = moment(`${year}-04-06`)
 			.utc()
@@ -167,7 +169,9 @@ const getTaxYearDates = () => {
 const filterByTaxYear = data => {
 	const { from, to } = getTaxYearDates();
 	return data.filter(d =>
-		moment(d.date).utc() > from && moment(d.date).utc() < to ? d : null
+		moment(d.date).utc() > from && moment(d.date).utc() < to
+			? d
+			: null
 	);
 };
 const earnedSoFar = data => {
@@ -186,7 +190,9 @@ const expensesTotalPerTaxYear = data => {
 	const { from, to } = getTaxYearDates();
 	return data
 		.filter(d =>
-			moment(d.date).utc() > from && moment(d.date).utc() < to ? d : null
+			moment(d.date).utc() > from && moment(d.date).utc() < to
+				? d
+				: null
 		)
 		.map(inv => inv.amount)
 		.reduce((a, b) => numeral(a).add(b), numeral(0));
@@ -211,7 +217,9 @@ const unPaidByTaxYear = data => {
 	const { from, to } = getTaxYearDates();
 	return data
 		.filter(d =>
-			moment(d.date).utc() > from && moment(d.date).utc() < to ? d : null
+			moment(d.date).utc() > from && moment(d.date).utc() < to
+				? d
+				: null
 		)
 		.filter(inv => (!inv.paid ? inv : null))
 		.sort((a, b) => (a.date > b.date ? 1 : -1));
@@ -229,7 +237,7 @@ const mapStateToProps = state => ({
 	mileage: mileageExpensesByTaxYear(state.invoices.invoices),
 	clients: numberOfClients(filterByTaxYear(state.invoices.invoices)),
 	invoicesProduced: filterByTaxYear(state.invoices.invoices).length,
-	overdueInvoices: unPaidByTaxYear(state.invoices.invoices)
+	overdueInvoices: unPaidByTaxYear(state.invoices.invoices),
 });
 
 export default connect(

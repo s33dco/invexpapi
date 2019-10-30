@@ -18,15 +18,19 @@ import InvoiceItem from './InvoiceItem';
 import {
 	addInvoice,
 	clearInvoiceErrors,
-	clearCurrentInvoice
+	clearCurrentInvoice,
 } from '../../actions/invoicesActions';
-import { businessName, checkMoney, checkNumber } from '../../../config/regexps';
+import {
+	businessName,
+	checkMoney,
+	checkNumber,
+} from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -35,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	buttonWrapper: {
 		display: 'flex',
@@ -43,44 +47,44 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: 'space-between',
 		margin: theme.spacing(1, 0, 3),
 		padding: theme.spacing(2, 1),
-		borderRadius: theme.spacing(2)
+		borderRadius: theme.spacing(2),
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	heading: {
 		margin: theme.spacing(4, 0, 2),
-		width: '100%'
+		width: '100%',
 	},
 	select: {
 		margin: theme.spacing(2, 0, 0),
-		width: '100%'
+		width: '100%',
 	},
 	datePicker: {
 		margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
+		margin: '1vh 0',
 	},
 	fab: {
 		margin: theme.spacing(1),
-		padding: theme.spacing(0.5)
+		padding: theme.spacing(0.5),
 	},
 	extendedIcon: {
-		marginRight: theme.spacing(0.25)
-	}
+		marginRight: theme.spacing(0.25),
+	},
 }));
 
 const AddInvoice = ({
@@ -91,7 +95,7 @@ const AddInvoice = ({
 	invoices,
 	clients,
 	business,
-	lastInv
+	lastInv,
 }) => {
 	const usedInvNos = invoices.map(i => i.invNo);
 	const nextInvNumber = () => (invoices.length > 1 ? lastInv + 1 : 1);
@@ -107,7 +111,7 @@ const AddInvoice = ({
 		items: [],
 		message: '',
 		mileage: 0,
-		paid: false
+		paid: false,
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -115,7 +119,7 @@ const AddInvoice = ({
 		client: '0',
 		message: '0',
 		mileage: '1',
-		items: '0'
+		items: '0',
 	});
 	const { useMileage } = business;
 
@@ -183,9 +187,9 @@ const AddInvoice = ({
 			...invoice,
 			total: parseFloat(total._value).toFixed(2),
 			business: { ...business },
-		}
+		};
 
-		console.log(newInvoice)
+		console.log(newInvoice);
 
 		await addInvoice(newInvoice);
 	};
@@ -198,7 +202,7 @@ const AddInvoice = ({
 			items: [],
 			message: '',
 			mileage: 0,
-			paid: false
+			paid: false,
 		});
 		setErrorInvoice({
 			invNo: '1',
@@ -206,7 +210,7 @@ const AddInvoice = ({
 			client: '0',
 			message: '0',
 			mileage: '1',
-			items: '0'
+			items: '0',
 		});
 	};
 
@@ -230,7 +234,7 @@ const AddInvoice = ({
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
 			...errorInvoice,
-			client: '1'
+			client: '1',
 		});
 	};
 
@@ -271,12 +275,12 @@ const AddInvoice = ({
 		if (e.target.value.match(regExp)) {
 			setErrorInvoice({
 				...errorInvoice,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setErrorInvoice({
 				...errorInvoice,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
@@ -288,8 +292,8 @@ const AddInvoice = ({
 			items: [
 				...invoice.items.map(item =>
 					item.id === id ? { ...item, date: e } : item
-				)
-			]
+				),
+			],
 		});
 	};
 
@@ -310,9 +314,11 @@ const AddInvoice = ({
 			...invoice,
 			items: [
 				...invoice.items.map(item =>
-					item.id === id ? { ...item, [e.target.name]: e.target.value } : item
-				)
-			]
+					item.id === id
+						? { ...item, [e.target.name]: e.target.value }
+						: item
+				),
+			],
 		});
 
 		const prevErrors = errorInvoice[id];
@@ -320,12 +326,12 @@ const AddInvoice = ({
 		if (e.target.value.match(regExp) && e.target.value) {
 			setErrorInvoice({
 				...errorInvoice,
-				[id]: { ...prevErrors, [e.target.name]: '1' }
+				[id]: { ...prevErrors, [e.target.name]: '1' },
 			});
 		} else {
 			setErrorInvoice({
 				...errorInvoice,
-				[id]: { ...prevErrors, [e.target.name]: message }
+				[id]: { ...prevErrors, [e.target.name]: message },
 			});
 		}
 	};
@@ -333,7 +339,11 @@ const AddInvoice = ({
 	const deleteItem = id => {
 		setInvoice({
 			...invoice,
-			items: [...invoice.items.filter(item => (item.id === id ? null : item))]
+			items: [
+				...invoice.items.filter(item =>
+					item.id === id ? null : item
+				),
+			],
 		});
 	};
 
@@ -347,17 +357,17 @@ const AddInvoice = ({
 					date: moment().utc(),
 					desc: '',
 					fee: '',
-					id: newId
-				}
-			]
+					id: newId,
+				},
+			],
 		});
 		setErrorInvoice({
 			...errorInvoice,
 			items: '1',
 			[newId]: {
 				desc: '0',
-				fee: '0'
-			}
+				fee: '0',
+			},
 		});
 	};
 
@@ -397,7 +407,7 @@ const AddInvoice = ({
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
@@ -496,7 +506,7 @@ const mapStateToProps = state => ({
 	lastInv: state.invoices.invoices
 		.map(i => i.invNo)
 		.sort((a, b) => (a > b ? 1 : -1))
-		.pop()
+		.pop(),
 });
 
 export default connect(

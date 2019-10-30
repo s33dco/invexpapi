@@ -11,44 +11,44 @@ import {
 	SET_CURRENT_EXPENSE,
 	CLEAR_CURRENT_EXPENSE,
 	SET_DELETE_EXPENSE,
-	CLEAR_DELETE_EXPENSE
+	CLEAR_DELETE_EXPENSE,
 } from './types';
 
 export const clearExpenses = () => async dispatch => {
 	dispatch({
-		type: CLEAR_EXPENSES
+		type: CLEAR_EXPENSES,
 	});
 };
 
 export const clearExpenseErrors = () => async dispatch => {
 	dispatch({
-		type: CLEAR_EXPENSE_ERRORS
+		type: CLEAR_EXPENSE_ERRORS,
 	});
 };
 
 export const setCurrentExpense = expense => async dispatch => {
 	dispatch({
 		type: SET_CURRENT_EXPENSE,
-		payload: expense
+		payload: expense,
 	});
 };
 
 export const clearCurrentExpense = () => async dispatch => {
 	dispatch({
-		type: CLEAR_CURRENT_EXPENSE
+		type: CLEAR_CURRENT_EXPENSE,
 	});
 };
 
 export const setDeleteExpense = expense => async dispatch => {
 	dispatch({
 		type: SET_DELETE_EXPENSE,
-		payload: expense
+		payload: expense,
 	});
 };
 
 export const clearDeleteExpense = () => async dispatch => {
 	dispatch({
-		type: CLEAR_DELETE_EXPENSE
+		type: CLEAR_DELETE_EXPENSE,
 	});
 };
 
@@ -57,12 +57,13 @@ export const getExpenses = () => async dispatch => {
 		const res = await axios.get(`${process.env.API_URL}/expenses`);
 		dispatch({
 			type: GET_EXPENSES,
-			payload: res.data
+			payload: res.data,
 		});
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 		const message =
 			error.response.data.msg || 'something went wrong - try again';
@@ -74,8 +75,8 @@ export const getExpenses = () => async dispatch => {
 export const addExpense = formData => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -87,14 +88,15 @@ export const addExpense = formData => async dispatch => {
 
 		dispatch({
 			type: ADD_EXPENSE,
-			payload: res.data
+			payload: res.data,
 		});
 
 		await dispatch(setAlert('Expense Created!', 'info'));
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -102,8 +104,8 @@ export const addExpense = formData => async dispatch => {
 export const updateExpense = (id, formData) => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -115,13 +117,14 @@ export const updateExpense = (id, formData) => async dispatch => {
 
 		dispatch({
 			type: UPDATE_EXPENSE,
-			payload: res.data
+			payload: res.data,
 		});
 		await dispatch(setAlert('Expense Updated!', 'info'));
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };
@@ -129,8 +132,8 @@ export const updateExpense = (id, formData) => async dispatch => {
 export const deleteExpense = id => async dispatch => {
 	const config = {
 		headers: {
-			'Content-type': 'application/json'
-		}
+			'Content-type': 'application/json',
+		},
 	};
 
 	try {
@@ -141,14 +144,15 @@ export const deleteExpense = id => async dispatch => {
 
 		dispatch({
 			type: DELETE_EXPENSE,
-			payload: id
+			payload: id,
 		});
 
 		await dispatch(setAlert(res.data.msg, 'info'));
 	} catch (error) {
 		dispatch({
 			type: EXPENSE_ERROR,
-			payload: error.response.data.msg || 'something went wrong - try again'
+			payload:
+				error.response.data.msg || 'something went wrong - try again',
 		});
 	}
 };

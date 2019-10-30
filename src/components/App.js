@@ -1,8 +1,12 @@
-import { hot } from 'react-hot-loader/root';
+// import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import {
+	Switch,
+	BrowserRouter as Router,
+	Route,
+} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import importedComponent from 'react-imported-component';
+// import importedComponent from 'react-imported-component';
 import { Provider } from 'react-redux';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -14,52 +18,14 @@ import Footer from './layout/Footer';
 import Loading from './layout/Loading';
 import PrivateRoute from './PrivateRoute';
 import Home from './home/Home';
-
+import Invoices from './invoices/Invoices';
+import Expenses from './expenses/Expenses';
+import Clients from './clients/Clients';
+import Business from './business/Business';
+import Reports from './reports/Reports';
+import Contact from './contact/Contact';
+import NoMatch from './NoMatch';
 import store from '../store';
-
-const AsyncInvoices = importedComponent(
-	() => import(/* webpackChunkName:'Invoices' */ './invoices/Invoices'),
-	{
-		LoadingComponent: Loading
-	}
-);
-const AsyncExpenses = importedComponent(
-	() => import(/* webpackChunkName:'Expenses' */ './expenses/Expenses'),
-	{
-		LoadingComponent: Loading
-	}
-);
-const AsyncClients = importedComponent(
-	() => import(/* webpackChunkName:'Clients' */ './clients/Clients'),
-	{
-		LoadingComponent: Loading
-	}
-);
-const AsyncReports = importedComponent(
-	() => import(/* webpackChunkName:'Reports' */ './reports/Reports'),
-	{
-		LoadingComponent: Loading
-	}
-);
-
-const AsyncBusiness = importedComponent(
-	() => import(/* webpackChunkName:'Business' */ './business/Business'),
-	{
-		LoadingComponent: Loading
-	}
-);
-const AsyncContact = importedComponent(
-	() => import(/* webpackChunkName:'Contact' */ './contact/Contact'),
-	{
-		LoadingComponent: Loading
-	}
-);
-const AsyncNoMatch = importedComponent(
-	() => import(/* webpackChunkName:'NoMatch' */ './NoMatch'),
-	{
-		LoadingComponent: Loading
-	}
-);
 
 const useStyles = makeStyles(theme => ({
 	body: {
@@ -67,25 +33,25 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: 'column',
 		margin: '0',
 		padding: '0',
-		minHeight: '100vh'
+		minHeight: '100vh',
 	},
 	header: {
-		height: '0'
+		height: '0',
 	},
 	main: {
 		flex: '1',
 		minHeight: '95vh',
-		paddingTop: '60px'
+		paddingTop: '60px',
 	},
 	footer: {
 		flex: '0',
-		padding: '1vh 2.5vw'
+		padding: '1vh 2.5vw',
 	},
 	'@media (min-width: 600px)': {
 		main: {
-			paddingLeft: 152
-		}
-	}
+			paddingLeft: 152,
+		},
+	},
 }));
 
 const App = () => {
@@ -106,22 +72,33 @@ const App = () => {
 								<PrivateRoute
 									exact
 									path="/invoices"
-									component={AsyncInvoices}
+									// component={AsyncInvoices}
+									conponent={Invoices}
 								/>
-								<PrivateRoute exact path="/clients" component={AsyncClients} />
+								<PrivateRoute
+									exact
+									path="/clients"
+									component={Clients}
+								/>
 								<PrivateRoute
 									exact
 									path="/expenses"
-									component={AsyncExpenses}
+									// component={AsyncExpenses}
+									component={Expenses}
 								/>
 								<PrivateRoute
 									exact
 									path="/business"
-									component={AsyncBusiness}
+									// component={AsyncBusiness}
+									component={Business}
 								/>
-								<PrivateRoute exact path="/reports" component={AsyncReports} />
-								<Route exact path="/contact" component={AsyncContact} />
-								<Route component={AsyncNoMatch} />
+								<PrivateRoute
+									exact
+									path="/reports"
+									component={Reports}
+								/>
+								<Route exact path="/contact" component={Contact} />
+								<Route component={NoMatch} />
 							</Switch>
 						</Container>
 						{/* </main> */}
@@ -135,4 +112,4 @@ const App = () => {
 	);
 };
 
-export default hot(App);
+export default App;

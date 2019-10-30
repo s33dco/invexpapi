@@ -10,25 +10,25 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import titleCase from '../../../config/titleCase';
+import { titleCase } from '../../../config/textFormat';
 import {
 	updateClient,
 	clearClientErrors,
-	clearCurrentClient
+	clearCurrentClient,
 } from '../../actions/clientsActions';
 import {
 	businessName,
 	checkName,
 	checkPhoneNumber,
 	checkPostcode,
-	simpleEmail
+	simpleEmail,
 } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
 	modal: {
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -37,25 +37,25 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(2, 4, 3),
 		width: '90vw',
 		maxHeight: '90vh',
-		overflowY: 'auto'
+		overflowY: 'auto',
 	},
 	'@media (min-width: 600px)': {
 		paper: {
-			width: '50vw'
-		}
+			width: '50vw',
+		},
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
+		width: '100%',
 	},
 	form: {
 		margin: '0',
-		width: '100%'
+		width: '100%',
 	},
 	divider: {
-		margin: '1vh 0'
-	}
+		margin: '1vh 0',
+	},
 }));
 
 const EditClient = ({
@@ -63,7 +63,7 @@ const EditClient = ({
 	clearClientErrors,
 	clearCurrentClient,
 	error,
-	current
+	current,
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -80,7 +80,7 @@ const EditClient = ({
 		add2: '',
 		add3: '',
 		postCode: '',
-		greeting: ''
+		greeting: '',
 	});
 	const [formErrors, setFormErrors] = useState({
 		name: '1',
@@ -90,7 +90,7 @@ const EditClient = ({
 		add2: '1',
 		add3: '1',
 		postCode: '1',
-		greeting: '1'
+		greeting: '1',
 	});
 
 	useEffect(() => {
@@ -129,7 +129,7 @@ const EditClient = ({
 			add2: '',
 			add3: '',
 			postCode: '',
-			greeting: ''
+			greeting: '',
 		});
 		setFormErrors({
 			name: '1',
@@ -139,7 +139,7 @@ const EditClient = ({
 			add2: '1',
 			add3: '1',
 			postCode: '1',
-			greeting: '1'
+			greeting: '1',
 		});
 	};
 	const resetFormErrors = async () => {
@@ -196,35 +196,35 @@ const EditClient = ({
 		}
 		setClient({
 			...client,
-			[e.target.id]: e.target.value
+			[e.target.id]: e.target.value,
 		});
 		if (e.target.id === 'add2' || 'add3') {
 			if (e.target.value === '' || e.target.value.match(regExp)) {
 				setFormErrors({
 					...formErrors,
-					[e.target.id]: '1'
+					[e.target.id]: '1',
 				});
 			} else {
 				setFormErrors({
 					...formErrors,
-					[e.target.id]: message
+					[e.target.id]: message,
 				});
 			}
 		} else if (e.target.value.match(regExp)) {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: '1'
+				[e.target.id]: '1',
 			});
 		} else {
 			setFormErrors({
 				...formErrors,
-				[e.target.id]: message
+				[e.target.id]: message,
 			});
 		}
 	};
 
 	return (
-		<Fragment>
+		<>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -234,14 +234,18 @@ const EditClient = ({
 				closeAfterTransition
 				BackdropComponent={Backdrop}
 				BackdropProps={{
-					timeout: 500
+					timeout: 500,
 				}}
 			>
 				<Fade in={open}>
 					<div className={classes.paper}>
 						<Container component="form" className={classes.form}>
 							{current && (
-								<Typography variant="h5" component="h1" align="center">
+								<Typography
+									variant="h5"
+									component="h1"
+									align="center"
+								>
 									Editing {titleCase(current.name)}
 								</Typography>
 							)}
@@ -268,7 +272,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.name.length > 1 ? formErrors.name : ''}
+								helperText={
+									formErrors.name.length > 1 ? formErrors.name : ''
+								}
 							/>
 
 							<TextField
@@ -285,7 +291,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.email.length > 1 ? formErrors.email : ''}
+								helperText={
+									formErrors.email.length > 1 ? formErrors.email : ''
+								}
 							/>
 
 							<TextField
@@ -302,7 +310,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.phone.length > 1 ? formErrors.phone : ''}
+								helperText={
+									formErrors.phone.length > 1 ? formErrors.phone : ''
+								}
 							/>
 
 							<TextField
@@ -319,7 +329,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add1.length > 1 ? formErrors.add1 : ''}
+								helperText={
+									formErrors.add1.length > 1 ? formErrors.add1 : ''
+								}
 							/>
 
 							<TextField
@@ -335,7 +347,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add2.length > 1 ? formErrors.add2 : ''}
+								helperText={
+									formErrors.add2.length > 1 ? formErrors.add2 : ''
+								}
 							/>
 
 							<TextField
@@ -351,7 +365,9 @@ const EditClient = ({
 								onBlur={canSend}
 								className={classes.textField}
 								margin="normal"
-								helperText={formErrors.add3.length > 1 ? formErrors.add3 : ''}
+								helperText={
+									formErrors.add3.length > 1 ? formErrors.add3 : ''
+								}
 							/>
 
 							<TextField
@@ -369,7 +385,9 @@ const EditClient = ({
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.postCode.length > 1 ? formErrors.postCode : ''
+									formErrors.postCode.length > 1
+										? formErrors.postCode
+										: ''
 								}
 							/>
 
@@ -388,7 +406,9 @@ const EditClient = ({
 								className={classes.textField}
 								margin="normal"
 								helperText={
-									formErrors.greeting.length > 1 ? formErrors.greeting : ''
+									formErrors.greeting.length > 1
+										? formErrors.greeting
+										: ''
 								}
 							/>
 
@@ -417,7 +437,7 @@ const EditClient = ({
 					</div>
 				</Fade>
 			</Modal>
-		</Fragment>
+		</>
 	);
 };
 
@@ -425,12 +445,12 @@ EditClient.propTypes = {
 	updateClient: PropTypes.func.isRequired,
 	clearClientErrors: PropTypes.func.isRequired,
 	clearCurrentClient: PropTypes.func.isRequired,
-	error: PropTypes.string.isRequired
+	error: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
 	current: state.clients.current,
-	error: state.clients.error
+	error: state.clients.error,
 });
 
 export default connect(

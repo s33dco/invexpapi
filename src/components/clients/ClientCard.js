@@ -17,12 +17,11 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import sentanceCase from '../../../config/sentanceCase';
-import titleCase from '../../../config/titleCase';
+import { sentanceCase, titleCase } from '../../../config/textFormat';
 import {
 	setCurrentClient,
 	setDeleteClient,
-	getClientItems
+	getClientItems,
 } from '../../actions/clientsActions';
 
 const useStyles = makeStyles(theme => ({
@@ -30,45 +29,45 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 275,
 		borderRadius: theme.spacing(1),
 		boxShadow: theme.shadows[1],
-		marginBottom: theme.spacing(1)
+		marginBottom: theme.spacing(1),
 	},
 	title: {
-		textTransform: 'capitalize'
+		textTransform: 'capitalize',
 	},
 	contact: {
 		marginBottom: 0,
-		verticalAlign: 'center'
+		verticalAlign: 'center',
 	},
 	greeting: {
 		marginBottom: theme.spacing(2, 0),
-		verticalAlign: 'center'
+		verticalAlign: 'center',
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 	invoiceLink: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	address: {
-		textTransfrom: 'capitalize'
+		textTransfrom: 'capitalize',
 	},
 	postCode: {
-		textTransfrom: 'uppercase'
+		textTransfrom: 'uppercase',
 	},
 	expand: {
 		transform: 'rotate(0deg)',
 		marginLeft: 'auto',
 		transition: theme.transitions.create('transform', {
-			duration: theme.transitions.duration.shortest
-		})
+			duration: theme.transitions.duration.shortest,
+		}),
 	},
 	expandOpen: {
-		transform: 'rotate(180deg)'
-	}
+		transform: 'rotate(180deg)',
+	},
 }));
 
 const ClientCard = ({
@@ -76,9 +75,18 @@ const ClientCard = ({
 	invoices,
 	setCurrentClient,
 	setDeleteClient,
-	getClientItems
+	getClientItems,
 }) => {
-	const { name, email, phone, add1, add2, add3, postCode, greeting } = client;
+	const {
+		name,
+		email,
+		phone,
+		add1,
+		add2,
+		add3,
+		postCode,
+		greeting,
+	} = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
 
@@ -88,14 +96,26 @@ const ClientCard = ({
 	return (
 		<Card className={classes.card}>
 			<CardContent>
-				<Typography className={classes.title} variant="h5" component="h2">
+				<Typography
+					className={classes.title}
+					variant="h5"
+					component="h2"
+				>
 					{titleCase(name)}
 				</Typography>
-				<Typography className={classes.contact} variant="h6" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="h6"
+					component="h3"
+				>
 					<PhoneIcon />
 					{phone}
 				</Typography>
-				<Typography className={classes.contact} variant="h6" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="h6"
+					component="h3"
+				>
 					<EmailIcon />
 					{email}
 				</Typography>
@@ -115,7 +135,7 @@ const ClientCard = ({
 				</IconButton>
 				<IconButton
 					className={clsx(classes.expand, {
-						[classes.expandOpen]: expanded
+						[classes.expandOpen]: expanded,
 					})}
 					onClick={handleExpandClick}
 					aria-expanded={expanded}
@@ -187,7 +207,7 @@ const ClientCard = ({
 ClientCard.propTypes = {};
 
 const mapStateToProps = state => ({
-	invoices: state.invoices.invoices
+	invoices: state.invoices.invoices,
 });
 
 export default connect(

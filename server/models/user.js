@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
-const { checkName, checkPassword, simpleEmail } = require('../../config/regexps');
+const {
+	checkName,
+	checkPassword,
+	simpleEmail
+} = require('../../config/regexps');
 
 const userSchema = new mongoose.Schema({
 	name: {

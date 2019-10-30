@@ -15,10 +15,9 @@ import numeral from 'numeral';
 import 'numeral/locales';
 import {
 	setCurrentExpense,
-	setDeleteExpense
+	setDeleteExpense,
 } from '../../actions/expensesActions';
-import sentanceCase from '../../../config/sentanceCase';
-import titleCase from '../../../config/titleCase';
+import { sentanceCase, titleCase } from '../../../config/textFormat';
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');
@@ -28,49 +27,53 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 275,
 		borderRadius: theme.spacing(1),
 		boxShadow: theme.shadows[1],
-		marginBottom: theme.spacing(1)
+		marginBottom: theme.spacing(1),
 	},
 	title: {
-		textTransform: 'capitalize'
+		textTransform: 'capitalize',
 	},
 	contact: {
 		marginBottom: 0,
-		verticalAlign: 'center'
+		verticalAlign: 'center',
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 	invoiceLink: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	header: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 	address: {
-		textTransfrom: 'capitalize'
+		textTransfrom: 'capitalize',
 	},
 	postCode: {
-		textTransfrom: 'uppercase'
+		textTransfrom: 'uppercase',
 	},
 	expand: {
 		transform: 'rotate(0deg)',
 		marginLeft: 'auto',
 		transition: theme.transitions.create('transform', {
-			duration: theme.transitions.duration.shortest
-		})
+			duration: theme.transitions.duration.shortest,
+		}),
 	},
 	expandOpen: {
-		transform: 'rotate(180deg)'
-	}
+		transform: 'rotate(180deg)',
+	},
 }));
 
-const ExpenseCard = ({ expense, setCurrentExpense, setDeleteExpense }) => {
+const ExpenseCard = ({
+	expense,
+	setCurrentExpense,
+	setDeleteExpense,
+}) => {
 	const { date, desc, amount, category } = expense;
 	const classes = useStyles();
 
@@ -78,17 +81,33 @@ const ExpenseCard = ({ expense, setCurrentExpense, setDeleteExpense }) => {
 		<Card className={classes.card}>
 			<CardContent>
 				<div className={classes.header}>
-					<Typography className={classes.title} variant="h5" component="h2">
+					<Typography
+						className={classes.title}
+						variant="h5"
+						component="h2"
+					>
 						<Moment format="Do MMM YYYY">{date}</Moment>
 					</Typography>
-					<Typography className={classes.title} variant="h5" component="h2">
+					<Typography
+						className={classes.title}
+						variant="h5"
+						component="h2"
+					>
 						{numeral(amount).format()}
 					</Typography>
 				</div>
-				<Typography className={classes.contact} variant="body1" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="body1"
+					component="h3"
+				>
 					{titleCase(category)}
 				</Typography>
-				<Typography className={classes.contact} variant="body1" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="body1"
+					component="h3"
+				>
 					{sentanceCase(desc)}
 				</Typography>
 			</CardContent>

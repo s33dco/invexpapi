@@ -8,11 +8,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { sentanceCase } from '../../../config/sentanceCase';
 import {
 	deleteInvoice,
 	clearDeleteInvoice,
-	clearInvoiceErrors
+	clearInvoiceErrors,
 } from '../../actions/invoicesActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -23,7 +22,7 @@ const DeleteInvoiceDialog = ({
 	deleteInvoice,
 	clearInvoiceErrors,
 	clearDeleteInvoice,
-	toDelete
+	toDelete,
 }) => {
 	const [open, setOpen] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
@@ -71,17 +70,21 @@ const DeleteInvoiceDialog = ({
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">Are you sure?</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">
+					Are you sure?
+				</DialogTitle>
 				<DialogContent>
 					{paid ? (
 						<DialogContentText id="alert-dialog-slide-description">
-							Invoice {invNo} is paid and cannot be deleted! If you really want
-							to do this edit the invoice, set paid to false and then delete.
-							The information will be permenantly lost.
+							Invoice {invNo} is paid and cannot be deleted! If you
+							really want to do this edit the invoice, set paid to
+							false and then delete. The information will be
+							permenantly lost.
 						</DialogContentText>
 					) : (
 						<DialogContentText id="alert-dialog-slide-description">
-							Invoice {invNo} will be permanently deleted, there is no way back!
+							Invoice {invNo} will be permanently deleted, there is no
+							way back!
 						</DialogContentText>
 					)}
 				</DialogContent>
@@ -90,7 +93,11 @@ const DeleteInvoiceDialog = ({
 						Keep Invoice
 					</Button>
 					{toDelete && (
-						<Button onClick={requestDelete} disabled={paid} color="primary">
+						<Button
+							onClick={requestDelete}
+							disabled={paid}
+							color="primary"
+						>
 							Delete Invoice
 						</Button>
 					)}
@@ -103,7 +110,7 @@ const DeleteInvoiceDialog = ({
 DeleteInvoiceDialog.propTypes = {};
 
 const mapStateToProps = state => ({
-	toDelete: state.invoices.delete
+	toDelete: state.invoices.delete,
 });
 
 export default connect(

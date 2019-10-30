@@ -8,11 +8,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import sentanceCase from '../../../config/sentanceCase';
+import { sentanceCase } from '../../../config/textFormat';
 import {
 	deleteExpense,
 	clearDeleteExpense,
-	clearExpenseErrors
+	clearExpenseErrors,
 } from '../../actions/expensesActions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -23,7 +23,7 @@ const DeleteExpenseDialog = ({
 	deleteExpense,
 	clearExpenseErrors,
 	clearDeleteExpense,
-	toDelete
+	toDelete,
 }) => {
 	const [open, setOpen] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
@@ -70,11 +70,13 @@ const DeleteExpenseDialog = ({
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">Are you sure?</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">
+					Are you sure?
+				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						This expense, ({sentanceCase(desc)}), will be permanently deleted,
-						there is no way back!
+						This expense, ({sentanceCase(desc)}), will be permanently
+						deleted, there is no way back!
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
@@ -95,7 +97,7 @@ const DeleteExpenseDialog = ({
 DeleteExpenseDialog.propTypes = {};
 
 const mapStateToProps = state => ({
-	toDelete: state.expenses.delete
+	toDelete: state.expenses.delete,
 });
 
 export default connect(
