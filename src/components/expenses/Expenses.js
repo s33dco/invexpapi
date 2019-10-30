@@ -93,7 +93,7 @@ const Expenses = ({ expenses }) => {
 	};
 
 	return (
-		<>
+		<Fragment>
 			<Toolbar
 				className={classes.toolbar}
 				position="static"
@@ -121,7 +121,7 @@ const Expenses = ({ expenses }) => {
 			))}
 			<EditExpense />
 			<DeleteExpenseDialog />
-		</>
+		</Fragment>
 	);
 };
 

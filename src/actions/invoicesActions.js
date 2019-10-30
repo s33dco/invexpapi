@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAlert } from './alertActions';
+import setAlert from './alertActions';
 import {
 	GET_INVOICES,
 	ADD_INVOICE,
@@ -229,6 +229,7 @@ export const emailInvoice = (info, file) => async dispatch => {
 
 	const fields = Object.entries(info);
 
+	// eslint-disable-next-line no-restricted-syntax
 	for (const [name, value] of fields) {
 		data.append(name, value);
 	}

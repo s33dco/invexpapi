@@ -26,6 +26,7 @@
 		"object-shorthand": "off",
 		"class-methods-use-this": "off",
 		"consistent-return": "off",
+		"react/jsx-fragments": "off",
 		"react/jsx-indent": [
 			2,
 			"tab",

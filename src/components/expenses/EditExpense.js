@@ -360,7 +360,7 @@ EditExpense.propTypes = {};
 const mapStateToProps = state => ({
 	current: state.expenses.current,
 	error: state.expenses.error,
-	options: state.expenses.categories.selectOptions,
+	options: state.expenses.categories,
 });
 
 export default connect(

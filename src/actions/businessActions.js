@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAlert } from './alertActions';
+import setAlert from './alertActions';
 import {
 	GET_BUSINESS,
 	ADD_BUSINESS,

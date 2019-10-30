@@ -74,9 +74,7 @@ const Dashboard = ({
 	};
 	const generateDashboard = () => {
 		const moneyOut = totalDeductions(expenses, mileage);
-		console.log('moneyOut', moneyOut);
 		const income = declaredIncome(receipts, expenses, mileage);
-		console.log('income', income);
 		const dashData = {
 			numberOfInvoices: invoicesProduced,
 			numberOfClients: clients,
@@ -116,7 +114,7 @@ const Dashboard = ({
 	]);
 
 	return (
-		<>
+		<Fragment>
 			<Container className={classes.buttonArea}>
 				<AddInvoice />
 				<AddClient />
@@ -137,7 +135,7 @@ const Dashboard = ({
 					<DeleteInvoiceDialog />
 				</Container>
 			)}
-		</>
+		</Fragment>
 	);
 };
 Dashboard.propTypes = {};

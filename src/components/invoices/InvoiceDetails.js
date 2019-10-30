@@ -9,17 +9,17 @@ import { titleCase } from '../../../config/textFormat';
 const useStyles = makeStyles(theme => ({
 	select: {
 		margin: theme.spacing(2, 0, 0),
-		width: '100%'
+		width: '100%',
 	},
 	datePicker: {
 		margin: theme.spacing(2, 0),
-		width: '100%'
+		width: '100%',
 	},
 	textField: {
 		marginLeft: '0',
 		marginRight: '0',
-		width: '100%'
-	}
+		width: '100%',
+	},
 }));
 
 const InvoiceDetails = props => {
@@ -35,7 +35,7 @@ const InvoiceDetails = props => {
 		handleInvoiceNumber,
 		handleDatePaidChange,
 		useMileage,
-		canSend
+		canSend,
 	} = props;
 
 	return (
@@ -49,7 +49,9 @@ const InvoiceDetails = props => {
 				name="invNo"
 				type="text"
 				error={!(errorInvoice.invNo.length === 1)}
-				helperText={errorInvoice.invNo.length > 1 ? errorInvoice.invNo : ''}
+				helperText={
+					errorInvoice.invNo.length > 1 ? errorInvoice.invNo : ''
+				}
 				value={invoice.invNo}
 				onChange={handleInvoiceNumber}
 				className={classes.textField}
@@ -64,7 +66,9 @@ const InvoiceDetails = props => {
 					format="Do MMMM YYYY"
 					animateYearScrolling
 					error={!(errorInvoice.date.length === 1)}
-					helperText={errorInvoice.date.length > 1 ? errorInvoice.date : ''}
+					helperText={
+						errorInvoice.date.length > 1 ? errorInvoice.date : ''
+					}
 				/>
 			</div>
 			<Select
@@ -76,7 +80,7 @@ const InvoiceDetails = props => {
 				displayEmpty
 				inputProps={{
 					name: 'client',
-					id: 'client'
+					id: 'client',
 				}}
 			>
 				{selectedClient ? (
@@ -94,7 +98,11 @@ const InvoiceDetails = props => {
 				)}
 
 				{clients.map(c => (
-					<MenuItem value={c} key={c._id} className={classes.textField}>
+					<MenuItem
+						value={c}
+						key={c._id}
+						className={classes.textField}
+					>
 						{titleCase(c.name)}
 					</MenuItem>
 				))}
@@ -105,7 +113,9 @@ const InvoiceDetails = props => {
 					required
 					error={!(errorInvoice.mileage.length === 1)}
 					helperText={
-						errorInvoice.mileage.length > 1 ? errorInvoice.mileage : ''
+						errorInvoice.mileage.length > 1
+							? errorInvoice.mileage
+							: ''
 					}
 					placeholder="Round number of miles driven"
 					label="Round number of miles driven"
@@ -133,7 +143,9 @@ const InvoiceDetails = props => {
 				className={classes.textField}
 				margin="normal"
 				onBlur={canSend}
-				helperText={errorInvoice.message.length > 1 ? errorInvoice.message : ''}
+				helperText={
+					errorInvoice.message.length > 1 ? errorInvoice.message : ''
+				}
 			/>
 			{invoice.paid && (
 				<div className={classes.datePicker}>

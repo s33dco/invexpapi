@@ -26,7 +26,7 @@ import Contact from './contact/Contact';
 import NoMatch from './NoMatch';
 import store from '../store';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	body: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -71,8 +71,7 @@ const App = () => {
 								<PrivateRoute
 									exact
 									path="/invoices"
-									// component={AsyncInvoices}
-									conponent={Invoices}
+									component={Invoices}
 								/>
 								<PrivateRoute
 									exact

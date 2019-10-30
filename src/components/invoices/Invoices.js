@@ -92,7 +92,7 @@ const Invoices = ({ invoices }) => {
 	};
 
 	return (
-		<>
+		<Fragment>
 			<Toolbar
 				className={classes.toolbar}
 				position="static"
@@ -120,7 +120,7 @@ const Invoices = ({ invoices }) => {
 			))}
 			<EditInvoice />
 			<DeleteInvoiceDialog />
-		</>
+		</Fragment>
 	);
 };
 

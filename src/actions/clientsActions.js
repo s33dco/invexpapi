@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAlert } from './alertActions';
+import setAlert from './alertActions';
 import {
 	GET_CLIENTS,
 	ADD_CLIENT,
@@ -15,7 +15,6 @@ import {
 	GET_CLIENT_ITEMS,
 	CLEAR_CLIENT_ITEMS,
 } from './types';
-import { clearInvoices } from './invoicesActions';
 
 export const clearClients = () => async dispatch => {
 	dispatch({
@@ -167,9 +166,7 @@ export const getClientItems = (
 			.map(i => i.items)
 			.flat(2);
 
-		const orderedJobs = jobs.sort((a, b) =>
-			a.date < b.date ? 1 : -1
-		);
+		jobs.sort((a, b) => (a.date < b.date ? 1 : -1));
 
 		dispatch({
 			type: GET_CLIENT_ITEMS,

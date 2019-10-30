@@ -1,6 +1,6 @@
 {
 	"mongodbURI": "mongodb://localhost:27017/invexpapiprod",
-	"apiURL": "https://s33dinvoice.herokuapp.com/api",
+	"apiURL": "https://localhost:5001/api",
 	"backend_port": 5001,
 	"SENDGRID_API_PASSWORD": "SENDGRID_API_PASSWORD",
 	"jwt_secret": "secret"

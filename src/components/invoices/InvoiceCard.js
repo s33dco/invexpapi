@@ -32,7 +32,7 @@ import {
 	setDeleteInvoice,
 	payInvoice,
 	unpayInvoice,
-	emailInvoice
+	emailInvoice,
 } from '../../actions/invoicesActions';
 
 numeral.locale('en-gb');
@@ -43,46 +43,46 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 275,
 		borderRadius: theme.spacing(1),
 		boxShadow: theme.shadows[1],
-		marginBottom: theme.spacing(1)
+		marginBottom: theme.spacing(1),
 	},
 	title: {
-		textTransform: 'capitalize'
+		textTransform: 'capitalize',
 	},
 	contact: {
 		marginBottom: 0,
-		verticalAlign: 'center'
+		verticalAlign: 'center',
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 	invoiceLink: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	address: {
-		textTransfrom: 'capitalize'
+		textTransfrom: 'capitalize',
 	},
 	postCode: {
-		textTransfrom: 'uppercase'
+		textTransfrom: 'uppercase',
 	},
 	expand: {
 		transform: 'rotate(0deg)',
 		marginLeft: 'auto',
 		transition: theme.transitions.create('transform', {
-			duration: theme.transitions.duration.shortest
-		})
+			duration: theme.transitions.duration.shortest,
+		}),
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 	expandOpen: {
-		transform: 'rotate(180deg)'
-	}
+		transform: 'rotate(180deg)',
+	},
 }));
 
 const InvoiceCard = ({
@@ -91,7 +91,7 @@ const InvoiceCard = ({
 	setDeleteInvoice,
 	payInvoice,
 	unpayInvoice,
-	emailInvoice
+	emailInvoice,
 }) => {
 	const {
 		invNo,
@@ -104,7 +104,7 @@ const InvoiceCard = ({
 		datePaid,
 		greeting,
 		message,
-		_id
+		_id,
 	} = invoice;
 	const { name } = client;
 	const classes = useStyles();
@@ -130,7 +130,7 @@ const InvoiceCard = ({
 			total: invoice.total,
 			fileName: fileName,
 			paid: paid,
-			_id: _id
+			_id: _id,
 		};
 		const blob = await pdf(<InvoicePDF data={invoice} />).toBlob();
 		emailInvoice(info, blob);
@@ -145,17 +145,33 @@ const InvoiceCard = ({
 		<Card className={classes.card}>
 			<CardContent>
 				<div className={classes.buttonArea}>
-					<Typography className={classes.title} variant="h6" component="h2">
+					<Typography
+						className={classes.title}
+						variant="h6"
+						component="h2"
+					>
 						Invoice {invNo}
 					</Typography>
-					<Typography className={classes.contact} variant="h6" component="h2">
+					<Typography
+						className={classes.contact}
+						variant="h6"
+						component="h2"
+					>
 						{numeral(total).format()}
 					</Typography>
 				</div>
-				<Typography className={classes.contact} variant="h6" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="h6"
+					component="h3"
+				>
 					{titleCase(name)}
 				</Typography>
-				<Typography className={classes.contact} variant="body1" component="h3">
+				<Typography
+					className={classes.contact}
+					variant="body1"
+					component="h3"
+				>
 					Invoice Date <Moment format="Do MMM YYYY">{date}</Moment>
 				</Typography>
 				{emailSent ? (
@@ -181,7 +197,8 @@ const InvoiceCard = ({
 						variant="body1"
 						component="h3"
 					>
-						Payment received <Moment format="Do MMM YYYY">{datePaid}</Moment>
+						Payment received{' '}
+						<Moment format="Do MMM YYYY">{datePaid}</Moment>
 					</Typography>
 				) : (
 					<Typography
@@ -220,7 +237,7 @@ const InvoiceCard = ({
 				</IconButton>
 				<IconButton
 					className={clsx(classes.expand, {
-						[classes.expandOpen]: expanded
+						[classes.expandOpen]: expanded,
 					})}
 					onClick={handleExpandClick}
 					aria-expanded={expanded}
@@ -266,6 +283,6 @@ export default connect(
 		setDeleteInvoice,
 		payInvoice,
 		unpayInvoice,
-		emailInvoice
+		emailInvoice,
 	}
 )(InvoiceCard);

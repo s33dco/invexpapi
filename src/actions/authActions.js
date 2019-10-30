@@ -1,6 +1,6 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
-import { setAlert } from './alertActions';
+import setAlert from './alertActions';
 import { clearBusiness, getBusiness } from './businessActions';
 import { clearClients, getClients } from './clientsActions';
 import { clearExpenses, getExpenses } from './expensesActions';

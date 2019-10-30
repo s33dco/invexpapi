@@ -63,6 +63,3 @@ export const EMAIL_INVOICE = 'EMAIL_INVOICE';
 
 export const ADD_INVOICE_DATA = 'ADD_INVOICE_DATA';
 export const ADD_EXPENSE_DATA = 'ADD_EXPENSE_DATA';
-export const CLEAR_REPORT = 'CLEAR_REPORT';
-export const REPORT_ERROR = 'REPORT_ERROR';
-export const REPORT_READY = 'REPORT_READY';

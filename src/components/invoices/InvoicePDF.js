@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import {
+	Page,
+	Text,
+	View,
+	Document,
+	StyleSheet,
+} from '@react-pdf/renderer';
 import moment from 'moment';
 import { sentanceCase, titleCase } from '../../../config/textFormat';
 
@@ -12,7 +18,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		fontSize: '5mm',
 		minHeight: '100%',
-		padding: '2cm'
+		padding: '2cm',
 	},
 	header: {
 		display: 'flex',
@@ -20,20 +26,20 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginBottom: '5mm'
+		marginBottom: '5mm',
 	},
 	number: {
-		fontSize: '10mm'
+		fontSize: '10mm',
 	},
 	dateTotal: {
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	sideBySide: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	addresses: {
 		display: 'flex',
@@ -41,45 +47,45 @@ const styles = StyleSheet.create({
 		fontSize: '4mm',
 		justifyContent: 'space-around',
 		alignItems: 'flex-start',
-		padding: '7.5mm, 0'
+		padding: '7.5mm, 0',
 	},
 	items: {
 		display: 'flex',
 		flexDirection: 'column',
 		flexGrow: '1',
-		justifyContent: 'space-around'
+		justifyContent: 'space-around',
 	},
 	invoiceItem: {
 		padding: '5mm, 0, 0',
 		display: 'flex',
 		flexDirection: 'row',
-		fontSize: '4mm'
+		fontSize: '4mm',
 	},
 	details: {
-		width: '85%'
+		width: '85%',
 	},
 	money: {
-		width: '15%'
+		width: '15%',
 	},
 	aRight: {
 		fontSize: '4mm',
-		textAlign: 'right'
+		textAlign: 'right',
 	},
 	cCenter: {
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	banking: {
 		display: 'flex',
-		flexDirection: 'column'
+		flexDirection: 'column',
 	},
 	payment: {
-		fontSize: '4mm'
+		fontSize: '4mm',
 	},
 
 	withThanks: {
 		fontSize: '7mm',
 		padding: '5mm, 0',
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	footer: {
 		borderTop: '2px #000 solid',
@@ -88,8 +94,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around',
 		alignItems: 'center',
 		padding: '1cm, 0',
-		border: '2mm, solid, black'
-	}
+		border: '2mm, solid, black',
+	},
 });
 
 const InvoicePDF = props => {
@@ -101,7 +107,7 @@ const InvoicePDF = props => {
 		items,
 		paid,
 		datePaid,
-		total
+		total,
 	} = props.data;
 
 	return (
@@ -138,8 +144,12 @@ const InvoicePDF = props => {
 							<View>
 								<Text>{titleCase(business.name)}</Text>
 								<Text>{titleCase(business.add1)}</Text>
-								{business.add2 && <Text>{titleCase(business.add2)}</Text>}
-								{business.add3 && <Text>{titleCase(business.add3)}</Text>}
+								{business.add2 && (
+									<Text>{titleCase(business.add2)}</Text>
+								)}
+								{business.add3 && (
+									<Text>{titleCase(business.add3)}</Text>
+								)}
 								<Text>{business.postCode}</Text>
 							</View>
 						</View>
@@ -148,7 +158,9 @@ const InvoicePDF = props => {
 							{items.map(item => (
 								<View key={item.id} style={styles.invoiceItem}>
 									<View style={styles.details}>
-										<Text>{moment(item.date).format('dddd Do MMMM YYYY')}</Text>
+										<Text>
+											{moment(item.date).format('dddd Do MMMM YYYY')}
+										</Text>
 										<Text>{sentanceCase(item.desc)}</Text>
 									</View>
 
@@ -163,7 +175,8 @@ const InvoicePDF = props => {
 						<View style={styles.withThanks}>
 							{paid && (
 								<Text style={styles.movieTitle}>
-									Received with thanks {moment(datePaid).format('Do MMMM YYYY')}
+									Received with thanks{' '}
+									{moment(datePaid).format('Do MMMM YYYY')}
 								</Text>
 							)}
 						</View>
@@ -172,10 +185,12 @@ const InvoicePDF = props => {
 							<View style={styles.payment}>
 								<Text style={styles.cCenter}>Payment Details.</Text>
 								<Text style={styles.cCenter}>
-									{titleCase(business.bankName)}, account {business.accountNo},
-									sortcode : {business.sortCode}
+									{titleCase(business.bankName)}, account{' '}
+									{business.accountNo}, sortcode : {business.sortCode}
 								</Text>
-								<Text style={styles.cCenter}>UTR : {business.utr}</Text>
+								<Text style={styles.cCenter}>
+									UTR : {business.utr}
+								</Text>
 							</View>
 							<View style={styles.payment}>
 								<Text style={styles.cCenter}>
@@ -186,7 +201,8 @@ const InvoicePDF = props => {
 
 						<View style={styles.footer}>
 							<Text>
-								{titleCase(business.contact)} {business.phone} {business.email}
+								{titleCase(business.contact)} {business.phone}{' '}
+								{business.email}
 							</Text>
 						</View>
 					</Fragment>
