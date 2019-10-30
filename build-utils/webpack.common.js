@@ -1,7 +1,7 @@
+const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
 const getValue = require('config');
 
 const apiURL = getValue.get('apiURL');
@@ -10,8 +10,8 @@ module.exports = {
 	entry: './src/index.js',
 	node: {
 		net: 'empty',
-		tls: 'empty',
-		dns: 'empty',
+		// tls: 'empty',
+		// dns: 'empty',
 	},
 	module: {
 		rules: [

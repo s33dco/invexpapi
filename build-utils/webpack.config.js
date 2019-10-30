@@ -2,8 +2,8 @@
 /* eslint-disable import/no-dynamic-require */
 
 const webpackMerge = require('webpack-merge');
-
 const commonConfig = require('./webpack.common.js');
+const logger = require('../server/startup/logger');
 
 const getAddons = addonsArgs => {
 	const addons = Array.isArray(addonsArgs)
@@ -16,6 +16,7 @@ const getAddons = addonsArgs => {
 };
 
 module.exports = ({ env, addon }) => {
+	logger.info(`** building for ${env}... **`);
 	const envConfig = require(`./webpack.${env}.js`);
 
 	return webpackMerge(commonConfig, envConfig, ...getAddons(addon));

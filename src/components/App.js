@@ -15,7 +15,6 @@ import Container from '@material-ui/core/Container';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
 import Footer from './layout/Footer';
-import Loading from './layout/Loading';
 import PrivateRoute from './PrivateRoute';
 import Home from './home/Home';
 import Invoices from './invoices/Invoices';

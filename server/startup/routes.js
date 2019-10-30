@@ -16,14 +16,14 @@ const invoices = require('../routes/invoices');
 const initialize = app => {
 	const corsOptions = {
 		origin: config.get('frontendURL'),
-		optionsSuccessStatus: 200
+		optionsSuccessStatus: 200,
 	};
 
 	const middlewares = [
 		morgan('dev', { stream: logger.stream }),
 		express.json({ extended: false }),
 		cors(corsOptions),
-		removeEmptyProperties()
+		removeEmptyProperties(),
 	];
 
 	app.use(middlewares);
@@ -42,12 +42,16 @@ const initialize = app => {
 	if (config.util.getEnv('NODE_ENV') === 'production') {
 		app.use(express.static('build'));
 		app.get('*', (req, res) => {
-			res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+			res.sendFile(
+				path.resolve(__dirname, '../', '../', 'build', 'index.html')
+			);
 		});
 	} else {
 		app.use(express.static('dev'));
 		app.get('*', (req, res) => {
-			res.sendFile(path.resolve(__dirname, 'dev', 'index.html'));
+			res.sendFile(
+				path.resolve(__dirname, '../', '../', 'dev', 'index.html')
+			);
 		});
 	}
 };
