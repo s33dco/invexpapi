@@ -12,14 +12,14 @@ import {
 	DELETE_INVOICE,
 	MARK_AS_PAID,
 	MARK_AS_UNPAID,
-	EMAIL_INVOICE
+	EMAIL_INVOICE,
 } from '../actions/types';
 
 const initialState = {
 	invoices: [],
 	current: '',
 	delete: '',
-	error: ''
+	error: '',
 };
 
 export default (state = initialState, action) => {
@@ -27,32 +27,32 @@ export default (state = initialState, action) => {
 		case GET_INVOICES:
 			return {
 				...state,
-				invoices: [...action.payload]
+				invoices: [...action.payload],
 			};
 		case ADD_INVOICE:
 			return {
 				...state,
-				invoices: [...state.invoices, action.payload]
+				invoices: [...state.invoices, action.payload],
 			};
 		case INVOICE_ERROR:
 			return {
 				...state,
-				error: action.payload
+				error: action.payload,
 			};
 		case CLEAR_INVOICE_ERRORS:
 			return {
 				...state,
-				error: ''
+				error: '',
 			};
 		case SET_CURRENT_INVOICE:
 			return {
 				...state,
-				current: action.payload
+				current: action.payload,
 			};
 		case CLEAR_CURRENT_INVOICE:
 			return {
 				...state,
-				current: ''
+				current: '',
 			};
 		case UPDATE_INVOICE:
 		case MARK_AS_PAID:
@@ -62,22 +62,24 @@ export default (state = initialState, action) => {
 				...state,
 				invoices: state.invoices.map(inv =>
 					inv._id === action.payload._id ? action.payload : inv
-				)
+				),
 			};
 		case SET_DELETE_INVOICE:
 			return {
 				...state,
-				delete: action.payload
+				delete: action.payload,
 			};
 		case CLEAR_DELETE_INVOICE:
 			return {
 				...state,
-				delete: ''
+				delete: '',
 			};
 		case DELETE_INVOICE:
 			return {
 				...state,
-				invoices: state.invoices.filter(exp => exp._id !== action.payload)
+				invoices: state.invoices.filter(
+					exp => exp._id !== action.payload
+				),
 			};
 		case CLEAR_INVOICES:
 			return {
@@ -85,7 +87,7 @@ export default (state = initialState, action) => {
 				invoices: [],
 				error: '',
 				current: '',
-				delete: ''
+				delete: '',
 			};
 		default:
 			return state;

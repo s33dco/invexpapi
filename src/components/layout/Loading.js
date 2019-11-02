@@ -5,8 +5,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
 	progress: {
-		margin: theme.spacing(2)
-	}
+		margin: theme.spacing(2),
+	},
 }));
 
 const Loader = () => {

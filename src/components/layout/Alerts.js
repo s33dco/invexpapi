@@ -1,16 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Fade from '@material-ui/core/Fade';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles(() => ({
 	root: {
 		padding: '1vh 1vw',
-		marginBottom: '2.5vh'
+		marginBottom: '2.5vh',
 		// background: '#4caf50'
-	}
+	},
 }));
 
 const Alerts = ({ alerts }) => {
@@ -29,7 +28,7 @@ const Alerts = ({ alerts }) => {
 };
 
 const mapStateToProps = state => ({
-	alerts: state.alert
+	alerts: state.alert,
 });
 
 export default connect(mapStateToProps)(Alerts);

@@ -5,7 +5,6 @@ import businessReducer from './businessReducer';
 import clientsReducer from './clientsReducer';
 import expensesReducer from './expensesReducer';
 import invoicesReducer from './invoicesReducer';
-import reportsReducer from './reportsReducer';
 
 export default combineReducers({
 	auth: authReducer,
@@ -14,5 +13,4 @@ export default combineReducers({
 	clients: clientsReducer,
 	expenses: expensesReducer,
 	invoices: invoicesReducer,
-	reports: reportsReducer
 });

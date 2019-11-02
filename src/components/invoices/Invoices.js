@@ -124,7 +124,56 @@ const Invoices = ({ invoices }) => {
 	);
 };
 
-Invoices.propTypes = {};
+Invoices.propTypes = {
+	invoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+			items: PropTypes.arrayOf(
+				PropTypes.shape({
+					date: PropTypes.string.isRequired,
+					desc: PropTypes.string.isRequired,
+					fee: PropTypes.string.isRequired,
+					id: PropTypes.string.isRequired,
+				})
+			),
+		})
+	).isRequired,
+};
 
 const mapStateToProps = state => ({
 	invoices: state.invoices.invoices,

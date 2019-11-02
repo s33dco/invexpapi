@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -90,6 +92,15 @@ const EditBusiness = props => {
 		// set component fields
 		...details,
 	});
+
+	const handleOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+
 	const [formErrors, setFormErrors] = useState({
 		name: '1',
 		contact: '1', // set field level error state,
@@ -196,14 +207,6 @@ const EditBusiness = props => {
 
 	const onRadioToggle = e => {
 		setBusiness({ ...business, [e.target.name]: e.target.value });
-	};
-
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
 	};
 
 	return (
@@ -596,6 +599,24 @@ const EditBusiness = props => {
 EditBusiness.propTypes = {
 	updateBusiness: PropTypes.func.isRequired,
 	clearBusinessErrors: PropTypes.func.isRequired,
+	upBus: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		bankName: PropTypes.string.isRequired,
+		accountNo: PropTypes.string.isRequired,
+		sortCode: PropTypes.string.isRequired,
+		utr: PropTypes.string.isRequired,
+		terms: PropTypes.string.isRequired,
+		farewell: PropTypes.string.isRequired,
+		contact: PropTypes.string.isRequired,
+	}),
+	error: PropTypes.string,
 };
 
 const mapStateToProps = state => ({

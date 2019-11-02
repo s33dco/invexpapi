@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -94,7 +96,18 @@ const DeleteExpenseDialog = ({
 	);
 };
 
-DeleteExpenseDialog.propTypes = {};
+DeleteExpenseDialog.propTypes = {
+	deleteExpense: PropTypes.func.isRequired,
+	clearExpenseErrors: PropTypes.func.isRequired,
+	clearDeleteExpense: PropTypes.func.isRequired,
+	toDelete: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		category: PropTypes.string.isRequired,
+		amount: PropTypes.string.isRequired,
+		desc: PropTypes.string.isRequired,
+	}).isRequired,
+};
 
 const mapStateToProps = state => ({
 	toDelete: state.expenses.delete,

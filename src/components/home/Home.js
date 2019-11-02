@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -15,6 +16,10 @@ const Home = ({ isAuthenticated, user, token }) => {
 Home.propTypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
 	token: PropTypes.string,
+	user: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	}),
 };
 
 const mapStateToProps = state => ({

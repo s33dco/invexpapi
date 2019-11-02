@@ -1,9 +1,9 @@
+/* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import { saveAs } from 'file-saver';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,19 +13,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import EmailIcon from '@material-ui/icons/Email';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GetApp from '@material-ui/icons/GetApp';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import clsx from 'clsx';
 import numeral from 'numeral';
 import 'numeral/locales';
 import Moment from 'react-moment';
-import { pdf, BlobProvider } from '@react-pdf/renderer';
-import CardHeader from '@material-ui/core/CardHeader';
+import { pdf } from '@react-pdf/renderer';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InvoicePDF from './InvoicePDF';
-import { sentanceCase, titleCase } from '../../../config/textFormat';
+import { titleCase } from '../../../config/textFormat';
 import InvoiceJobItem from './InvoiceJobItem';
 import {
 	setCurrentInvoice,
@@ -75,11 +72,6 @@ const useStyles = makeStyles(theme => ({
 			duration: theme.transitions.duration.shortest,
 		}),
 	},
-	buttonArea: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-	},
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
@@ -102,20 +94,15 @@ const InvoiceCard = ({
 		items,
 		emailSent,
 		datePaid,
-		greeting,
-		message,
 		_id,
 	} = invoice;
 	const { name } = client;
 	const classes = useStyles();
 	const [expanded, setExpanded] = useState(false);
-	const [file, setFile] = useState(null);
 	const fileName = `Invoice${invNo}.pdf`;
-
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 	};
-
 	const sendInvoiceToEmail = async invoice => {
 		const info = {
 			to: invoice.client.email,
@@ -135,12 +122,10 @@ const InvoiceCard = ({
 		const blob = await pdf(<InvoicePDF data={invoice} />).toBlob();
 		emailInvoice(info, blob);
 	};
-
 	const downloadInvoice = async invoice => {
 		const doc = await pdf(<InvoicePDF data={invoice} />).toBlob();
 		saveAs(doc, `${fileName}`);
 	};
-
 	return (
 		<Card className={classes.card}>
 			<CardContent>
@@ -257,7 +242,7 @@ const InvoiceCard = ({
 						className={classes.invoiceLink}
 						onClick={() => payInvoice(_id)}
 					>
-						<Button size="small" colot="primary">
+						<Button size="small" color="primary">
 							mark as paid
 						</Button>
 					</CardActions>
@@ -266,7 +251,7 @@ const InvoiceCard = ({
 						className={classes.invoiceLink}
 						onClick={() => unpayInvoice(_id)}
 					>
-						<Button size="small" colot="primary">
+						<Button size="small" color="primary">
 							mark as unpaid
 						</Button>
 					</CardActions>
@@ -274,6 +259,62 @@ const InvoiceCard = ({
 			</Collapse>
 		</Card>
 	);
+};
+
+InvoiceCard.propTypes = {
+	setCurrentInvoice: PropTypes.func.isRequired,
+	setDeleteInvoice: PropTypes.func.isRequired,
+	payInvoice: PropTypes.func.isRequired,
+	unpayInvoice: PropTypes.func.isRequired,
+	emailInvoice: PropTypes.func.isRequired,
+	invoice: PropTypes.shape({
+		invNo: PropTypes.number.isRequired,
+		mileage: PropTypes.number,
+		message: PropTypes.string.isRequired,
+		total: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		paid: PropTypes.bool.isRequired,
+		datePaid: PropTypes.string,
+		emailSent: PropTypes.string,
+		client: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		}).isRequired,
+		business: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			bankName: PropTypes.string.isRequired,
+			accountNo: PropTypes.string.isRequired,
+			sortCode: PropTypes.string.isRequired,
+			utr: PropTypes.string.isRequired,
+			terms: PropTypes.string.isRequired,
+			farewell: PropTypes.string.isRequired,
+			contact: PropTypes.string.isRequired,
+			useMileage: PropTypes.bool.isRequired,
+		}).isRequired,
+		items: PropTypes.arrayOf(
+			PropTypes.shape({
+				date: PropTypes.string.isRequired,
+				desc: PropTypes.string.isRequired,
+				fee: PropTypes.string.isRequired,
+				id: PropTypes.string.isRequired,
+			})
+		).isRequired,
+	}).isRequired,
 };
 
 export default connect(

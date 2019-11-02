@@ -1,3 +1,6 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -95,20 +98,13 @@ const AddClient = ({
 		greeting: '0',
 	});
 
-	useEffect(() => {
-		if (error) {
-			// if api error
-			setDbError('Please take another look...'); // set form level error
-			setFormErrors({ ...formErrors, email: error }); // set field level error
-			clearClientErrors(); // clear api level error
-		}
-		if (!error && !dbError && !disabled) {
-			// no api or form errors and form enabled
-			clearForm();
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, clients]); // check for changes from api, api error and change in record being updated
+	const handleOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	const clearForm = () => {
 		setDisabled(true);
@@ -133,6 +129,21 @@ const AddClient = ({
 			greeting: '0',
 		});
 	};
+
+	useEffect(() => {
+		if (error) {
+			// if api error
+			setDbError('Please take another look...'); // set form level error
+			setFormErrors({ ...formErrors, email: error }); // set field level error
+			clearClientErrors(); // clear api level error
+		}
+		if (!error && !dbError && !disabled) {
+			// no api or form errors and form enabled
+			clearForm();
+			handleClose();
+		}
+		// eslint - disable - next - line;
+	}, [error, clients]); // check for changes from api, api error and change in record being updated
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
@@ -202,14 +213,6 @@ const AddClient = ({
 				[e.target.id]: message,
 			});
 		}
-	};
-
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
 	};
 
 	return (
@@ -439,6 +442,19 @@ AddClient.propTypes = {
 	addClient: PropTypes.func.isRequired,
 	clearClientErrors: PropTypes.func.isRequired,
 	error: PropTypes.string.isRequired,
+	clients: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		})
+	),
 };
 
 const mapStateToProps = state => ({

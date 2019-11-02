@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -93,19 +95,23 @@ const AddExpense = ({
 		desc: '0',
 		amount: '0',
 	});
-	useEffect(() => {
-		if (error) {
-			// if api error
-			setDbError(error); // set form level error
-			dealWithError(error); // set form level errors
-			clearExpenseErrors(); // clear api level error
-		}
-		if (!error && !dbError && !disabled) {
-			// no api or form errors and form enabled
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, expenses]); // check for changes from api, api error and change in record being updated
+
+	const clearForm = () => {
+		setDisabled(true);
+		setExpense({
+			date: moment(),
+			category: '',
+			amount: '',
+			desc: '',
+		});
+		setFormErrors({
+			date: '1',
+			category: '0',
+			amount: '0',
+			desc: '0',
+		});
+	};
+
 	const dealWithError = error => {
 		const desc = /desc/;
 		const amount = /amount/;
@@ -128,21 +134,27 @@ const AddExpense = ({
 				clearForm();
 		}
 	};
-	const clearForm = () => {
-		setDisabled(true);
-		setExpense({
-			date: moment(),
-			category: '',
-			amount: '',
-			desc: '',
-		});
-		setFormErrors({
-			date: '1',
-			category: '0',
-			amount: '0',
-			desc: '0',
-		});
+
+	const handleClose = () => {
+		setOpen(false);
+		setDbError('');
+		clearForm();
 	};
+
+	useEffect(() => {
+		if (error) {
+			// if api error
+			setDbError(error); // set form level error
+			dealWithError(error); // set form level errors
+			clearExpenseErrors(); // clear api level error
+		}
+		if (!error && !dbError && !disabled) {
+			// no api or form errors and form enabled
+			handleClose();
+		}
+		// eslint - disable - next - line;
+	}, [error, expenses]); // check for changes from api, api error and change in record being updated
+
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			// if no field level errors
@@ -208,11 +220,7 @@ const AddExpense = ({
 	const handleOpen = () => {
 		setOpen(true);
 	};
-	const handleClose = () => {
-		setOpen(false);
-		setDbError('');
-		clearForm();
-	};
+
 	return (
 		<div>
 			<Fab
@@ -352,7 +360,21 @@ const AddExpense = ({
 	);
 };
 
-AddExpense.propTypes = {};
+AddExpense.propTypes = {
+	addExpense: PropTypes.func.isRequired,
+	clearExpenseErrors: PropTypes.func.isRequired,
+	error: PropTypes.string,
+	expenses: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			category: PropTypes.string.isRequired,
+			amount: PropTypes.string.isRequired,
+			desc: PropTypes.string.isRequired,
+		})
+	),
+	options: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 const mapStateToProps = state => ({
 	expenses: state.expenses.expenses,

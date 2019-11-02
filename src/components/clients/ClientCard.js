@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,12 +14,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
 import clsx from 'clsx';
-import CardHeader from '@material-ui/core/CardHeader';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { sentanceCase, titleCase } from '../../../config/textFormat';
+import { titleCase } from '../../../config/textFormat';
 import {
 	setCurrentClient,
 	setDeleteClient,
@@ -204,7 +204,61 @@ const ClientCard = ({
 	);
 };
 
-ClientCard.propTypes = {};
+ClientCard.propTypes = {
+	client: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		greeting: PropTypes.string.isRequired,
+	}).isRequired,
+	invoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+			}),
+		})
+	),
+	setCurrentClient: PropTypes.func.isRequired,
+	setDeleteClient: PropTypes.func.isRequired,
+	getClientItems: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
 	invoices: state.invoices.invoices,

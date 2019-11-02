@@ -1,9 +1,9 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import numeral from 'numeral';
 
 numeral.locale('en-gb');
@@ -13,8 +13,6 @@ const useStyles = makeStyles(theme => ({
 	summary: {
 		margin: '0',
 		padding: '0',
-	},
-	summary: {
 		borderRadius: theme.spacing(1),
 		boxShadow: theme.shadows[1],
 		paddingTop: theme.spacing(2),
@@ -52,6 +50,53 @@ const DashSummary = ({ dashBoard }) => {
 		</Container>
 	);
 };
-DashSummary.propTypes = {};
+DashSummary.propTypes = {
+	dashBoard: PropTypes.shape({
+		numberOfClients: PropTypes.number,
+		numberOfInvoices: PropTypes.number,
+		deductions: PropTypes.shape({
+			_input: PropTypes.number.isRequired,
+			_value: PropTypes.number.isRequired,
+			add: PropTypes.func.isRequired,
+			clone: PropTypes.func.isRequired,
+			difference: PropTypes.func.isRequired,
+			divide: PropTypes.func.isRequired,
+			format: PropTypes.func.isRequired,
+			input: PropTypes.func.isRequired,
+			multiply: PropTypes.func.isRequired,
+			set: PropTypes.func.isRequired,
+			subtract: PropTypes.func.isRequired,
+			value: PropTypes.func.isRequired,
+		}),
+		income: PropTypes.shape({
+			_input: PropTypes.number.isRequired,
+			_value: PropTypes.number.isRequired,
+			add: PropTypes.func.isRequired,
+			clone: PropTypes.func.isRequired,
+			difference: PropTypes.func.isRequired,
+			divide: PropTypes.func.isRequired,
+			format: PropTypes.func.isRequired,
+			input: PropTypes.func.isRequired,
+			multiply: PropTypes.func.isRequired,
+			set: PropTypes.func.isRequired,
+			subtract: PropTypes.func.isRequired,
+			value: PropTypes.func.isRequired,
+		}),
+		receipts: PropTypes.shape({
+			_input: PropTypes.number.isRequired,
+			_value: PropTypes.number.isRequired,
+			add: PropTypes.func.isRequired,
+			clone: PropTypes.func.isRequired,
+			difference: PropTypes.func.isRequired,
+			divide: PropTypes.func.isRequired,
+			format: PropTypes.func.isRequired,
+			input: PropTypes.func.isRequired,
+			multiply: PropTypes.func.isRequired,
+			set: PropTypes.func.isRequired,
+			subtract: PropTypes.func.isRequired,
+			value: PropTypes.func.isRequired,
+		}),
+	}),
+};
 
 export default DashSummary;

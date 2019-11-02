@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -39,6 +40,14 @@ const ClientItem = ({ item }) => {
 			{sentanceCase(item.desc)}
 		</Container>
 	);
+};
+
+ClientItem.propTypes = {
+	item: PropTypes.shape({
+		date: PropTypes.string.isRequired,
+		fee: PropTypes.string.isRequired,
+		desc: PropTypes.string.isRequired,
+	}).isRequired,
 };
 
 export default ClientItem;

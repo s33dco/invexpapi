@@ -8,27 +8,23 @@ import 'numeral/locales';
 import Moment from 'react-moment';
 import Typography from '@material-ui/core/Typography';
 import { sentanceCase } from '../../../config/textFormat';
-import {
-	setCurrentInvoice,
-	setDeleteInvoice
-} from '../../actions/invoicesActions';
 
 numeral.locale('en-gb');
 numeral.defaultFormat('$0,0.00');
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
 	card: {
-		minWidth: 275
+		minWidth: 275,
 	},
 	item: {},
 	address: {
-		textTransfrom: 'capitalize'
+		textTransfrom: 'capitalize',
 	},
 	buttonArea: {
 		display: 'flex',
 		flexDirection: 'row',
-		justifyContent: 'space-between'
-	}
+		justifyContent: 'space-between',
+	},
 }));
 
 const InvoiceJobItem = ({ item }) => {
@@ -67,6 +63,14 @@ const InvoiceJobItem = ({ item }) => {
 			</Container>
 		</CardContent>
 	);
+};
+
+InvoiceJobItem.propTypes = {
+	item: PropTypes.shape({
+		date: PropTypes.string.isRequired,
+		desc: PropTypes.string.isRequired,
+		fee: PropTypes.string.isRequired,
+	}).isRequired,
 };
 
 export default InvoiceJobItem;

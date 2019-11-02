@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -95,7 +97,22 @@ const DeleteClientDialog = ({
 	);
 };
 
-DeleteClientDialog.propTypes = {};
+DeleteClientDialog.propTypes = {
+	deleteClient: PropTypes.func.isRequired,
+	clearClientErrors: PropTypes.func.isRequired,
+	clearDeleteClient: PropTypes.func.isRequired,
+	toDelete: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		greeting: PropTypes.string.isRequired,
+	}).isRequired,
+};
 
 const mapStateToProps = state => ({
 	toDelete: state.clients.delete,

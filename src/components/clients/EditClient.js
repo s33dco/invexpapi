@@ -1,3 +1,5 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect, Fragment } from 'react';
 // import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -93,30 +95,6 @@ const EditClient = ({
 		greeting: '1',
 	});
 
-	useEffect(() => {
-		if (current && !inProcess) {
-			setOpen(true);
-			const { _id, ...toUpdate } = current;
-			const objId = _id.toString();
-			setRecord({ ...record, id: objId });
-			setClient({ ...client, ...toUpdate });
-			setInProcess(true);
-		}
-
-		if (error) {
-			setHasSent(false);
-			setDbError('Please take another look...'); // set form level error
-			setFormErrors({ ...formErrors, email: error }); // set field level error
-			setClient({ ...client, email: '' }); // clear email field on form
-			setDisabled(true); // disable sebd button on form
-		}
-
-		if (current && hasSent && !error && !dbError && !disabled) {
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, current, hasSent, inProcess, dbError]);
-
 	const resetForm = () => {
 		setDisabled(true);
 		setHasSent(false);
@@ -146,6 +124,7 @@ const EditClient = ({
 		await clearClientErrors();
 		setDbError('');
 	};
+
 	const handleClose = () => {
 		setOpen(false);
 		resetFormErrors();
@@ -153,6 +132,31 @@ const EditClient = ({
 		clearCurrentClient();
 		setInProcess(false);
 	};
+
+	useEffect(() => {
+		if (current && !inProcess) {
+			setOpen(true);
+			const { _id, ...toUpdate } = current;
+			const objId = _id.toString();
+			setRecord({ ...record, id: objId });
+			setClient({ ...client, ...toUpdate });
+			setInProcess(true);
+		}
+
+		if (error) {
+			setHasSent(false);
+			setDbError('Please take another look...'); // set form level error
+			setFormErrors({ ...formErrors, email: error }); // set field level error
+			setClient({ ...client, email: '' }); // clear email field on form
+			setDisabled(true); // disable sebd button on form
+		}
+
+		if (current && hasSent && !error && !dbError && !disabled) {
+			handleClose();
+		}
+		// eslint - disable - next - line;
+	}, [error, current, hasSent, inProcess, dbError]);
+
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			// if no field level errors
@@ -224,7 +228,7 @@ const EditClient = ({
 	};
 
 	return (
-		<>
+		<Fragment>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -437,7 +441,7 @@ const EditClient = ({
 					</div>
 				</Fade>
 			</Modal>
-		</>
+		</Fragment>
 	);
 };
 
@@ -446,6 +450,17 @@ EditClient.propTypes = {
 	clearClientErrors: PropTypes.func.isRequired,
 	clearCurrentClient: PropTypes.func.isRequired,
 	error: PropTypes.string.isRequired,
+	current: PropTypes.shape({
+		_id: PropTypes.string,
+		name: PropTypes.string,
+		email: PropTypes.string,
+		phone: PropTypes.string,
+		add1: PropTypes.string,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string,
+		greeting: PropTypes.string,
+	}).isRequired,
 };
 
 const mapStateToProps = state => ({

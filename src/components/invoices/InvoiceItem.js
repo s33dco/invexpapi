@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -115,6 +116,31 @@ const InvoiceItem = props => {
 			/>
 		</Container>
 	);
+};
+
+InvoiceItem.propTypes = {
+	item: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		date: PropTypes.shape({
+			_d: PropTypes.string.isRequired,
+		}).isRequired,
+		desc: PropTypes.string.isRequired,
+		fee: PropTypes.string.isRequired,
+	}).isRequired,
+	updateChangedDateField: PropTypes.func.isRequired,
+	updateChangedTextField: PropTypes.func.isRequired,
+	deleteItem: PropTypes.func.isRequired,
+	errorInvoice: PropTypes.shape({
+		invNo: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		client: PropTypes.string.isRequired,
+		message: PropTypes.string.isRequired,
+		mileage: PropTypes.string.isRequired,
+	}).isRequired,
+	canSend: PropTypes.func.isRequired,
+	invDate: PropTypes.shape({
+		_d: PropTypes.string.isRequired,
+	}).isRequired,
 };
 
 export default InvoiceItem;

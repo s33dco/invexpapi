@@ -10,26 +10,25 @@ import Charts from './Charts';
 const Reports = ({ invoices, expenses }) => {
 	const [startDate, setStartDate] = useState(moment().utc());
 	const [endDate, setEndDate] = useState(moment().utc());
-	const [formError, setFormError] = useState({ start: '0', end: '0' });
+	const [formError, setFormError] = useState({
+		start: '0',
+		end: '0',
+	});
 	const [reportData, setReportData] = useState({});
 	const [showReport, setShowReport] = useState(false);
 
 	const generateReport = async () => {
 		const invoiceItems = reportInvoices();
-		console.log('invoiceitems', invoiceItems);
 		const expenseItems = reportExpenses();
-		console.log('expenseItems', expenseItems);
 		const mileageItems = mileageExpenses();
-		console.log('mileageItems', mileageItems);
 		const moneyIn = [...invoiceItems];
-		console.log('moneyIn', moneyIn);
 		const moneyOut = [...expenseItems, ...mileageItems];
-		console.log('moneyOut', moneyOut);
 		const data = [...invoiceItems, ...expenseItems, ...mileageItems];
-		const totalOutgoings = addUpOutgoings([...expenseItems, ...mileageItems]);
-		console.log('totalOutgoings', totalOutgoings);
+		const totalOutgoings = addUpOutgoings([
+			...expenseItems,
+			...mileageItems,
+		]);
 		const totalIncomings = addUpIncomings([...invoiceItems]);
-		console.log('totalIncomings', totalIncomings);
 		const takeHome = calculateIncome(totalIncomings, totalOutgoings);
 		const incomePie = breakoutFigures([...moneyIn]);
 		const deductionsPie = breakoutFiguresPositive([...moneyOut]);
@@ -42,7 +41,7 @@ const Reports = ({ invoices, expenses }) => {
 			totalIncomings,
 			incomePie,
 			deductionsPie,
-			tableData
+			tableData,
 		};
 		setReportData(newReport);
 		setShowReport(true);
@@ -79,7 +78,6 @@ const Reports = ({ invoices, expenses }) => {
 	};
 
 	const breakoutFigures = data => {
-		console.log('data', data);
 		const sorted = data.reduce((obj, item) => {
 			if (item.desc in obj) {
 				obj[item.desc] = obj[item.desc].add(item.total);
@@ -89,10 +87,7 @@ const Reports = ({ invoices, expenses }) => {
 			return obj;
 		}, {});
 
-		console.log('sorted', sorted);
-
 		const pieFormat = { ...sorted };
-		console.log('pieformat', pieFormat);
 		delete pieFormat.date;
 		delete pieFormat.category;
 
@@ -100,16 +95,14 @@ const Reports = ({ invoices, expenses }) => {
 			const obj = {
 				id: item[0],
 				label: item[0],
-				value: Number(parseFloat(item[1].value()).toFixed(2))
+				value: Number(parseFloat(item[1].value()).toFixed(2)),
 			};
 			return obj;
 		});
-		console.log('pieSlices', pieSlices);
 		return pieSlices;
 	};
 
 	const breakoutFiguresPositive = data => {
-		console.log('data', data);
 		const sorted = data.reduce((obj, item) => {
 			if (item.desc in obj) {
 				obj[item.desc] = obj[item.desc].add(item.total);
@@ -119,23 +112,18 @@ const Reports = ({ invoices, expenses }) => {
 			return obj;
 		}, {});
 
-		console.log('sorted', sorted);
-
 		const pieFormat = { ...sorted };
-		console.log('pieformat', pieFormat);
 		delete pieFormat.date;
 		delete pieFormat.category;
-		console.log('pieformat no dates or cats', pieFormat);
 
 		const pieSlices = Object.entries(pieFormat).map(item => {
 			const obj = {
 				id: item[0],
 				label: item[0],
-				value: Number(parseFloat(item[1].value() * -1).toFixed(2))
+				value: Number(parseFloat(item[1].value() * -1).toFixed(2)),
 			};
 			return obj;
 		});
-		console.log('pieSlices', pieSlices);
 		return pieSlices;
 	};
 
@@ -163,7 +151,7 @@ const Reports = ({ invoices, expenses }) => {
 					date: moment(invoice.datePaid).utc(),
 					category: `Inv${invoice.invNo}`,
 					desc: `${titleCase(invoice.client.name)}`,
-					total: parseFloat(invoice.total).toFixed(2)
+					total: parseFloat(invoice.total).toFixed(2),
 				};
 				return data;
 			});
@@ -181,7 +169,7 @@ const Reports = ({ invoices, expenses }) => {
 					date: moment(exp.date).utc(),
 					category: titleCase(exp.desc),
 					desc: titleCase(exp.category),
-					total: parseFloat(exp.amount * -1).toFixed(2)
+					total: parseFloat(exp.amount * -1).toFixed(2),
 				};
 				return data;
 			});
@@ -200,7 +188,7 @@ const Reports = ({ invoices, expenses }) => {
 					date: moment(invoice.date).utc(),
 					category: `Inv${invoice.invNo}`,
 					desc: 'Mileage',
-					total: parseFloat(invoice.mileage * -1 * 0.45).toFixed(2)
+					total: parseFloat(invoice.mileage * -1 * 0.45).toFixed(2),
 				};
 				return data;
 			});
@@ -210,7 +198,7 @@ const Reports = ({ invoices, expenses }) => {
 		startDate > endDate
 			? setFormError({
 					...formError,
-					start: 'start date should be before end date'
+					start: 'start date should be before end date',
 			  })
 			: setFormError({ ...formError, start: '1' });
 	};
@@ -220,7 +208,7 @@ const Reports = ({ invoices, expenses }) => {
 		endDate < startDate
 			? setFormError({
 					...formError,
-					end: 'end date should be after start date'
+					end: 'end date should be after start date',
 			  })
 			: setFormError({ ...formError, end: '1' });
 	};
@@ -248,8 +236,7 @@ Reports.propTypes = {};
 
 const mapStateToProps = state => ({
 	invoices: state.invoices.invoices,
-	error: state.reports.error,
-	expenses: state.expenses.expenses
+	expenses: state.expenses.expenses,
 });
 
 export default connect(mapStateToProps)(Reports);

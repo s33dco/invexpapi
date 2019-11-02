@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -121,24 +125,37 @@ const AddInvoice = ({
 		mileage: '1',
 		items: '0',
 	});
+	// eslint-disable-next-line no-unused-vars
 	const { useMileage } = business;
 
-	useEffect(() => {
-		if (error) {
-			// if api error
-			setIsSent(false);
-			setDbError(error); // set form level error
-			dealWithError(error); // set form level errors
-			clearInvoiceErrors(); // clear api level error
-		}
-		if (!error && !dbError && !disabled && isSent) {
-			// no api or form errors and form enabled
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, invoices, invoice]);
+	const clearForm = () => {
+		setInvoice({
+			invNo: nextInvNumber(),
+			date: moment().utc(),
+			client: '',
+			items: [],
+			message: '',
+			mileage: 0,
+			paid: false,
+		});
+		setErrorInvoice({
+			invNo: '1',
+			date: '1',
+			client: '0',
+			message: '0',
+			mileage: '1',
+			items: '0',
+		});
+	};
 
-	// errors from api
+	const handleClose = () => {
+		setOpen(false);
+		setIsSent(false);
+		setDbError('');
+		clearForm();
+		clearCurrentInvoice();
+	};
+
 	const dealWithError = error => {
 		const invNo = /invNo/;
 		const date = /date/;
@@ -170,9 +187,25 @@ const AddInvoice = ({
 		}
 	};
 
+	useEffect(() => {
+		if (error) {
+			// if api error
+			setIsSent(false);
+			setDbError(error); // set form level error
+			dealWithError(error); // set form level errors
+			clearInvoiceErrors(); // clear api level error
+		}
+		if (!error && !dbError && !disabled && isSent) {
+			// no api or form errors and form enabled
+			handleClose();
+		}
+		// eslint - disable - next - line;
+	}, [error, invoices, invoice]);
+
 	const onSubmit = async e => {
 		e.preventDefault();
 		invoice.items.forEach(item => {
+			// eslint-disable-next-line no-param-reassign
 			item.fee = parseFloat(item.fee).toFixed(2);
 		});
 		invoice.items.sort((a, b) => (a.date > b.date ? 1 : -1));
@@ -194,26 +227,6 @@ const AddInvoice = ({
 		await addInvoice(newInvoice);
 	};
 
-	const clearForm = () => {
-		setInvoice({
-			invNo: nextInvNumber(),
-			date: moment().utc(),
-			client: '',
-			items: [],
-			message: '',
-			mileage: 0,
-			paid: false,
-		});
-		setErrorInvoice({
-			invNo: '1',
-			date: '1',
-			client: '0',
-			message: '0',
-			mileage: '1',
-			items: '0',
-		});
-	};
-
 	const canSend = () => {
 		const allOk = Object.values(errorInvoice)
 			.flat()
@@ -229,7 +242,6 @@ const AddInvoice = ({
 		}
 	};
 
-	// invoice details
 	const handleClientChange = e => {
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
@@ -248,7 +260,7 @@ const AddInvoice = ({
 		if (!e.target.value.match(checkNumber)) {
 			message = 'just use digits for an invoice number';
 		}
-		if (usedInvNos.includes(parseInt(e.target.value))) {
+		if (usedInvNos.includes(parseInt(e.target.value, 10))) {
 			message = `You already have an invoice number ${e.target.value}`;
 		}
 
@@ -285,7 +297,6 @@ const AddInvoice = ({
 		}
 	};
 
-	// invoice items
 	const updateChangedDateField = id => e => {
 		setInvoice({
 			...invoice,
@@ -371,17 +382,8 @@ const AddInvoice = ({
 		});
 	};
 
-	// open and close form
 	const handleOpen = () => {
 		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-		setIsSent(false);
-		setDbError('');
-		clearForm();
-		clearCurrentInvoice();
 	};
 
 	return (
@@ -496,7 +498,83 @@ const AddInvoice = ({
 	);
 };
 
-AddInvoice.propTypes = {};
+AddInvoice.propTypes = {
+	addInvoice: PropTypes.func.isRequired,
+	clearInvoiceErrors: PropTypes.func.isRequired,
+	clearCurrentInvoice: PropTypes.func.isRequired,
+	error: PropTypes.string,
+	invoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+		})
+	),
+	clients: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		})
+	),
+	business: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		bankName: PropTypes.string.isRequired,
+		accountNo: PropTypes.string.isRequired,
+		sortCode: PropTypes.string.isRequired,
+		utr: PropTypes.string.isRequired,
+		terms: PropTypes.string.isRequired,
+		farewell: PropTypes.string.isRequired,
+		contact: PropTypes.string.isRequired,
+	}),
+	lastInv: PropTypes.number,
+};
 
 const mapStateToProps = state => ({
 	invoices: state.invoices.invoices,

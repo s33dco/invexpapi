@@ -13,13 +13,15 @@ const PrivateRoute = ({
 }) => {
 	return (
 		<Route
+			// eslint-disable-next-line react/jsx-props-no-spreading
 			{...rest}
 			render={props =>
 				!isAuthenticated && !user ? (
 					<Redirect to="/" />
 				) : (
+					// eslint-disable-next-line react/jsx-props-no-spreading
 					<Component {...props} />
-				)
+			)
 			}
 		/>
 	);
@@ -27,7 +29,7 @@ const PrivateRoute = ({
 
 const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(PrivateRoute);

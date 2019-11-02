@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -19,42 +20,47 @@ import { logout } from '../../actions/authActions';
 const drawerWidth = 128;
 const useStyles = makeStyles(theme => ({
 	root: {
-		display: 'flex'
+		display: 'flex',
 	},
 	drawer: {
 		[theme.breakpoints.up('sm')]: {
 			width: drawerWidth,
-			flexShrink: 0
-		}
+			flexShrink: 0,
+		},
 	},
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1
+		zIndex: theme.zIndex.drawer + 1,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
 		[theme.breakpoints.up('sm')]: {
-			display: 'none'
-		}
+			display: 'none',
+		},
 	},
 	toolbar: theme.mixins.toolbar,
 	drawerPaper: {
-		width: drawerWidth
+		width: drawerWidth,
 	},
 	content: {
 		flexGrow: 1,
-		padding: theme.spacing(3)
+		padding: theme.spacing(3),
 	},
 	closeMenuButton: {
 		marginRight: 'auto',
-		marginLeft: 0
+		marginLeft: 0,
 	},
 	title: {
-		flexGrow: 1
-	}
+		flexGrow: 1,
+	},
 }));
 const NavBar = ({ isAuthenticated, user, logout }) => {
 	const authLinks = [
-		<NavLink className="header__link" to="/" activeClassName="is-active" exact>
+		<NavLink
+			className="header__link"
+			to="/"
+			activeClassName="is-active"
+			exact
+		>
 			<Typography>Dashboard</Typography>
 		</NavLink>,
 		<NavLink
@@ -96,10 +102,15 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 			exact
 		>
 			<Typography>Invoice Info</Typography>
-		</NavLink>
+		</NavLink>,
 	];
 	const publicLinks = [
-		<NavLink className="header__link" to="/" activeClassName="is-active" exact>
+		<NavLink
+			className="header__link"
+			to="/"
+			activeClassName="is-active"
+			exact
+		>
 			<Typography>About</Typography>
 		</NavLink>,
 		<NavLink
@@ -109,7 +120,7 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 			exact
 		>
 			<Typography>Get In Touch</Typography>
-		</NavLink>
+		</NavLink>,
 	];
 
 	const classes = useStyles();
@@ -180,10 +191,10 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 						open={mobileOpen}
 						onClose={handleDrawerToggle}
 						classes={{
-							paper: classes.drawerPaper
+							paper: classes.drawerPaper,
 						}}
 						ModalProps={{
-							keepMounted: true // Better open performance on mobile.
+							keepMounted: true, // Better open performance on mobile.
 						}}
 					>
 						<IconButton
@@ -200,7 +211,7 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 						className={classes.drawer}
 						variant="permanent"
 						classes={{
-							paper: classes.drawerPaper
+							paper: classes.drawerPaper,
 						}}
 					>
 						<div className={classes.toolbar} />
@@ -217,12 +228,16 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 };
 
 NavBar.propTypes = {
-	isAuthenticated: PropTypes.bool.isRequired
+	isAuthenticated: PropTypes.bool.isRequired,
+	logout: PropTypes.func.isRequired,
+	// user: PropTypes.shape({
+
+	// })
 };
 
 const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(

@@ -125,7 +125,17 @@ const Expenses = ({ expenses }) => {
 	);
 };
 
-Expenses.propTypes = {};
+Expenses.propTypes = {
+	expenses: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			category: PropTypes.string.isRequired,
+			amount: PropTypes.string.isRequired,
+			desc: PropTypes.string.isRequired,
+		})
+	).isRequired,
+};
 
 const mapStateToProps = state => ({
 	expenses: state.expenses.expenses,

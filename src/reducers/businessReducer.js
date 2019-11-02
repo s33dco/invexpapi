@@ -4,12 +4,12 @@ import {
 	UPDATE_BUSINESS,
 	BUSINESS_ERROR,
 	CLEAR_BUSINESS,
-	CLEAR_BUSINESS_ERROR
+	CLEAR_BUSINESS_ERROR,
 } from '../actions/types';
 
 const initialState = {
 	business: {},
-	error: ''
+	error: '',
 };
 
 export default (state = initialState, action) => {
@@ -20,23 +20,23 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				business: { ...action.payload },
-				error: ''
+				error: '',
 			};
 		case BUSINESS_ERROR:
 			return {
 				...state,
-				error: action.payload
+				error: action.payload,
 			};
 		case CLEAR_BUSINESS_ERROR:
 			return {
 				...state,
-				error: ''
+				error: '',
 			};
 		case CLEAR_BUSINESS:
 			return {
 				...state,
 				business: {},
-				error: ''
+				error: '',
 			};
 		default:
 			return state;

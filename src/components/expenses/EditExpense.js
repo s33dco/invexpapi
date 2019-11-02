@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -90,53 +92,6 @@ const EditExpense = ({
 		amount: '1',
 	});
 
-	useEffect(() => {
-		if (current && !inProcess) {
-			setOpen(true);
-			const { _id, ...toUpdate } = current;
-			const objId = _id.toString();
-			setRecord({ ...record, id: objId });
-			setExpense({ ...expense, ...toUpdate });
-			setInProcess(true);
-		}
-
-		if (error) {
-			setHasSent(false);
-			setDbError(error); // set form level error
-			dealWithError(error);
-			clearExpenseErrors(); // set form level errors
-			setDisabled(true); // disable sebd button on form
-		}
-
-		if (current && hasSent && !error && !dbError && !disabled) {
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, current, hasSent, inProcess, dbError]);
-
-	const dealWithError = error => {
-		const desc = /desc/;
-		const amount = /amount/;
-		const category = /category/;
-		const date = /date/;
-		switch (true) {
-			case desc.test(error):
-				setFormErrors({ ...formErrors, desc: error });
-				break;
-			case category.test(error):
-				setFormErrors({ ...formErrors, email: error });
-				break;
-			case amount.test(error):
-				setFormErrors({ ...formErrors, amount: error });
-				break;
-			case date.test(error):
-				setFormErrors({ ...formErrors, amount: error });
-				break;
-			default:
-				resetForm();
-		}
-	};
-
 	const resetForm = () => {
 		setDisabled(true);
 		setHasSent(false);
@@ -165,6 +120,54 @@ const EditExpense = ({
 		clearCurrentExpense();
 		setInProcess(false);
 	};
+
+	const dealWithError = error => {
+		const desc = /desc/;
+		const amount = /amount/;
+		const category = /category/;
+		const date = /date/;
+		switch (true) {
+			case desc.test(error):
+				setFormErrors({ ...formErrors, desc: error });
+				break;
+			case category.test(error):
+				setFormErrors({ ...formErrors, email: error });
+				break;
+			case amount.test(error):
+				setFormErrors({ ...formErrors, amount: error });
+				break;
+			case date.test(error):
+				setFormErrors({ ...formErrors, amount: error });
+				break;
+			default:
+				resetForm();
+		}
+	};
+
+	useEffect(() => {
+		if (current && !inProcess) {
+			setOpen(true);
+			const { _id, ...toUpdate } = current;
+			const objId = _id.toString();
+			setRecord({ ...record, id: objId });
+			setExpense({ ...expense, ...toUpdate });
+			setInProcess(true);
+		}
+
+		if (error) {
+			setHasSent(false);
+			setDbError(error); // set form level error
+			dealWithError(error);
+			clearExpenseErrors(); // set form level errors
+			setDisabled(true); // disable sebd button on form
+		}
+
+		if (current && hasSent && !error && !dbError && !disabled) {
+			handleClose();
+		}
+		// eslint - disable - next - line;
+	}, [error, current, hasSent, inProcess, dbError]);
+
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
 			// if no field level errors
@@ -230,7 +233,7 @@ const EditExpense = ({
 	};
 
 	return (
-		<>
+		<Fragment>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -351,11 +354,24 @@ const EditExpense = ({
 					</div>
 				</Fade>
 			</Modal>
-		</>
+		</Fragment>
 	);
 };
 
-EditExpense.propTypes = {};
+EditExpense.propTypes = {
+	updateExpense: PropTypes.func.isRequired,
+	clearExpenseErrors: PropTypes.func.isRequired,
+	clearCurrentExpense: PropTypes.func.isRequired,
+	current: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		category: PropTypes.string.isRequired,
+		amount: PropTypes.string.isRequired,
+		desc: PropTypes.string.isRequired,
+	}).isRequired,
+	error: PropTypes.string,
+	options: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 const mapStateToProps = state => ({
 	current: state.expenses.current,

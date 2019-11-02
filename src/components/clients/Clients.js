@@ -1,8 +1,8 @@
+/* eslint-disable react/require-default-props */
 import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
@@ -95,7 +95,7 @@ const Clients = ({ clients }) => {
 	};
 
 	return (
-		<>
+		<Fragment>
 			<Toolbar
 				className={classes.toolbar}
 				position="static"
@@ -118,25 +118,31 @@ const Clients = ({ clients }) => {
 				</div>
 				<AddClient />
 			</Toolbar>
-
-			{/* <Grid
-				container
-				direction="row"
-				justify="space-evenly"
-				alignItems="flex-start"
-			> */}
 			{filtered.map(client => (
 				<ClientCard key={client._id} client={client} />
 			))}
-			{/* </Grid> */}
 			<PreviousItems />
 			<EditClient />
 			<DeleteClientDialog />
-		</>
+		</Fragment>
 	);
 };
 
-Clients.propTypes = {};
+Clients.propTypes = {
+	clients: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		})
+	),
+};
 
 const mapStateToProps = state => ({
 	clients: state.clients.clients,

@@ -1,9 +1,9 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect, Fragment } from 'react';
-// import { withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -52,6 +52,12 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 	const [open, setOpen] = useState(false);
 	const [items, setItems] = useState([]);
 
+	const handleClose = () => {
+		setOpen(false);
+		setItems([]);
+		clearClientItems();
+	};
+
 	useEffect(() => {
 		if (clientItems.name) {
 			setItems([...clientItems.items]);
@@ -61,14 +67,8 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 		}
 	}, [clientItems.name]);
 
-	const handleClose = () => {
-		setOpen(false);
-		setItems([]);
-		clearClientItems();
-	};
-
 	return (
-		<>
+		<Fragment>
 			<Modal
 				aria-labelledby="modal-title"
 				aria-describedby="modal-description"
@@ -109,11 +109,14 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 					</div>
 				</Fade>
 			</Modal>
-		</>
+		</Fragment>
 	);
 };
 
-PreviousItems.propTypes = {};
+PreviousItems.propTypes = {
+	clientItems: PropTypes.func.isRequired,
+	clearClientItems: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
 	clientItems: state.clients.clientItems,

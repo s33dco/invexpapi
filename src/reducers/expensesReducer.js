@@ -10,7 +10,7 @@ import {
 	UPDATE_EXPENSE,
 	SET_DELETE_EXPENSE,
 	CLEAR_DELETE_EXPENSE,
-	DELETE_EXPENSE
+	DELETE_EXPENSE,
 } from '../actions/types';
 
 const initialState = {
@@ -18,7 +18,7 @@ const initialState = {
 	categories: selectOptions,
 	current: '',
 	delete: '',
-	error: ''
+	error: '',
 };
 
 export default (state = initialState, action) => {
@@ -26,54 +26,56 @@ export default (state = initialState, action) => {
 		case GET_EXPENSES:
 			return {
 				...state,
-				expenses: [...action.payload]
+				expenses: [...action.payload],
 			};
 		case ADD_EXPENSE:
 			return {
 				...state,
-				expenses: [...state.expenses, action.payload]
+				expenses: [...state.expenses, action.payload],
 			};
 		case EXPENSE_ERROR:
 			return {
 				...state,
-				error: action.payload
+				error: action.payload,
 			};
 		case CLEAR_EXPENSE_ERRORS:
 			return {
 				...state,
-				error: ''
+				error: '',
 			};
 		case SET_CURRENT_EXPENSE:
 			return {
 				...state,
-				current: action.payload
+				current: action.payload,
 			};
 		case CLEAR_CURRENT_EXPENSE:
 			return {
 				...state,
-				current: ''
+				current: '',
 			};
 		case UPDATE_EXPENSE:
 			return {
 				...state,
 				expenses: state.expenses.map(exp =>
 					exp._id === action.payload._id ? action.payload : exp
-				)
+				),
 			};
 		case SET_DELETE_EXPENSE:
 			return {
 				...state,
-				delete: action.payload
+				delete: action.payload,
 			};
 		case CLEAR_DELETE_EXPENSE:
 			return {
 				...state,
-				delete: ''
+				delete: '',
 			};
 		case DELETE_EXPENSE:
 			return {
 				...state,
-				expenses: state.expenses.filter(exp => exp._id !== action.payload)
+				expenses: state.expenses.filter(
+					exp => exp._id !== action.payload
+				),
 			};
 		case CLEAR_EXPENSES:
 			return {
@@ -81,7 +83,7 @@ export default (state = initialState, action) => {
 				expenses: [],
 				error: '',
 				current: '',
-				delete: ''
+				delete: '',
 			};
 		default:
 			return state;

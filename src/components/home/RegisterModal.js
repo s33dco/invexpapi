@@ -1,3 +1,7 @@
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -329,6 +333,10 @@ RegisterModal.propTypes = {
 	clearErrors: PropTypes.func.isRequired,
 	error: PropTypes.string,
 	isAuthenticated: PropTypes.bool.isRequired,
+	user: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	}),
 };
 
 const mapStateToProps = state => ({

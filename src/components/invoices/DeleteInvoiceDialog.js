@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -27,16 +29,16 @@ const DeleteInvoiceDialog = ({
 	const [open, setOpen] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
 	const [record, setRecord] = useState({ id: '' });
-	const [desc, setDesc] = useState('');
+	// const [desc, setDesc] = useState('');
 	const { invNo, paid } = toDelete;
 
 	useEffect(() => {
 		if (toDelete && !inProcess) {
 			setOpen(true);
-			const { _id, desc } = toDelete;
+			const { _id } = toDelete;
 			const objId = _id.toString();
 			setRecord({ ...record, id: objId });
-			setDesc(desc);
+			// setDesc(desc);
 			setInProcess(true);
 		}
 	}, [toDelete]);
@@ -45,7 +47,7 @@ const DeleteInvoiceDialog = ({
 		await clearDeleteInvoice();
 		await clearInvoiceErrors();
 		setInProcess(false);
-		setDesc('');
+		// setDesc('');
 		setRecord({ ...record, id: '' });
 		setOpen(false);
 		// statusCheck('end of handleClose block');
@@ -107,7 +109,49 @@ const DeleteInvoiceDialog = ({
 	);
 };
 
-DeleteInvoiceDialog.propTypes = {};
+DeleteInvoiceDialog.propTypes = {
+	deleteInvoice: PropTypes.func.isRequired,
+	clearInvoiceErrors: PropTypes.func.isRequired,
+	clearDeleteInvoice: PropTypes.func.isRequired,
+	toDelete: PropTypes.shape({
+		invNo: PropTypes.number.isRequired,
+		mileage: PropTypes.number,
+		message: PropTypes.string.isRequired,
+		total: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		paid: PropTypes.bool.isRequired,
+		client: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		}).isRequired,
+		business: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			bankName: PropTypes.string.isRequired,
+			accountNo: PropTypes.string.isRequired,
+			sortCode: PropTypes.string.isRequired,
+			utr: PropTypes.string.isRequired,
+			terms: PropTypes.string.isRequired,
+			farewell: PropTypes.string.isRequired,
+			contact: PropTypes.string.isRequired,
+			useMileage: PropTypes.bool.isRequired,
+		}),
+	}).isRequired,
+};
 
 const mapStateToProps = state => ({
 	toDelete: state.invoices.delete,

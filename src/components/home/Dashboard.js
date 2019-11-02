@@ -10,7 +10,7 @@ import { getBusiness } from '../../actions/businessActions';
 import { getClients } from '../../actions/clientsActions';
 import { getExpenses } from '../../actions/expensesActions';
 import { getInvoices } from '../../actions/invoicesActions';
-import { setAlert } from '../../actions/alertActions';
+import setAlert from '../../actions/alertActions';
 import InvoiceCard from '../invoices/InvoiceCard';
 import EditInvoice from '../invoices/EditInvoice';
 import AddInvoice from '../invoices/AddInvoice';

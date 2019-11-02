@@ -1,4 +1,6 @@
+/* eslint-disable react/require-default-props */
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -161,6 +163,96 @@ const InvoiceDetails = props => {
 			)}
 		</Fragment>
 	);
+};
+
+InvoiceDetails.propTypes = {
+	selectedClient: PropTypes.shape({
+		_id: PropTypes.string,
+		name: PropTypes.string,
+		email: PropTypes.string,
+		phone: PropTypes.string,
+		add1: PropTypes.string,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string,
+		greeting: PropTypes.string,
+	}),
+	clients: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		})
+	).isRequired,
+
+	invoice: PropTypes.shape({
+		invNo: PropTypes.number.isRequired,
+		mileage: PropTypes.number,
+		message: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		datePaid: PropTypes.string,
+		paid: PropTypes.bool.isRequired,
+		client: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		}).isRequired,
+		business: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			bankName: PropTypes.string.isRequired,
+			accountNo: PropTypes.string.isRequired,
+			sortCode: PropTypes.string.isRequired,
+			utr: PropTypes.string.isRequired,
+			terms: PropTypes.string.isRequired,
+			farewell: PropTypes.string.isRequired,
+			contact: PropTypes.string.isRequired,
+			useMileage: PropTypes.bool.isRequired,
+		}).isRequired,
+		items: PropTypes.arrayOf(
+			PropTypes.shape({
+				date: PropTypes.string.isRequired,
+				desc: PropTypes.string.isRequired,
+				fee: PropTypes.string.isRequired,
+				id: PropTypes.string.isRequired,
+			})
+		).isRequired,
+	}).isRequired,
+
+	errorInvoice: PropTypes.shape({
+		invNo: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		business: PropTypes.string.isRequired,
+		client: PropTypes.string.isRequired,
+		message: PropTypes.string.isRequired,
+		mileage: PropTypes.string.isRequired,
+	}),
+	handleChange: PropTypes.func.isRequired,
+	handleDateChange: PropTypes.func.isRequired,
+	handleClientChange: PropTypes.func.isRequired,
+	handleInvoiceNumber: PropTypes.func.isRequired,
+	handleDatePaidChange: PropTypes.func.isRequired,
+	useMileage: PropTypes.bool.isRequired,
+	canSend: PropTypes.func.isRequired,
 };
 
 export default InvoiceDetails;

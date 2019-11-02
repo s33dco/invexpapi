@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/require-default-props */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import Container from '@material-ui/core/Container';
@@ -92,9 +95,9 @@ const EditInvoice = ({
 	clearCurrentInvoice,
 	error,
 	clients,
-	invoices,
 	current,
 	business,
+	invoices,
 }) => {
 	const classes = useStyles();
 	const [invoice, setInvoice] = useState({
@@ -107,7 +110,6 @@ const EditInvoice = ({
 		mileage: 0,
 		paid: false,
 		datePaid: '',
-		items: [],
 	});
 	const [errorInvoice, setErrorInvoice] = useState({
 		invNo: '1',
@@ -123,47 +125,32 @@ const EditInvoice = ({
 	const [hasSent, setHasSent] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
 	const [dbError, setDbError] = useState('');
-
 	const { useMileage } = business;
+	const usedInvNos = invoices.map(i => i.invNo);
 
-	useEffect(() => {
-		async function itemsErrors() {
-			current.items
-				.map(item => item.id)
-				.map(i => {
-					setErrorInvoice({
-						...errorInvoice,
-						[i]: { desc: '1', fee: '1' },
-					});
-				});
-		}
-
-		if (current && !inProcess) {
-			const { _id, ...toUpdate } = current;
-			setInvoice({ ...invoice, ...toUpdate });
-			itemsErrors(invoice);
-			setRecord({ ...record, id: _id.toString() });
-			itemsErrors();
-			setInProcess(true);
-			setOpen(true);
-		}
-
-		if (error) {
-			setHasSent(false);
-			setDbError(error); // set form level error
-			dealWithError(error);
-			clearInvoiceErrors(); // set form level errors
-			setDisabled(true); // disable sebd button on form
-		}
-
-		if (current && hasSent && !error && !dbError && !disabled) {
-			handleClose();
-		}
-		if (!current) {
-			handleClose();
-		}
-	}, [current, inProcess, error, current, hasSent, dbError, open]);
-
+	const clearForm = () => {
+		setInvoice({
+			invNo: '',
+			date: moment().utc(),
+			business: {},
+			client: {},
+			items: [],
+			message: '',
+			mileage: 0,
+			paid: false,
+			datePaid: '',
+		});
+		setErrorInvoice({
+			invNo: '1',
+			date: '1',
+			business: '1',
+			client: '1',
+			message: '1',
+			mileage: '1',
+			items: '1',
+			datePaid: '1',
+		});
+	};
 	const dealWithError = error => {
 		const invNo = /invNo/;
 		const date = /date/;
@@ -205,30 +192,53 @@ const EditInvoice = ({
 				clearForm();
 		}
 	};
-
-	const clearForm = () => {
-		setInvoice({
-			invNo: '',
-			date: moment().utc(),
-			business: {},
-			client: {},
-			items: [],
-			message: '',
-			mileage: 0,
-			paid: false,
-			datePaid: '',
-		});
-		setErrorInvoice({
-			invNo: '1',
-			date: '1',
-			business: '1',
-			client: '1',
-			message: '1',
-			mileage: '1',
-			items: '1',
-			datePaid: '1',
-		});
+	const handleClose = () => {
+		clearCurrentInvoice();
+		setOpen(false);
+		setDbError('');
+		clearForm();
+		setInProcess(false);
+		setHasSent(false);
+		setDisabled(false);
 	};
+
+	useEffect(() => {
+		async function itemsErrors() {
+			current.items
+				.map(item => item.id)
+				.map(i => {
+					setErrorInvoice({
+						...errorInvoice,
+						[i]: { desc: '1', fee: '1' },
+					});
+				});
+		}
+
+		if (current && !inProcess) {
+			const { _id, ...toUpdate } = current;
+			setInvoice({ ...invoice, ...toUpdate });
+			itemsErrors(invoice);
+			setRecord({ ...record, id: _id.toString() });
+			itemsErrors();
+			setInProcess(true);
+			setOpen(true);
+		}
+
+		if (error) {
+			setHasSent(false);
+			setDbError(error); // set form level error
+			dealWithError(error);
+			clearInvoiceErrors(); // set form level errors
+			setDisabled(true); // disable sebd button on form
+		}
+
+		if (current && hasSent && !error && !dbError && !disabled) {
+			handleClose();
+		}
+		if (!current) {
+			handleClose();
+		}
+	}, [current, inProcess, error, current, hasSent, dbError, open]);
 
 	const canSend = () => {
 		const allOk = Object.values(errorInvoice)
@@ -244,7 +254,6 @@ const EditInvoice = ({
 			setDisabled(true); // if field errors disable form
 		}
 	};
-
 	const onSubmit = async e => {
 		e.preventDefault();
 		invoice.items.forEach(item => {
@@ -262,7 +271,6 @@ const EditInvoice = ({
 			total: parseFloat(total._value).toFixed(2),
 		});
 	};
-
 	const handleClientChange = e => {
 		setInvoice({ ...invoice, client: e.target.value });
 		setErrorInvoice({
@@ -270,19 +278,16 @@ const EditInvoice = ({
 			client: '1',
 		});
 	};
-
 	const handleDateChange = e => {
 		setInvoice({ ...invoice, date: e });
 	};
-
 	const handleDatePaidChange = e => {
 		setInvoice({ ...invoice, datePaid: e });
 	};
-
 	const handleInvoiceNumber = e => {
 		setInvoice({ ...invoice, [e.target.name]: e.target.value });
 		let message = '';
-		if (usedInvNos.includes(parseInt(e.target.value))) {
+		if (usedInvNos.includes(parseInt(e.target.value, 10))) {
 			message = `You already have an invoice number ${e.target.value}`;
 		}
 		if (!e.target.value.match(checkNumber)) {
@@ -292,7 +297,6 @@ const EditInvoice = ({
 			? setErrorInvoice({ ...errorInvoice, [e.target.id]: '1' })
 			: setErrorInvoice({ ...errorInvoice, [e.target.id]: message });
 	};
-
 	const handleChange = e => {
 		let regExp;
 		let message;
@@ -324,7 +328,6 @@ const EditInvoice = ({
 			});
 		}
 	};
-
 	const updateChangedDateField = id => e => {
 		setInvoice({
 			...invoice,
@@ -335,7 +338,6 @@ const EditInvoice = ({
 			],
 		});
 	};
-
 	const updateChangedTextField = id => e => {
 		let regExp;
 		let message = "this can't be blank";
@@ -374,7 +376,6 @@ const EditInvoice = ({
 			});
 		}
 	};
-
 	const deleteItem = id => {
 		setInvoice({
 			...invoice,
@@ -385,7 +386,6 @@ const EditInvoice = ({
 			],
 		});
 	};
-
 	const addAnItem = () => {
 		const newId = uuid();
 		setInvoice({
@@ -409,23 +409,8 @@ const EditInvoice = ({
 			},
 		});
 	};
-
 	const onRadioToggle = e => {
 		setInvoice({ ...invoice, [e.target.name]: e.target.value });
-	};
-
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		clearCurrentInvoice();
-		setOpen(false);
-		setDbError('');
-		clearForm();
-		setInProcess(false);
-		setHasSent(false);
-		setDisabled(false);
 	};
 
 	return (
@@ -530,7 +515,137 @@ const EditInvoice = ({
 	);
 };
 
-EditInvoice.propTypes = {};
+EditInvoice.propTypes = {
+	updateInvoice: PropTypes.func.isRequired,
+	clearInvoiceErrors: PropTypes.func.isRequired,
+	clearCurrentInvoice: PropTypes.func.isRequired,
+	error: PropTypes.string,
+	clients: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		})
+	).isRequired,
+	invoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+			items: PropTypes.arrayOf(
+				PropTypes.shape({
+					date: PropTypes.string.isRequired,
+					desc: PropTypes.string.isRequired,
+					fee: PropTypes.string.isRequired,
+					id: PropTypes.string.isRequired,
+				})
+			),
+		})
+	).isRequired,
+	current: PropTypes.shape({
+		invNo: PropTypes.number.isRequired,
+		mileage: PropTypes.number,
+		message: PropTypes.string.isRequired,
+		total: PropTypes.string.isRequired,
+		_id: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		paid: PropTypes.bool.isRequired,
+		client: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			greeting: PropTypes.string.isRequired,
+		}).isRequired,
+		business: PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			name: PropTypes.string.isRequired,
+			email: PropTypes.string.isRequired,
+			phone: PropTypes.string.isRequired,
+			add1: PropTypes.string.isRequired,
+			add2: PropTypes.string,
+			add3: PropTypes.string,
+			postCode: PropTypes.string.isRequired,
+			bankName: PropTypes.string.isRequired,
+			accountNo: PropTypes.string.isRequired,
+			sortCode: PropTypes.string.isRequired,
+			utr: PropTypes.string.isRequired,
+			terms: PropTypes.string.isRequired,
+			farewell: PropTypes.string.isRequired,
+			contact: PropTypes.string.isRequired,
+			useMileage: PropTypes.bool.isRequired,
+		}).isRequired,
+		items: PropTypes.arrayOf(
+			PropTypes.shape({
+				date: PropTypes.string.isRequired,
+				desc: PropTypes.string.isRequired,
+				fee: PropTypes.string.isRequired,
+				id: PropTypes.string.isRequired,
+			})
+		).isRequired,
+	}).isRequired,
+	business: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		bankName: PropTypes.string.isRequired,
+		accountNo: PropTypes.string.isRequired,
+		sortCode: PropTypes.string.isRequired,
+		utr: PropTypes.string.isRequired,
+		terms: PropTypes.string.isRequired,
+		farewell: PropTypes.string.isRequired,
+		contact: PropTypes.string.isRequired,
+		useMileage: PropTypes.bool.isRequired,
+	}).isRequired,
+};
 
 const mapStateToProps = state => ({
 	current: state.invoices.current,

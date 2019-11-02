@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,7 +15,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { updateBusiness } from '../../actions/businessActions';
 import { sentanceCase } from '../../../config/textFormat';
 import EditBusiness from './EditBusiness';
 import AddBusiness from './AddBusiness';
@@ -63,13 +63,12 @@ const Business = ({
 		farewell,
 		contact,
 	},
-	updateBusiness,
 }) => {
 	const classes = useStyles();
 
 	if (name) {
 		return (
-			<>
+			<Fragment>
 				<Typography
 					className={classes.title}
 					variant="h1"
@@ -242,19 +241,33 @@ const Business = ({
 					</ExpansionPanel>
 				</div>
 				<EditBusiness />
-			</>
+			</Fragment>
 		);
 	}
 	return <AddBusiness />;
 };
 
-Business.propTypes = {};
+Business.propTypes = {
+	business: PropTypes.shape({
+		name: PropTypes.string.isRequired,
+		email: PropTypes.string.isRequired,
+		phone: PropTypes.string.isRequired,
+		add1: PropTypes.string.isRequired,
+		add2: PropTypes.string,
+		add3: PropTypes.string,
+		postCode: PropTypes.string.isRequired,
+		bankName: PropTypes.string.isRequired,
+		accountNo: PropTypes.string.isRequired,
+		sortCode: PropTypes.string.isRequired,
+		utr: PropTypes.string.isRequired,
+		terms: PropTypes.string.isRequired,
+		farewell: PropTypes.string.isRequired,
+		contact: PropTypes.string.isRequired,
+	}),
+};
 
 const mapStateToProps = state => ({
 	business: state.business.business,
 });
 
-export default connect(
-	mapStateToProps,
-	{ updateBusiness }
-)(Business);
+export default connect(mapStateToProps)(Business);

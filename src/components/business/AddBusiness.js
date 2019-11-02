@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -29,11 +30,6 @@ import {
 } from '../../../config/regexps';
 
 const useStyles = makeStyles(theme => ({
-	modal: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
 		border: '2px solid #000',
@@ -64,7 +60,7 @@ const AddBusiness = ({
 	addBusiness,
 	clearBusinessErrors,
 	error,
-	businessAppState,
+	businessHasName,
 }) => {
 	const classes = useStyles();
 	const [disabled, setDisabled] = useState(true);
@@ -104,17 +100,11 @@ const AddBusiness = ({
 
 	useEffect(() => {
 		if (error) {
-			// if api error
-			setDbError('Please take another look...'); // set form level error
-			setFormErrors({ ...formErrors, email: error }); // set field level error
-			clearBusinessErrors(); // clear api level error
+			setDbError('Please take another look...');
+			setFormErrors({ ...formErrors, email: error });
+			clearBusinessErrors();
 		}
-		if (!error && !dbError && !disabled) {
-			// no api or form errors and form enabled
-			handleClose();
-		}
-		// eslint - disable - next - line;
-	}, [error, businessAppState]); // check for changes from api, api error and change in record being updated
+	}, [error, businessHasName]);
 
 	const canSend = () => {
 		if (Array.from(new Set(Object.values(formErrors))).length === 1) {
@@ -524,11 +514,15 @@ const AddBusiness = ({
 
 AddBusiness.propTypes = {
 	addBusiness: PropTypes.func.isRequired,
+	clearBusinessErrors: PropTypes.func.isRequired,
+	error: PropTypes.string.isRequired,
+	// eslint-disable-next-line react/require-default-props
+	businessHasName: PropTypes.string,
 };
 
 const mapStateToProps = state => ({
 	error: state.business.error,
-	businessAppState: state.business.business,
+	businessHasName: state.business.business.name,
 });
 
 export default connect(
