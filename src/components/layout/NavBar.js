@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable no-shadow */
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -230,9 +232,10 @@ const NavBar = ({ isAuthenticated, user, logout }) => {
 NavBar.propTypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
 	logout: PropTypes.func.isRequired,
-	// user: PropTypes.shape({
-
-	// })
+	user: PropTypes.shape({
+		_id: PropTypes.string,
+		name: PropTypes.string,
+	}),
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -21,10 +24,18 @@ const PrivateRoute = ({
 				) : (
 					// eslint-disable-next-line react/jsx-props-no-spreading
 					<Component {...props} />
-			)
+				)
 			}
 		/>
 	);
+};
+
+PrivateRoute.propTypes = {
+	isAuthenticated: PropTypes.bool.isRequired,
+	user: PropTypes.shape({
+		_id: PropTypes.string,
+		name: PropTypes.string,
+	}),
 };
 
 const mapStateToProps = state => ({

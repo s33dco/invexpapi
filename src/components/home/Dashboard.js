@@ -1,3 +1,5 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable no-shadow */
 import React, { useEffect, useState, Fragment } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -6,10 +8,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import numeral from 'numeral';
-import { getBusiness } from '../../actions/businessActions';
-import { getClients } from '../../actions/clientsActions';
-import { getExpenses } from '../../actions/expensesActions';
-import { getInvoices } from '../../actions/invoicesActions';
 import setAlert from '../../actions/alertActions';
 import InvoiceCard from '../invoices/InvoiceCard';
 import EditInvoice from '../invoices/EditInvoice';
@@ -54,7 +52,6 @@ const Dashboard = ({
 	invoicesProduced,
 	overdueInvoices,
 	invoices,
-	current,
 }) => {
 	const classes = useStyles();
 	const [dashBoard, setDashBoard] = useState({
@@ -78,9 +75,9 @@ const Dashboard = ({
 		const dashData = {
 			numberOfInvoices: invoicesProduced,
 			numberOfClients: clients,
-			receipts,
-			deductions: moneyOut,
-			income,
+			receipts: numeral(receipts).format(),
+			deductions: numeral(moneyOut).format(),
+			income: numeral(income).format(),
 		};
 		setDashBoard(dashData);
 	};
@@ -138,8 +135,6 @@ const Dashboard = ({
 		</Fragment>
 	);
 };
-Dashboard.propTypes = {};
-
 const getTaxYearDates = () => {
 	let taxYearStart;
 	let taxYearEnd;
@@ -222,6 +217,212 @@ const unPaidByTaxYear = data => {
 		.filter(inv => (!inv.paid ? inv : null))
 		.sort((a, b) => (a.date > b.date ? 1 : -1));
 };
+
+Dashboard.propTypes = {
+	setAlert: PropTypes.func.isRequired,
+	businessError: PropTypes.string,
+	clientError: PropTypes.string,
+	expensesError: PropTypes.string,
+	invoicesError: PropTypes.string,
+	taxYearInvoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+			items: PropTypes.arrayOf(
+				PropTypes.shape({
+					date: PropTypes.string.isRequired,
+					desc: PropTypes.string.isRequired,
+					fee: PropTypes.string.isRequired,
+					id: PropTypes.string.isRequired,
+				})
+			),
+		})
+	),
+	taxYearExpenses: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			category: PropTypes.string.isRequired,
+			amount: PropTypes.string.isRequired,
+			desc: PropTypes.string.isRequired,
+		})
+	),
+	receipts: PropTypes.shape({
+		_input: PropTypes.number.isRequired,
+		_value: PropTypes.number.isRequired,
+		add: PropTypes.func.isRequired,
+		clone: PropTypes.func.isRequired,
+		difference: PropTypes.func.isRequired,
+		divide: PropTypes.func.isRequired,
+		format: PropTypes.func.isRequired,
+		input: PropTypes.func.isRequired,
+		multiply: PropTypes.func.isRequired,
+		set: PropTypes.func.isRequired,
+		subtract: PropTypes.func.isRequired,
+		value: PropTypes.func.isRequired,
+	}).isRequired,
+	expenses: PropTypes.shape({
+		_input: PropTypes.number.isRequired,
+		_value: PropTypes.number.isRequired,
+		add: PropTypes.func.isRequired,
+		clone: PropTypes.func.isRequired,
+		difference: PropTypes.func.isRequired,
+		divide: PropTypes.func.isRequired,
+		format: PropTypes.func.isRequired,
+		input: PropTypes.func.isRequired,
+		multiply: PropTypes.func.isRequired,
+		set: PropTypes.func.isRequired,
+		subtract: PropTypes.func.isRequired,
+		value: PropTypes.func.isRequired,
+	}).isRequired,
+	mileage: PropTypes.shape({
+		_input: PropTypes.number.isRequired,
+		_value: PropTypes.number.isRequired,
+		add: PropTypes.func.isRequired,
+		clone: PropTypes.func.isRequired,
+		difference: PropTypes.func.isRequired,
+		divide: PropTypes.func.isRequired,
+		format: PropTypes.func.isRequired,
+		input: PropTypes.func.isRequired,
+		multiply: PropTypes.func.isRequired,
+		set: PropTypes.func.isRequired,
+		subtract: PropTypes.func.isRequired,
+		value: PropTypes.func.isRequired,
+	}).isRequired,
+	clients: PropTypes.number.isRequired,
+	invoicesProduced: PropTypes.number.isRequired,
+	invoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+			items: PropTypes.arrayOf(
+				PropTypes.shape({
+					date: PropTypes.string.isRequired,
+					desc: PropTypes.string.isRequired,
+					fee: PropTypes.string.isRequired,
+					id: PropTypes.string.isRequired,
+				})
+			),
+		})
+	),
+	overdueInvoices: PropTypes.arrayOf(
+		PropTypes.shape({
+			invNo: PropTypes.number.isRequired,
+			mileage: PropTypes.number,
+			message: PropTypes.string.isRequired,
+			total: PropTypes.string.isRequired,
+			_id: PropTypes.string.isRequired,
+			date: PropTypes.string.isRequired,
+			paid: PropTypes.bool.isRequired,
+			client: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				greeting: PropTypes.string.isRequired,
+			}).isRequired,
+			business: PropTypes.shape({
+				_id: PropTypes.string.isRequired,
+				name: PropTypes.string.isRequired,
+				email: PropTypes.string.isRequired,
+				phone: PropTypes.string.isRequired,
+				add1: PropTypes.string.isRequired,
+				add2: PropTypes.string,
+				add3: PropTypes.string,
+				postCode: PropTypes.string.isRequired,
+				bankName: PropTypes.string.isRequired,
+				accountNo: PropTypes.string.isRequired,
+				sortCode: PropTypes.string.isRequired,
+				utr: PropTypes.string.isRequired,
+				terms: PropTypes.string.isRequired,
+				farewell: PropTypes.string.isRequired,
+				contact: PropTypes.string.isRequired,
+				useMileage: PropTypes.bool.isRequired,
+			}),
+			items: PropTypes.arrayOf(
+				PropTypes.shape({
+					date: PropTypes.string.isRequired,
+					desc: PropTypes.string.isRequired,
+					fee: PropTypes.string.isRequired,
+					id: PropTypes.string.isRequired,
+				})
+			),
+		})
+	),
+};
+
 const mapStateToProps = state => ({
 	businessError: state.business.error,
 	clientError: state.clients.error,
@@ -240,5 +441,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ getBusiness, getClients, setAlert }
+	{ setAlert }
 )(Dashboard);

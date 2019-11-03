@@ -114,7 +114,17 @@ const PreviousItems = ({ clientItems, clearClientItems }) => {
 };
 
 PreviousItems.propTypes = {
-	clientItems: PropTypes.func.isRequired,
+	clientItems: PropTypes.shape({
+		name: PropTypes.string.isRequired,
+		items: PropTypes.arrayOf(
+			PropTypes.shape({
+				date: PropTypes.string,
+				desc: PropTypes.string,
+				fee: PropTypes.string,
+				id: PropTypes.string,
+			})
+		),
+	}).isRequired,
 	clearClientItems: PropTypes.func.isRequired,
 };
 

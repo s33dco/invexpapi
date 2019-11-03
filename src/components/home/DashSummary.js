@@ -33,7 +33,7 @@ const DashSummary = ({ dashBoard }) => {
 			</Container>
 			<Container>
 				<Typography variant="h6" component="h2" align="center">
-					Income : {numeral(dashBoard.income).format()}
+					Income : {dashBoard.income}
 				</Typography>
 				<Typography align="center">
 					{dashBoard.numberOfInvoices} invoices /{' '}
@@ -41,10 +41,10 @@ const DashSummary = ({ dashBoard }) => {
 				</Typography>
 
 				<Typography variant="body2" component="h3" align="center">
-					Receipts {numeral(dashBoard.receipts).format()}
+					Receipts {dashBoard.receipts}
 				</Typography>
 				<Typography variant="body2" component="h3" align="center">
-					Deductions {numeral(dashBoard.deductions).format()}
+					Deductions {dashBoard.deductions}
 				</Typography>
 			</Container>
 		</Container>
@@ -54,48 +54,9 @@ DashSummary.propTypes = {
 	dashBoard: PropTypes.shape({
 		numberOfClients: PropTypes.number,
 		numberOfInvoices: PropTypes.number,
-		deductions: PropTypes.shape({
-			_input: PropTypes.number.isRequired,
-			_value: PropTypes.number.isRequired,
-			add: PropTypes.func.isRequired,
-			clone: PropTypes.func.isRequired,
-			difference: PropTypes.func.isRequired,
-			divide: PropTypes.func.isRequired,
-			format: PropTypes.func.isRequired,
-			input: PropTypes.func.isRequired,
-			multiply: PropTypes.func.isRequired,
-			set: PropTypes.func.isRequired,
-			subtract: PropTypes.func.isRequired,
-			value: PropTypes.func.isRequired,
-		}),
-		income: PropTypes.shape({
-			_input: PropTypes.number.isRequired,
-			_value: PropTypes.number.isRequired,
-			add: PropTypes.func.isRequired,
-			clone: PropTypes.func.isRequired,
-			difference: PropTypes.func.isRequired,
-			divide: PropTypes.func.isRequired,
-			format: PropTypes.func.isRequired,
-			input: PropTypes.func.isRequired,
-			multiply: PropTypes.func.isRequired,
-			set: PropTypes.func.isRequired,
-			subtract: PropTypes.func.isRequired,
-			value: PropTypes.func.isRequired,
-		}),
-		receipts: PropTypes.shape({
-			_input: PropTypes.number.isRequired,
-			_value: PropTypes.number.isRequired,
-			add: PropTypes.func.isRequired,
-			clone: PropTypes.func.isRequired,
-			difference: PropTypes.func.isRequired,
-			divide: PropTypes.func.isRequired,
-			format: PropTypes.func.isRequired,
-			input: PropTypes.func.isRequired,
-			multiply: PropTypes.func.isRequired,
-			set: PropTypes.func.isRequired,
-			subtract: PropTypes.func.isRequired,
-			value: PropTypes.func.isRequired,
-		}),
+		deductions: PropTypes.string.isRequired,
+		income: PropTypes.string.isRequired,
+		receipts: PropTypes.string.isRequired,
 	}),
 };
 
