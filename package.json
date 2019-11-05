@@ -15,7 +15,7 @@
 		"test": "jest --watchAll --runInBand",
 		"analyze": "cd client && build:analyze",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production && cd client && yarn build\" \" cross-env NODE_ENV=production yarn start\"",
-		"heroku-postbuild": "cd client && yarn build",
+		"heroku-postbuild": "cd client && yarn install && yarn build",
 		"start": "NODE_ENV=production node server/server.js"
 	},
 	"dependencies": {
