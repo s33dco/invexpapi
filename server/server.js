@@ -1,6 +1,6 @@
 const config = require('config');
 const fs = require('fs');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const app = require('./app');
 const logger = require('./startup/logger');
@@ -16,7 +16,7 @@ const certOptions = {
 	),
 };
 
-http.createServer(certOptions, app).listen(port, () => {
+https.createServer(certOptions, app).listen(port, () => {
 	logger.info(
 		`** https server running in ${environment} listening on port ${port}...`
 	);
