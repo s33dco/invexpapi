@@ -11,13 +11,13 @@
 		"npm": "6.9.0"
 	},
 	"scripts": {
-		"clientinstall": "cd client && npm install",
+		"clientinstall": "npm install --prefix client",
 		"server": "nodemon server/server.js",
-		"indev": "concurrently \"cd client && npm run dev\" \"npm run server\"",
+		"indev": "concurrently \"npm run dev  --prefix client\" \"npm run server\"",
 		"test": "jest --watchAll --runInBand",
-		"analyze": "cd client && build:analyze",
-		"inprod": "concurrently \"cross-env NODE_ENV=production && cd client && npm run build\" \" cross-env NODE_ENV=production npm run start\"",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && npm install && npm run build",
+		"analyze": "npm run build:analyze --prefix client",
+		"inprod": "concurrently \"cross-env NODE_ENV=production npm run build --prefix client\" \" cross-env NODE_ENV=production npm run start\"",
+		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
 		"start": "node server/server.js"
 	},
 	"dependencies": {
