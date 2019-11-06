@@ -44,11 +44,6 @@ const initialize = app => {
 		app.get('*', (req, res) => {
 			res.sendFile(path.resolve(__dirname, '../../build/index.html'));
 		});
-	} else {
-		app.use(express.static('dev'));
-		app.get('*', (req, res) => {
-			res.sendFile(path.resolve(__dirname, '../../dev/index.html'));
-		});
 	}
 };
 

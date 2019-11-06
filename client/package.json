@@ -14,7 +14,6 @@
 	},
 	"scripts": {
 		"dev": "webpack-dev-server --env.env=dev",
-		"dev:build": "NODE_ENV=development $npm_package_config_webpack_args --env.env=dev",
 		"build": "NODE_ENV=production $npm_package_config_webpack_args --env.env=prod",
 		"build:analyze": "yarn build --env.addon=bundleanalyze --env.addon=bundlevisualizer"
 	},
