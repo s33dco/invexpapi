@@ -8,16 +8,16 @@
 	"private": true,
 	"engines": {
 		"node": "12.4.0",
-		"yarn": "1.19.1"
+		"npm": "6.9.0"
 	},
 	"scripts": {
-		"clientinstall": "cd client && yarn install",
+		"clientinstall": "cd client && npm install",
 		"server": "nodemon server/server.js",
-		"runindev": "concurrently \"cd client && yarn dev\" \"yarn server\"",
+		"indev": "concurrently \"cd client && npm run dev\" \"npm run server\"",
 		"test": "jest --watchAll --runInBand",
 		"analyze": "cd client && build:analyze",
-		"runinprod": "concurrently \"cross-env NODE_ENV=production && cd client && yarn build\" \" cross-env NODE_ENV=production yarn start\"",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && yarn install && yarn build",
+		"inprod": "concurrently \"cross-env NODE_ENV=production && cd client && npm run build\" \" cross-env NODE_ENV=production npm run start\"",
+		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && npm install && npm run build",
 		"start": "node server/server.js"
 	},
 	"dependencies": {
