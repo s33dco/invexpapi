@@ -7,7 +7,8 @@
 	"license": "MIT",
 	"private": true,
 	"engines": {
-		"node": "12.4.0"
+		"node": "12.4.0",
+		"yarn": "1.19.1"
 	},
 	"scripts": {
 		"clientinstall": "cd client && yarn install",
@@ -17,7 +18,7 @@
 		"analyze": "cd client && build:analyze",
 		"runinprod": "concurrently \"cross-env NODE_ENV=production && cd client && yarn build\" \" cross-env NODE_ENV=production yarn start\"",
 		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd client && yarn install && yarn build",
-		"start": "NODE_ENV=production node server/server.js"
+		"start": "node server/server.js"
 	},
 	"dependencies": {
 		"@hapi/joi": "^15.1.1",

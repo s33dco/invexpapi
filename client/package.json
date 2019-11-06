@@ -7,14 +7,15 @@
 	"license": "MIT",
 	"private": true,
 	"engines": {
-		"node": "12.4.0"
+		"node": "12.4.0",
+		"yarn": "1.19.1"
 	},
 	"config": {
 		"webpack_args": "webpack --config webpack.config.js --display-error-details"
 	},
 	"scripts": {
 		"dev": "webpack-dev-server --env.env=dev",
-		"build": "NODE_ENV=production $npm_package_config_webpack_args --env.env=prod",
+		"build": "$npm_package_config_webpack_args --env.env=prod",
 		"build:analyze": "yarn build --env.addon=bundleanalyze --env.addon=bundlevisualizer"
 	},
 	"dependencies": {
