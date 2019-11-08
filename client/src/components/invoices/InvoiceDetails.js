@@ -209,7 +209,7 @@ InvoiceDetails.propTypes = {
 			add3: PropTypes.string,
 			postCode: PropTypes.string.isRequired,
 			greeting: PropTypes.string.isRequired,
-		}).isRequired,
+		}),
 		business: PropTypes.shape({
 			_id: PropTypes.string.isRequired,
 			name: PropTypes.string.isRequired,
@@ -227,7 +227,7 @@ InvoiceDetails.propTypes = {
 			farewell: PropTypes.string.isRequired,
 			contact: PropTypes.string.isRequired,
 			useMileage: PropTypes.bool.isRequired,
-		}).isRequired,
+		}),
 		items: PropTypes.arrayOf(
 			PropTypes.shape({
 				date: PropTypes.string.isRequired,

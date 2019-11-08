@@ -1,6 +1,7 @@
 {
 	"mongodbURI": "mongodb://localhost:27017/invexpapidev",
-	"apiURL": "https://localhost:5000/api",
+	"apiURL": "http://localhost:5000/api",
+	"frontendURL": "https://localhost:8080/",
 	"backend_port": 5000,
 	"jwt_secret": "jwt_secret",
 	"SENDGRID_API_PASSWORD": "sendgrid_api_password"

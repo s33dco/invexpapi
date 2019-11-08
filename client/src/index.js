@@ -5,4 +5,3 @@ import '../styles/styles.scss';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
-module.hot.accept();

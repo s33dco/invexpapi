@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import About from './About';
 import Dashboard from './Dashboard';
 
-const Home = ({ isAuthenticated, user, token }) => {
+const Home = ({ isAuthenticated, user, token , loadUser}) => {
+
 	return (
 		<div className="container">
 			{isAuthenticated && user && token ? <Dashboard /> : <About />}

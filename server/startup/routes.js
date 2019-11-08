@@ -14,18 +14,18 @@ const expenses = require('../routes/expenses');
 const invoices = require('../routes/invoices');
 
 const initialize = app => {
-	const corsOptions = {
-		origin: '*',
-		optionsSuccessStatus: 200,
-	};
+	// const corsOptions = {
+	// 	origin: 'http://localhost:8080',
+	// 	optionsSuccessStatus: 200,
+	// };
 
 	const middlewares = [
+		cors(),
 		morgan('dev', { stream: logger.stream }),
 		express.json({ extended: false }),
-		cors(corsOptions),
 		removeEmptyProperties(),
 	];
-
+	app.options(cors());
 	app.use(middlewares);
 
 	// define Routes

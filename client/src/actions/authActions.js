@@ -16,7 +16,7 @@ import {
 	CLEAR_AUTH_ERRORS,
 } from './types';
 
-const loadUser = () => async dispatch => {
+export const loadUser = () => async dispatch => {
 	// load token into global axios headers.
 	if (localStorage.token) {
 		setAuthToken(localStorage.token);
@@ -39,6 +39,7 @@ const loadUser = () => async dispatch => {
 			payload:
 				error.response.data.msg || 'something went wrong - try again',
 		});
+		await dispatch(logout());
 	}
 };
 

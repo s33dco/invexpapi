@@ -2,6 +2,6 @@
 	"mongodbURI": "MONGODB_URI",
 	"apiURL": "API_URL",
 	"backend_port": "PORT",
-	"jwt_secret": "jwt_secret",
-  "SENDGRID_API_PASSWORD" : "SENDGRID_API_PASSWORD"
+	"jwt_secret": "JWT_SECRET",
+	"SENDGRID_API_PASSWORD": "SENDGRID_API_PASSWORD"
 }

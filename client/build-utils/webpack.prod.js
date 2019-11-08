@@ -40,7 +40,7 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: 'styles/styles.[contenthash].css',
 		}),
-		new webpack.HashedModuleIdsPlugin(),
+		new webpack.HashedModuleIdsPlugin()
 	],
 
 	optimization: {

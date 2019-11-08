@@ -1,4 +1,3 @@
-// import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import {
 	Switch,
@@ -6,7 +5,6 @@ import {
 	Route,
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-// import importedComponent from 'react-imported-component';
 import { Provider } from 'react-redux';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -53,8 +51,10 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
+
 const App = () => {
 	const classes = useStyles();
+
 	return (
 		<Provider store={store}>
 			<MuiPickersUtilsProvider utils={MomentUtils} locale="en">
@@ -99,7 +99,6 @@ const App = () => {
 								<Route component={NoMatch} />
 							</Switch>
 						</Container>
-						{/* </main> */}
 						<Container component="footer" className={classes.footer}>
 							<Footer />
 						</Container>

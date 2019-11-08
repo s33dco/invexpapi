@@ -1,9 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const fs = require('fs')
-// const portConfig = require('config');
-
-// const frontendPort = portConfig.get('frontend_port');
 
 module.exports = {
 	mode: 'none',
