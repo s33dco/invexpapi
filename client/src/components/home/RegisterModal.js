@@ -165,7 +165,8 @@ const RegisterModal = props => {
 	useEffect(() => {
 		// if authenticated redirect to root
 		if (isAuthenticated && user) {
-			props.history.push('/');
+			// props.history.push('/');
+			handleClose()
 		}
 
 		if (error) {
@@ -177,7 +178,7 @@ const RegisterModal = props => {
 		}
 
 		// eslint-disable-next-line
-	}, [error, isAuthenticated, props.history]); // dependencies for useEffect
+	}, [error, isAuthenticated, user]); // dependencies for useEffect
 
 	return (
 		<div>

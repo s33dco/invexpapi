@@ -5,18 +5,17 @@ import PropTypes from 'prop-types';
 import About from './About';
 import Dashboard from './Dashboard';
 
-const Home = ({ isAuthenticated, user, token , loadUser}) => {
+const Home = ({ isAuthenticated, user}) => {
 
 	return (
 		<div className="container">
-			{isAuthenticated && user && token ? <Dashboard /> : <About />}
+			{isAuthenticated && user ? <Dashboard /> : <About />}
 		</div>
 	);
 };
 
 Home.propTypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
-	token: PropTypes.string,
 	user: PropTypes.shape({
 		_id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
@@ -25,8 +24,7 @@ Home.propTypes = {
 
 const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user,
-	token: state.auth.token,
+	user: state.auth.user
 });
 
 export default connect(mapStateToProps)(Home);

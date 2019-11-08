@@ -111,7 +111,7 @@ export const logout = () => async dispatch => {
 	await dispatch(clearClients());
 	await dispatch(clearExpenses());
 	await dispatch(clearInvoices());
-	await dispatch(setAlert('See you soon!', 'info'));
+	await dispatch(setAlert("you'll need to sign back in.", 'info'));
 };
 
 export const clearErrors = () => async dispatch => {

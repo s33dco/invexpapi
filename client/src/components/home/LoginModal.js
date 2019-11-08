@@ -130,7 +130,7 @@ const LoginModal = props => {
 		// if authenticated redirect to root
 		if (isAuthenticated && user) {
 			handleClose();
-			props.history.push('/');
+			// props.history.push('/');
 		}
 
 		if (error) {
@@ -142,7 +142,7 @@ const LoginModal = props => {
 		}
 
 		// eslint-disable-next-line
-	}, [error, isAuthenticated, props.history]); // dependencies for useEffect
+	}, [error, isAuthenticated, user]); // dependencies for useEffect
 
 	return (
 		<div>

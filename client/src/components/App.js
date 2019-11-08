@@ -1,14 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
 	Switch,
 	BrowserRouter as Router,
 	Route,
 } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Provider } from 'react-redux';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { connect } from 'react-redux';
 import Container from '@material-ui/core/Container';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
@@ -22,7 +20,8 @@ import Business from './business/Business';
 import Reports from './reports/Reports';
 import Contact from './contact/Contact';
 import NoMatch from './NoMatch';
-import store from '../store';
+import {loadUser} from '../actions/authActions'
+
 
 const useStyles = makeStyles(() => ({
 	body: {
@@ -52,13 +51,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const App = () => {
+const App = ({loadUser, isAuthenticated, user }) => {
 	const classes = useStyles();
 
+	useEffect(() => {
+			loadUser();
+	},[])
+
 	return (
-		<Provider store={store}>
-			<MuiPickersUtilsProvider utils={MomentUtils} locale="en">
-				<CssBaseline />
 				<Router>
 					<Container component="div" className={classes.body}>
 						<Container component="header" className={classes.header}>
@@ -104,9 +104,23 @@ const App = () => {
 						</Container>
 					</Container>
 				</Router>
-			</MuiPickersUtilsProvider>
-		</Provider>
 	);
 };
 
-export default App;
+App.propTypes = {
+	isAuthenticated: PropTypes.bool.isRequired,
+	user: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	}),
+};
+
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.isAuthenticated,
+	user: state.auth.user
+});
+// export default App;
+export default connect(
+	mapStateToProps,
+	{ loadUser }
+)(App);
