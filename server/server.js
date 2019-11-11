@@ -17,9 +17,9 @@ const certOptions = {
 	),
 };
 
-https.createServer(certOptions, app).listen(port, () => {
+http.createServer(certOptions, app).listen(port, () => {
 	logger.info(
-		`** http server running in ${environment} listening on port ${port}...`
+		`** server running in ${environment} listening on port ${port}...`
 	);
 });
 
