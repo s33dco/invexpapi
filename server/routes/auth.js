@@ -33,7 +33,9 @@ router.post('/', async (req, res) => {
 	const { error } = validateLogin(req.body);
 
 	if (error) {
-		logger.warn(`failed login attempt from ${req.ip} using ${req.body.email}`);
+		logger.warn(
+			`failed login attempt from ${req.ip} using ${req.body.email}`
+		);
 		return res.status(400).json({ msg: error.details[0].message });
 	}
 
@@ -55,15 +57,39 @@ router.post('/', async (req, res) => {
 		const payload = {
 			user: {
 				id: user.id,
-				name: user.name
-			}
+				name: user.name,
+			},
 		};
 
 		jwt.sign(
 			payload,
 			config.get('jwt_secret'),
 			{
-				expiresIn: 3600
+				expiresIn: 600,
+			},
+			(err, token) => {
+				if (err) throw err;
+
+				res.json({ token });
+			}
+		);
+	} catch (e) {
+		logger.error(e.message);
+		res.status(500).send('Server Error');
+	}
+});
+
+router.post('/refresh', auth, async (req, res) => {
+	const token = req.header('x-auth-token');
+
+	try {
+		const decoded = jwt.verify(token, config.get('jwt_secret'));
+
+		jwt.sign(
+			decoded.user,
+			config.get('jwt_secret'),
+			{
+				expiresIn: 600,
 			},
 			(err, token) => {
 				if (err) throw err;

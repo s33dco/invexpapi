@@ -14,6 +14,7 @@ import {
 	LOGIN_FAIL,
 	LOGOUT,
 	CLEAR_AUTH_ERRORS,
+	REFRESH_TOKEN
 } from './types';
 
 export const loadUser = () => async dispatch => {
@@ -27,7 +28,10 @@ export const loadUser = () => async dispatch => {
 
 		dispatch({
 			type: USER_LOADED,
-			payload: res.data,
+			payload: {
+				user:res.data, 
+				token: localStorage.token
+			}
 		});
 		await dispatch(getBusiness());
 		await dispatch(getClients());
@@ -119,3 +123,32 @@ export const clearErrors = () => async dispatch => {
 		type: CLEAR_AUTH_ERRORS,
 	});
 };
+
+export const refreshToken = () => async (dispatch) => {
+	console.log('refreshUser called')
+	const config = {
+		headers: {
+			'Content-type': 'application/json',
+		},
+	};
+	try {
+		const res = await axios.post(`${process.env.API_URL}/auth/refresh`, config);
+		console.log(res)
+
+		dispatch({
+			type: REFRESH_TOKEN,
+			payload: res.data
+		});
+
+		// await dispatch(loadUser());
+		await dispatch(setAlert('Please carry on', 'info'));
+
+	} catch (error) {
+		dispatch({
+			type: AUTH_ERROR,
+			payload:
+				error.res.data.msg || 'something went wrong - try again',
+		});
+	}
+}
+

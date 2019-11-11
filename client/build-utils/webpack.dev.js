@@ -7,11 +7,11 @@ module.exports = {
 	devtool: 'eval-source-map',
 	module: {
 		rules: [
-			{
-				test: /\.(js|jsx)$/,
-				use: 'react-hot-loader/webpack',
-				include: /node_modules/,
-			},
+			// {
+			// 	test: /\.(js|jsx)$/,
+			// 	use: 'react-hot-loader/webpack',
+			// 	include: /node_modules/,
+			// },
 			{
 				test: /\.s?css$/,
 				use: ['style-loader', 'css-loader', 'sass-loader'],

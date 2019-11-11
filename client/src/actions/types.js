@@ -6,6 +6,8 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_AUTH_ERRORS = 'CLEAR_AUTH_ERRORS';
+export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+export const RELOGIN = 'RELOGIN';
 
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -28,8 +30,6 @@ export const CLEAR_CURRENT_CLIENT = 'CLEAR_CURRENT_CLIENT';
 export const SET_DELETE_CLIENT = 'SET_DELETE_CLIENT';
 export const CLEAR_DELETE_CLIENT = 'CLEAR_DELETE_CLIENT';
 export const DELETE_CLIENT = 'DELETE_CLIENT';
-
-// maybe do automatically...
 
 export const GET_CLIENT_ITEMS = 'GET_CLIENT_JOBS';
 export const CLEAR_CLIENT_ITEMS = 'CLEAR_CLIENT_JOBS';

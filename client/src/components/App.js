@@ -4,12 +4,12 @@ import {
 	BrowserRouter as Router,
 	Route,
 } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Container from '@material-ui/core/Container';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
+import RefreshDialog from './RefreshDialog'
 import Footer from './layout/Footer';
 import PrivateRoute from './PrivateRoute';
 import Home from './home/Home';
@@ -51,11 +51,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const App = ({loadUser, isAuthenticated, user }) => {
+const App = ({token, isAuthenticated, loadUser }) => {
 	const classes = useStyles();
 
 	useEffect(() => {
+		if (!isAuthenticated && !token){
 			loadUser();
+		}	
 	},[])
 
 	return (
@@ -66,6 +68,7 @@ const App = ({loadUser, isAuthenticated, user }) => {
 						</Container>
 						<Container component="main" className={classes.main}>
 							<Alerts />
+							<RefreshDialog />
 							<Switch>
 								<Route exact path="/" component={Home} />
 								<PrivateRoute
@@ -81,13 +84,11 @@ const App = ({loadUser, isAuthenticated, user }) => {
 								<PrivateRoute
 									exact
 									path="/expenses"
-									// component={AsyncExpenses}
 									component={Expenses}
 								/>
 								<PrivateRoute
 									exact
 									path="/business"
-									// component={AsyncBusiness}
 									component={Business}
 								/>
 								<PrivateRoute
@@ -106,21 +107,9 @@ const App = ({loadUser, isAuthenticated, user }) => {
 				</Router>
 	);
 };
-
-App.propTypes = {
-	isAuthenticated: PropTypes.bool.isRequired,
-	user: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-		name: PropTypes.string.isRequired,
-	}),
-};
-
 const mapStateToProps = state => ({
+	token: state.auth.token,
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
 });
-// export default App;
-export default connect(
-	mapStateToProps,
-	{ loadUser }
-)(App);
+
+export default connect(mapStateToProps, { loadUser })(App);
