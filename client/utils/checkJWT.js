@@ -1,7 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import moment from 'moment'
-import axios from 'axios'
-import {LOGOUT, SET_ALERT, RELOGIN} from '../src/actions/types'
+import {LOGOUT, SET_ALERT, RELOGIN, REMOVE_ALERT} from '../src/actions/types'
 
 const checkJWT = store => dispatch => action => {
  
@@ -9,7 +8,7 @@ const checkJWT = store => dispatch => action => {
 		const tokenExpiration = jwtDecode(store.getState().auth.token).exp;
 		const expiresAt = moment.unix(tokenExpiration).utc()
 
-		if (tokenExpiration - (moment().unix()) < 120 ){
+		if (tokenExpiration - (moment().unix()) < 101 ){
 			dispatch({ type: RELOGIN})
 		}
 		if (expiresAt < moment().utc()){
@@ -17,7 +16,9 @@ const checkJWT = store => dispatch => action => {
 			dispatch({
 				type: SET_ALERT,
 				payload: { msg:"you've been logged out", type:'info', id:'999' },
-			});
+			})
+			setTimeout(
+				() => dispatch({ type: REMOVE_ALERT, payload: '999' }), 5500);
 		} 
 	}
 	dispatch(action);

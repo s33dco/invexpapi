@@ -58,10 +58,21 @@ export default (state = initialState, action) => {
 				relogin: false,
 				expiresAt: expires
 			};
+		case LOGOUT:
+			localStorage.removeItem('token');
+			return {
+				...state,
+				token: null,
+				isAuthenticated: false,
+				loading: false,
+				user: null,
+				error: null,
+				relogin: false,
+				expiresAt: null
+			};
 		case LOGIN_FAIL:
 		case REGISTER_FAIL:
 		case AUTH_ERROR:
-		case LOGOUT:
 			localStorage.removeItem('token');
 			return {
 				...state,

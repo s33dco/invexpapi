@@ -22,7 +22,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const RefreshDialog = ({
 	relogin,
-	expiresAt,
 	logout,
 	refreshToken,
 }) => {
@@ -102,8 +101,7 @@ RefreshDialog.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	relogin: state.auth.relogin,
-	expiresAt: state.auth.expiresAt
+	relogin: state.auth.relogin
 });
 
 export default connect(
