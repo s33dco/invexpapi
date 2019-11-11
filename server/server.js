@@ -23,8 +23,8 @@ https.createServer(certOptions, app).listen(port, () => {
 	);
 });
 
-// https.createServer(app).listen(port, () => {
+// http.createServer(app).listen(port, () => {
 // 	logger.info(
-// 		`** http server running in ${environment} listening on port ${port}...`
+// 		`** server running in ${environment} listening on port ${port}...`
 // 	);
 // });

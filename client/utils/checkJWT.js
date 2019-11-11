@@ -3,30 +3,6 @@ import moment from 'moment'
 import axios from 'axios'
 import {LOGOUT, SET_ALERT, RELOGIN} from '../src/actions/types'
 
-// const refreshToken = async (dispatch) => {
-// 	console.log('refreshUser called')
-// 	const config = {
-// 		headers: {
-// 			'Content-type': 'application/json',
-// 		},
-// 	};
-// 		try {
-// 		const res = await axios.post(`${process.env.API_URL}/auth/refresh`, config);
-
-// 		dispatch({
-// 			type: REFRESH_TOKEN,
-// 			payload: res.data,
-// 		});
-
-// 	} catch (error) {
-// 		dispatch({
-// 			type: AUTH_ERROR,
-// 			payload:
-// 				error.response.data.msg || 'something went wrong - try again',
-// 		});
-// 	}
-// }
-
 const checkJWT = store => dispatch => action => {
  
 	if (store.getState().auth && store.getState().auth.token) {
