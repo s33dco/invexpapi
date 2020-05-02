@@ -29,7 +29,6 @@ const DeleteInvoiceDialog = ({
 	const [open, setOpen] = useState(false);
 	const [inProcess, setInProcess] = useState(false);
 	const [record, setRecord] = useState({ id: '' });
-	// const [desc, setDesc] = useState('');
 	const { invNo, paid } = toDelete;
 
 	useEffect(() => {
@@ -38,7 +37,6 @@ const DeleteInvoiceDialog = ({
 			const { _id } = toDelete;
 			const objId = _id.toString();
 			setRecord({ ...record, id: objId });
-			// setDesc(desc);
 			setInProcess(true);
 		}
 	}, [toDelete]);
@@ -47,10 +45,8 @@ const DeleteInvoiceDialog = ({
 		await clearDeleteInvoice();
 		await clearInvoiceErrors();
 		setInProcess(false);
-		// setDesc('');
 		setRecord({ ...record, id: '' });
 		setOpen(false);
-		// statusCheck('end of handleClose block');
 	};
 
 	const requestDelete = async () => {

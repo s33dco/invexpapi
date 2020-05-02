@@ -222,8 +222,6 @@ const AddInvoice = ({
 			business: { ...business },
 		};
 
-		console.log(newInvoice);
-
 		await addInvoice(newInvoice);
 	};
 

@@ -5,8 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
-// const apiURL = 'https://localhost:5000/api';
-const apiURL = process.env.API_URL;
+const apiURL = 'https://localhost:5000/api';
+// const apiURL = process.env.API_URL;
 
 module.exports = {
 	entry: './src/index.js',

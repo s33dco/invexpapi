@@ -8,7 +8,7 @@ const checkJWT = store => dispatch => action => {
 		const tokenExpiration = jwtDecode(store.getState().auth.token).exp;
 		const expiresAt = moment.unix(tokenExpiration).utc()
 
-		if (tokenExpiration - (moment().unix()) < 101 ){
+		if (tokenExpiration - (moment().unix()) < 300 ){
 			dispatch({ type: RELOGIN})
 		}
 		if (expiresAt < moment().utc()){

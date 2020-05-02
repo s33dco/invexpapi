@@ -182,7 +182,7 @@ export const payInvoice = id => async dispatch => {
 		dispatch({
 			type: INVOICE_ERROR,
 			payload:
-				error.response.data.msg || 'something went wrong - try again',
+				error.res.data.msg || 'something went wrong - try again',
 		});
 	}
 };
