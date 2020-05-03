@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const fs = require('fs')
+const fs = require('fs');
 
 module.exports = {
 	mode: 'none',
@@ -28,9 +28,9 @@ module.exports = {
 		contentBase: path.resolve(__dirname, './src'),
 		hot: true,
 		open: 'Google Chrome',
-		https: {
-      key: fs.readFileSync('../config/server.key'),
-      cert: fs.readFileSync('../config/server.crt')
-    }
+		// https: {
+		//   key: fs.readFileSync('../config/server.key'),
+		//   cert: fs.readFileSync('../config/server.crt')
+		// }
 	},
 };

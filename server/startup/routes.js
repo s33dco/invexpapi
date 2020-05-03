@@ -13,11 +13,11 @@ const clients = require('../routes/clients');
 const expenses = require('../routes/expenses');
 const invoices = require('../routes/invoices');
 
-const initialize = app => {
-	// const corsOptions = {
-	// 	origin: 'http://localhost:8080',
-	// 	optionsSuccessStatus: 200,
-	// };
+const initialize = (app) => {
+	const corsOptions = {
+		origin: 'http://localhost:8080',
+		optionsSuccessStatus: 200,
+	};
 
 	const middlewares = [
 		cors(),

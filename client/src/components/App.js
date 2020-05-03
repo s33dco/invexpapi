@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
 	Switch,
 	BrowserRouter as Router,
@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Container from '@material-ui/core/Container';
 import NavBar from './layout/NavBar';
 import Alerts from './layout/Alerts';
-import RefreshDialog from './RefreshDialog'
+import RefreshDialog from './RefreshDialog';
 import Footer from './layout/Footer';
 import PrivateRoute from './PrivateRoute';
 import Home from './home/Home';
@@ -20,8 +20,7 @@ import Business from './business/Business';
 import Reports from './reports/Reports';
 import Contact from './contact/Contact';
 import NoMatch from './NoMatch';
-import {loadUser} from '../actions/authActions'
-
+import { loadUser } from '../actions/authActions';
 
 const useStyles = makeStyles(() => ({
 	body: {
@@ -50,61 +49,52 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-
-const App = ({token, isAuthenticated, loadUser }) => {
+const App = ({ token, isAuthenticated, loadUser }) => {
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (!isAuthenticated && !token){
+		if (!isAuthenticated && !token) {
 			loadUser();
-		}	
-	},[])
+		}
+	}, []);
 
 	return (
-				<Router>
-					<Container component="div" className={classes.body}>
-						<Container component="header" className={classes.header}>
-							<NavBar />
-						</Container>
-						<Container component="main" className={classes.main}>
-							<Alerts />
-							<RefreshDialog />
-							<Switch>
-								<Route exact path="/" component={Home} />
-								<PrivateRoute
-									exact
-									path="/invoices"
-									component={Invoices}
-								/>
-								<PrivateRoute
-									exact
-									path="/clients"
-									component={Clients}
-								/>
-								<PrivateRoute
-									exact
-									path="/expenses"
-									component={Expenses}
-								/>
-								<PrivateRoute
-									exact
-									path="/business"
-									component={Business}
-								/>
-								<PrivateRoute
-									exact
-									path="/reports"
-									component={Reports}
-								/>
-								<Route exact path="/contact" component={Contact} />
-								<Route component={NoMatch} />
-							</Switch>
-						</Container>
-						<Container component="footer" className={classes.footer}>
-							<Footer />
-						</Container>
-					</Container>
-				</Router>
+		<Router>
+			<Container component="div" className={classes.body}>
+				<Container component="header" className={classes.header}>
+					<NavBar />
+				</Container>
+				<Container component="main" className={classes.main}>
+					<Alerts />
+					<RefreshDialog />
+					<Switch>
+						<Route exact path="/" component={Home} />
+						<PrivateRoute
+							exact
+							path="/invoices"
+							component={Invoices}
+						/>
+						<PrivateRoute exact path="/clients" component={Clients} />
+						<PrivateRoute
+							exact
+							path="/expenses"
+							component={Expenses}
+						/>
+						<PrivateRoute
+							exact
+							path="/business"
+							component={Business}
+						/>
+						<PrivateRoute exact path="/reports" component={Reports} />
+						<Route exact path="/contact" component={Contact} />
+						<Route component={NoMatch} />
+					</Switch>
+				</Container>
+				<Container component="footer" className={classes.footer}>
+					<Footer />
+				</Container>
+			</Container>
+		</Router>
 	);
 };
 const mapStateToProps = state => ({
@@ -112,4 +102,7 @@ const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { loadUser })(App);
+export default connect(
+	mapStateToProps,
+	{ loadUser }
+)(App);

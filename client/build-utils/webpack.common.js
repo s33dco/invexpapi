@@ -4,13 +4,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-
-const apiURL = 'https://localhost:5000/api';
+const apiURL = 'http://localhost:5000/api';
 // const apiURL = process.env.API_URL;
 
 module.exports = {
 	entry: './src/index.js',
-		node: {
+	node: {
 		net: 'empty',
 		// tls: 'empty',
 		// dns: 'empty',
@@ -23,17 +22,17 @@ module.exports = {
 				use: ['babel-loader'], // , 'eslint-loader'
 			},
 			{
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
-      }
+				test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name: '[name].[ext]',
+							outputPath: 'fonts/',
+						},
+					},
+				],
+			},
 		],
 	},
 	resolve: {

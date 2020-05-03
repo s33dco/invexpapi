@@ -12,9 +12,9 @@ const categories = {
 		'Staff expenses',
 		'Reselling goods',
 		'Legal and financial costs',
-		'Mktg, entertainment and subs'
+		'Mktg, entertainment and subs',
 	],
-	message: 'Select a valid option'
+	message: 'Select a valid option',
 };
 
 const selectOptions = categories.values;
@@ -24,70 +24,68 @@ const expenseSchema = new mongoose.Schema(
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'users',
-			required: [true, 'no user id with expense']
+			required: [true, 'no user id with expense'],
 		},
 		date: {
 			type: Date,
 			default: moment().utc(),
 			required: [true, 'Date is required'],
 			max: [
-				moment()
-					.utc()
-					.endOf('day'),
-				'Date should be today or earlier'
-			]
+				moment().utc().endOf('day'),
+				'Date should be today or earlier',
+			],
 		},
 		category: {
 			type: String,
 			required: [true, 'Category required'],
-			enum: categories
+			enum: categories,
 		},
 		amount: {
 			type: mongoose.Schema.Types.Decimal,
 			required: [true, 'Amount required'],
 			validate: {
-				validator: v => {
+				validator: (v) => {
 					return v >= 0;
 				},
-				message: 'Check amount - value cannot be negative'
-			}
+				message: 'Check amount - value cannot be negative',
+			},
 		},
 		desc: {
 			type: String,
 			required: [true, 'Description required'],
 			validate: {
-				validator: v => {
+				validator: (v) => {
 					return v.match(businessName);
 				},
-				message: 'Invalid character used.'
+				message: 'Invalid character used.',
 			},
 			lowercase: true,
-			trim: true
-		}
+			trim: true,
+		},
 	},
 	{
 		toObject: {
-			transform: function(doc, ret) {
+			transform: function (doc, ret) {
 				delete ret.userId;
 				delete ret.__v;
 				ret.amount = ret.amount.toString();
-			}
+			},
 		},
 		toJSON: {
-			transform: function(doc, ret) {
+			transform: function (doc, ret) {
 				delete ret.userId;
 				delete ret.__v;
 				ret.amount = ret.amount.toString();
-			}
-		}
+			},
+		},
 	}
 );
 
-expenseSchema.statics.findUsersExpensesByDate = function(userId) {
+expenseSchema.statics.findUsersExpensesByDate = function (userId) {
 	return this.find({ userId }).sort({ date: -1 });
 };
 
-const validate = expense => {
+const validate = (expense) => {
 	const schema = {
 		userId: Joi.objectId()
 			.required()
@@ -109,7 +107,7 @@ const validate = expense => {
 		desc: Joi.string()
 			.required()
 			.regex(businessName)
-			.error(() => 'Valid description is required')
+			.error(() => 'Valid description is required'),
 	};
 	return Joi.validate(expense, schema);
 };

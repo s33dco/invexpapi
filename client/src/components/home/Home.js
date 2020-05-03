@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import About from './About';
 import Dashboard from './Dashboard';
 
-const Home = ({ isAuthenticated, user}) => {
-
+const Home = ({ isAuthenticated, user }) => {
 	return (
 		<div className="container">
 			{isAuthenticated && user ? <Dashboard /> : <About />}
@@ -24,7 +23,7 @@ Home.propTypes = {
 
 const mapStateToProps = state => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	user: state.auth.user
+	user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(Home);

@@ -17,14 +17,14 @@ const certOptions = {
 	),
 };
 
-https.createServer(certOptions, app).listen(port, () => {
-	logger.info(
-		`** server running in ${environment} listening on port ${port}...`
-	);
-});
-
-// http.createServer(app).listen(port, () => {
+// https.createServer(certOptions, app).listen(port, () => {
 // 	logger.info(
 // 		`** server running in ${environment} listening on port ${port}...`
 // 	);
 // });
+
+http.createServer(app).listen(port, () => {
+	logger.info(
+		`** server running in ${environment} listening on port ${port}...`
+	);
+});

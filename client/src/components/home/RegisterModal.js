@@ -166,7 +166,7 @@ const RegisterModal = props => {
 		// if authenticated redirect to root
 		if (isAuthenticated && user) {
 			// props.history.push('/');
-			handleClose()
+			handleClose();
 		}
 
 		if (error) {
