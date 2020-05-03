@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
+const moment = require('moment/moment');
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
-const { businessName, checkMoney } = require('../../config/regexps');
+const { businessName } = require('../../config/regexps');
 
 const categories = {
 	values: [
