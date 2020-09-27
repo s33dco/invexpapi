@@ -4,8 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const apiURL = 'http://localhost:5000/api';
-// const apiURL = process.env.API_URL;
+// const apiURL = 'http://localhost:5000/api';
+const apiURL = process.env.API_URL;
 
 module.exports = {
 	entry: './src/index.js',
