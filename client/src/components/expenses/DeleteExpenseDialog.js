@@ -100,20 +100,21 @@ DeleteExpenseDialog.propTypes = {
 	deleteExpense: PropTypes.func.isRequired,
 	clearExpenseErrors: PropTypes.func.isRequired,
 	clearDeleteExpense: PropTypes.func.isRequired,
-	toDelete: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-		date: PropTypes.string.isRequired,
-		category: PropTypes.string.isRequired,
-		amount: PropTypes.string.isRequired,
-		desc: PropTypes.string.isRequired,
-	}).isRequired,
+	// toDelete: PropTypes.shape({
+	// 	_id: PropTypes.string.isRequired,
+	// 	date: PropTypes.string.isRequired,
+	// 	category: PropTypes.string.isRequired,
+	// 	amount: PropTypes.string.isRequired,
+	// 	desc: PropTypes.string.isRequired,
+	// }).isRequired,
 };
 
 const mapStateToProps = state => ({
 	toDelete: state.expenses.delete,
 });
 
-export default connect(
-	mapStateToProps,
-	{ deleteExpense, clearDeleteExpense, clearExpenseErrors }
-)(DeleteExpenseDialog);
+export default connect(mapStateToProps, {
+	deleteExpense,
+	clearDeleteExpense,
+	clearExpenseErrors,
+})(DeleteExpenseDialog);

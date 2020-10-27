@@ -382,7 +382,7 @@ const mapStateToProps = state => ({
 	options: state.expenses.categories,
 });
 
-export default connect(
-	mapStateToProps,
-	{ addExpense, clearExpenseErrors }
-)(AddExpense);
+export default connect(mapStateToProps, {
+	addExpense,
+	clearExpenseErrors,
+})(AddExpense);

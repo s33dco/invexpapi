@@ -39,7 +39,6 @@ const DashSummary = ({ dashBoard }) => {
 					{dashBoard.numberOfInvoices} invoices /{' '}
 					{dashBoard.numberOfClients} clients.
 				</Typography>
-
 				<Typography variant="body2" component="h3" align="center">
 					Receipts {dashBoard.receipts}
 				</Typography>
@@ -54,9 +53,9 @@ DashSummary.propTypes = {
 	dashBoard: PropTypes.shape({
 		numberOfClients: PropTypes.number,
 		numberOfInvoices: PropTypes.number,
-		deductions: PropTypes.string.isRequired,
-		income: PropTypes.string.isRequired,
-		receipts: PropTypes.string.isRequired,
+		deductions: PropTypes.string,
+		income: PropTypes.string,
+		receipts: PropTypes.string,
 	}),
 };
 

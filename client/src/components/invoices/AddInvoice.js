@@ -555,21 +555,21 @@ AddInvoice.propTypes = {
 		})
 	),
 	business: PropTypes.shape({
-		_id: PropTypes.string.isRequired,
-		name: PropTypes.string.isRequired,
-		email: PropTypes.string.isRequired,
-		phone: PropTypes.string.isRequired,
-		add1: PropTypes.string.isRequired,
+		_id: PropTypes.string,
+		name: PropTypes.string,
+		email: PropTypes.string,
+		phone: PropTypes.string,
+		add1: PropTypes.string,
 		add2: PropTypes.string,
 		add3: PropTypes.string,
-		postCode: PropTypes.string.isRequired,
-		bankName: PropTypes.string.isRequired,
-		accountNo: PropTypes.string.isRequired,
-		sortCode: PropTypes.string.isRequired,
-		utr: PropTypes.string.isRequired,
-		terms: PropTypes.string.isRequired,
-		farewell: PropTypes.string.isRequired,
-		contact: PropTypes.string.isRequired,
+		postCode: PropTypes.string,
+		bankName: PropTypes.string,
+		accountNo: PropTypes.string,
+		sortCode: PropTypes.string,
+		utr: PropTypes.string,
+		terms: PropTypes.string,
+		farewell: PropTypes.string,
+		contact: PropTypes.string,
 	}),
 	lastInv: PropTypes.number,
 };
@@ -585,7 +585,8 @@ const mapStateToProps = state => ({
 		.pop(),
 });
 
-export default connect(
-	mapStateToProps,
-	{ addInvoice, clearInvoiceErrors, clearCurrentInvoice }
-)(AddInvoice);
+export default connect(mapStateToProps, {
+	addInvoice,
+	clearInvoiceErrors,
+	clearCurrentInvoice,
+})(AddInvoice);
