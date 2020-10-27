@@ -4,5 +4,5 @@
 	"frontendURL": "https://localhost:8080/",
 	"backend_port": 5000,
 	"jwt_secret": "jwt_secret",
-	"SENDGRID_API_PASSWORD": "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"
+	"SENDGRID_API_PASSWORD": "SENDGRID_API_PASSWORD"
 }
