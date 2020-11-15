@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		display: 'flex',
-		borderBottom: '2px #000 solid',
+		borderBottom: '2 #000 solid',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	footer: {
-		borderTop: '2px #000 solid',
+		borderTop: '2 #000 solid',
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-around',
