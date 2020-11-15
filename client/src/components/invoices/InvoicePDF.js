@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		fontSize: '4mm',
-		justifyContent: 'space-around',
+		justifyContent: 'space-between',
 		alignItems: 'flex-start',
 		padding: '7.5mm, 0',
 	},
